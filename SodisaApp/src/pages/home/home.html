@@ -4,36 +4,44 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-footer class="bar-stable">
-    <div class="slot">
-      <ion-grid>
-        <ion-row>
-          <ion-col width-100>
-            <ion-card>
-              <ion-card-content>
-                Eco: T-MZ05U
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col width-50>
-            <ion-card (click)="ViajeDetalle()">
-              <ion-card-content>
-                SLOT 1
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col width-50>
-            <ion-card>
-              <ion-card-content>
-                SLOT 2
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
-  </ion-footer>
+<ion-content class="HomePage">
+    <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom" >
+        <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+            <sebm-google-map-info-window>
+                <strong>My location</strong>
+            </sebm-google-map-info-window>
+        </sebm-google-map-marker>
+    </sebm-google-map>
 </ion-content>
+
+<ion-footer class="bar-stable">
+  <div class="slot">
+    <ion-grid>
+      <ion-row>
+        <ion-col width-100>
+          <ion-card>
+            <ion-card-content>
+              Eco: T-MZ05U
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col width-50>
+          <ion-card (click)="ViajeDetalle()">
+            <ion-card-content>
+              SLOT 1
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col width-50>
+          <ion-card>
+            <ion-card-content>
+              SLOT 2
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-footer>
