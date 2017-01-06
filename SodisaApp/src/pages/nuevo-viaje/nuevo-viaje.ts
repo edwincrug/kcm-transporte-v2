@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, AlertController, Platform, ViewController } from 'ionic-angular';
+import { Geolocation } from 'ionic-native';
+
+import { ModalPage } from '../modal/modal';
 
 /*
   Generated class for the NuevoViaje page.
@@ -12,17 +15,76 @@ import { NavController, NavParams, ModalController } from 'ionic-angular';
   templateUrl: 'nuevo-viaje.html'
 })
 export class NuevoViajePage {
+  map: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
+    public alertCtrl: AlertController) {
+
+    this.loadMap();
+    this.map = { lat: 0, lng: 0, zoom: 15 };
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad NuevoViajePage');
   }
 
-  // presentModal() {
-  //   let modal = this.modalCtrl.create(ModalPage);
-  //   modal.present();
-  // }
+  loadMap() {
+    Geolocation.getCurrentPosition().then((position) => {
+      this.map =
+        {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          zoom: 15
+        };
+    });
+  }
+
+  muestraMotivos() {
+    // this.imei = Device.device.uuid;
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Motivos de Rechazo');
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Salud del operador',
+      value: '1',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Día de descanso',
+      value: '2',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Negativa del Operador',
+      value: '3',
+      checked: false
+    });
+
+    alert.addButton('Cerrar');
+    alert.addButton({
+      text: 'Aceptar',
+      handler: data => {
+
+        // if (this.idRechazoSelected != null) {
+        //   this.RechazaViaje(idViaje, idOrigen, idConcentrado, indice);
+        // }
+
+      }
+    });
+
+    alert.present();
+
+  }
+
+  openModal(characterNum) {
+
+    let modal = this.modalCtrl.create(ModalPage, characterNum);
+    modal.present();
+  }
 
 }
-

@@ -15,7 +15,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding class="HomePage">
   <ion-card>
     <ion-card-content>
       <h2>Concentrado: 050074</h2>
@@ -26,26 +26,32 @@
     </ion-card-content>
   </ion-card>
 
-  
+  <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+    <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+      <sebm-google-map-info-window>
+        <strong>My location</strong>
+      </sebm-google-map-info-window>
+    </sebm-google-map-marker>
+  </sebm-google-map>
+</ion-content>
 
-  <ion-footer class="bar-stable">
-    <ion-grid>
-      <ion-row>
-        <ion-col offset-15 width-35>
-          <button ion-button icon-left round color="primary">        
+<ion-footer class="bar-stable">
+  <ion-grid>
+    <ion-row>
+      <ion-col offset-15 width-35>
+        <button ion-button icon-left round color="primary" (click)="openModal()">        
         <ion-icon name="checkbox"></ion-icon>
         Aceptar
       </button>
-        </ion-col>
-        <ion-col offset-15 width-35>
-          <button ion-button icon-left round color="danger">        
+      </ion-col>
+      <ion-col offset-15 width-35>
+        <button ion-button icon-left round color="danger" (click)="muestraMotivos()">        
         <ion-icon name="close-circle"></ion-icon>
         Rechazar
       </button>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-      </ion-row>
-    </ion-grid>
-  </ion-footer>
-</ion-content>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+    </ion-row>
+  </ion-grid>
+</ion-footer>
