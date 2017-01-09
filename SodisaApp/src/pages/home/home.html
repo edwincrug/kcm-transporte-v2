@@ -5,13 +5,17 @@
 </ion-header>
 
 <ion-content class="HomePage">
-    <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom" >
-        <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
-            <sebm-google-map-info-window>
-                <strong>My location</strong>
-            </sebm-google-map-info-window>
-        </sebm-google-map-marker>
-    </sebm-google-map>
+  <ion-fab top right edge color="light">
+    <button ion-fab mini (click)="viajesAsignados()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+
+  <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+    <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+      <sebm-google-map-info-window>
+        <strong>My location</strong>
+      </sebm-google-map-info-window>
+    </sebm-google-map-marker>
+  </sebm-google-map>
 </ion-content>
 
 <ion-footer class="bar-stable">

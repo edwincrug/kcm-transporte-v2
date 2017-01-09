@@ -3,6 +3,7 @@ import { Geolocation } from 'ionic-native';
 import { NavController, Platform } from 'ionic-angular';
 
 import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
+import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 
 @Component({
   selector: 'page-home',
@@ -29,6 +30,10 @@ export class HomePage {
           zoom: 15
         };
     });
+  }
+
+  viajesAsignados() {
+    this.navCtrl.setRoot(ViajeAsignadoPage);
   }
 
 }
