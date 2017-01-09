@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
+import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
 
 /*
   Generated class for the ViajeAsignado page.
@@ -22,6 +23,6 @@ export class ViajeAsignadoPage {
   }
 
   ViajeTracking() {
-    this.navCtrl.setRoot(HomePage);
+    this.navCtrl.setRoot(NuevoViajePage);
   }
 }

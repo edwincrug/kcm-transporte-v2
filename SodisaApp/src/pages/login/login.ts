@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
+import { HomePage } from '../home/home';
 
 /*
   Generated class for the Login page.
@@ -39,7 +40,7 @@ export class LoginPage {
 
     loading.dismiss();
 
-    this.navCtrl.setRoot(ViajeAsignadoPage);
+    this.navCtrl.setRoot(HomePage);
   }
 
 

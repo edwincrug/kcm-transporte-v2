@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, AlertController, Platform, ViewController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 
-import { ModalPage } from '../modal/modal';
+import { HomePage } from '../home/home';
 
 /*
   Generated class for the NuevoViaje page.
@@ -79,12 +79,12 @@ export class NuevoViajePage {
 
     alert.present();
 
-  }
+  }  
 
-  openModal(characterNum) {
-
-    let modal = this.modalCtrl.create(ModalPage, characterNum);
-    modal.present();
+  redirectViajeAceptado() {
+    this.navCtrl.setRoot(HomePage, {
+      aceptado: 1
+    });
   }
 
 }
