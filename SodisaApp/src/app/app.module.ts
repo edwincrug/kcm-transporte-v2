@@ -7,6 +7,7 @@ import { ViajeAsignadoPage } from '../pages/viaje-asignado/viaje-asignado';
 import { NuevoViajePage } from '../pages/nuevo-viaje/nuevo-viaje';
 import { ModalPage } from '../pages/modal/modal';
 import { ModalAccidentePage } from '../pages/modal-accidente/modal-accidente';
+import { ViajeAceptadoPage } from '../pages/viaje-aceptado/viaje-aceptado';
 
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-maps-api-wrapper';
@@ -19,7 +20,8 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     ViajeAsignadoPage,
     NuevoViajePage,
     ModalPage,
-    ModalAccidentePage
+    ModalAccidentePage,
+    ViajeAceptadoPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -36,7 +38,8 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     ViajeAsignadoPage,
     NuevoViajePage,
     ModalPage,
-    ModalAccidentePage
+    ModalAccidentePage,
+    ViajeAceptadoPage
   ],
   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleMapsAPIWrapper]
 })

@@ -15,6 +15,7 @@ export class HomePage {
   map: any;
   aceptado: any;
   slots: boolean = true;
+  remolque: string = "remolque1";
 
   constructor(public navCtrl: NavController, private platform: Platform, public params: NavParams, public modalCtrl: ModalController) {
     this.loadMap();
@@ -44,16 +45,10 @@ export class HomePage {
 
   viajesAsignados() {
     this.navCtrl.setRoot(ViajeAsignadoPage);
-  }
+  }  
 
-  openModal(characterNum) {
-    let modal = this.modalCtrl.create(ModalPage, characterNum);
-    modal.present();
-  }
-
-  openModalAccidente(characterNum) {
-    let modal = this.modalCtrl.create(ModalAccidentePage, characterNum);
-    modal.present();
+  viajeTracking() {
+    this.navCtrl.setRoot(NuevoViajePage);
   }
 
 }

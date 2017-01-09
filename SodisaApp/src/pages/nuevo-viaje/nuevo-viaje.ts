@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, AlertController, Platform, ViewController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 
-import { HomePage } from '../home/home';
+import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
 
 /*
   Generated class for the NuevoViaje page.
@@ -82,9 +82,7 @@ export class NuevoViajePage {
   }  
 
   redirectViajeAceptado() {
-    this.navCtrl.setRoot(HomePage, {
-      aceptado: 1
-    });
+    this.navCtrl.setRoot(ViajeAceptadoPage);
   }
 
 }
