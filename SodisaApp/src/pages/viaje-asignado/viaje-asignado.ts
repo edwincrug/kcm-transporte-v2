@@ -25,4 +25,8 @@ export class ViajeAsignadoPage {
   ViajeTracking() {
     this.navCtrl.setRoot(NuevoViajePage);
   }
+
+  redirectHome(){
+    this.navCtrl.setRoot(HomePage);
+  }
 }

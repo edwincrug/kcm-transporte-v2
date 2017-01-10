@@ -3,6 +3,7 @@ import { NavController, NavParams, ModalController, AlertController, Platform, V
 import { Geolocation } from 'ionic-native';
 
 import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
+import { HomePage } from '../home/home';
 
 /*
   Generated class for the NuevoViaje page.
@@ -79,10 +80,14 @@ export class NuevoViajePage {
 
     alert.present();
 
-  }  
+  }
 
   redirectViajeAceptado() {
     this.navCtrl.setRoot(ViajeAceptadoPage);
+  }
+
+  redirectHome() {
+    this.navCtrl.setRoot(HomePage);
   }
 
 }
