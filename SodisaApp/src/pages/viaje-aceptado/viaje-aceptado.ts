@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 
 import { ModalPage } from '../modal/modal';
 import { ModalAccidentePage } from '../modal-accidente/modal-accidente';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
+import { HomePage } from '../home/home';
 
 /*
   Generated class for the ViajeAceptado page.
@@ -22,7 +23,7 @@ export class ViajeAceptadoPage {
   terminado: boolean = false;
   remolque: string = "remolque1";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, private loadingCtrl: LoadingController) {
     this.loadMap();
     this.map = { lat: 0, lng: 0, zoom: 15 };
   }
@@ -56,8 +57,19 @@ export class ViajeAceptadoPage {
     this.navCtrl.setRoot(ViajeAsignadoPage);
   }
 
-  terminaViaje(){
+  terminaViaje() {
     this.terminado = true;
+  }
+
+  terminarViaje() {
+    let loading = this.loadingCtrl.create({
+      content: '¡ Trabajo Terminado !',
+      duration: 2000
+    });
+
+    loading.present();
+
+    this.navCtrl.setRoot(HomePage);
   }
 
 }
