@@ -1,0 +1,78 @@
+<!--
+  Generated template for the Sincronizacion page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>Sincronización</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Última actualización: <strong>10 de Enero de 2017</strong></ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col offset-50>
+        <button ion-button icon-left round color="secondary" (click)="sincronizaViajes()" item-right>        
+        <ion-icon name="sync"></ion-icon>
+        Sincronizar
+      </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list>
+    <ion-item>
+      <h2>Concentrado: 050074</h2>
+      <h4>Estatus: <strong> Rechazado </strong> </h4>
+      <h4>Origen: 10 - CEDIS COB</h4>
+      <p>
+        Destino: 654654|0 - TIENDA DEL NORTE
+      </p>
+    </ion-item>
+
+    <ion-item>
+      <h2>Concentrado: 050078</h2>
+      <h4>Estatus: <strong> Terminado </strong> </h4>
+      <h4>Origen: 10 - CEDIS COB</h4>
+      <p>
+        Destino: 654654|0 - TIENDA DEL SUR
+      </p>
+    </ion-item>
+
+    <ion-item>
+      <h2>Concentrado: 0503476</h2>
+      <h4>Estatus: <strong> Aceptado </strong> </h4>
+      <h4>Origen: 10 - CEDIS COB</h4>
+      <p>
+        Destino: 654654|0 - TIENDA DEL PONIENTE
+      </p>
+    </ion-item>
+
+    <ion-item>
+      <h2>Concentrado: 1209666</h2>
+      <h4>Estatus: <strong> Iniciado </strong> </h4>
+      <h4>Origen: 10 - CEDIS COB</h4>
+      <p>
+        Destino: 654654|0 - TIENDA DEL ORIENTE
+      </p>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+
+<ion-footer class="bar-stable" padding>
+  <div>
+    <button ion-button block round color="danger" (click)="redirectHome()">Regresar</button>
+  </div>
+</ion-footer>

@@ -119,16 +119,8 @@
 
 </ion-content>
 
-<ion-footer class="bar-stable">
-  <ion-grid>
-    <ion-row>
-      <ion-col offset-33 width-50>
-        <button ion-button icon-only (click)="redirectHome()">
-          <ion-icon name="home"></ion-icon>
-        </button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-
+<ion-footer class="bar-stable" padding>
+  <div>
+    <button ion-button block round color="danger" (click)="redirectHome()">Regresar</button>
+  </div>
 </ion-footer>

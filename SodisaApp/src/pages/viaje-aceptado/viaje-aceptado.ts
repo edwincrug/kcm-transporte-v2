@@ -6,6 +6,7 @@ import { ModalPage } from '../modal/modal';
 import { ModalAccidentePage } from '../modal-accidente/modal-accidente';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { HomePage } from '../home/home';
+import { DocumentacionPage } from '../documentacion/documentacion';
 
 /*
   Generated class for the ViajeAceptado page.
@@ -69,7 +70,7 @@ export class ViajeAceptadoPage {
 
     loading.present();
 
-    this.navCtrl.setRoot(HomePage);
+    this.navCtrl.setRoot(DocumentacionPage);
   }
 
 }

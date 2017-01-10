@@ -6,6 +6,7 @@ import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { ModalPage } from '../modal/modal';
 import { ModalAccidentePage } from '../modal-accidente/modal-accidente';
+import { SincronizacionPage } from '../sincronizacion/sincronizacion';
 
 @Component({
   selector: 'page-home',
@@ -45,10 +46,14 @@ export class HomePage {
 
   viajesAsignados() {
     this.navCtrl.setRoot(ViajeAsignadoPage);
-  }  
+  }
 
   viajeTracking() {
     this.navCtrl.setRoot(NuevoViajePage);
+  }
+
+  redirectSync() {
+    this.navCtrl.setRoot(SincronizacionPage);;
   }
 
 }
