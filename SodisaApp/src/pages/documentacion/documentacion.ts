@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
+import { EvidenciaPage } from '../evidencia/evidencia';
+
 /*
   Generated class for the Documentacion page.
 
@@ -13,13 +15,13 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class DocumentacionPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DocumentacionPage');
   }
 
-redirectHome(){
-    //this.navCtrl.setRoot(HomePage);
+  redirectEvidencia() {
+    this.navCtrl.setRoot(EvidenciaPage);
   }
 }

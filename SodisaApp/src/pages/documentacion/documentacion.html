@@ -15,79 +15,54 @@
 
 <ion-content padding>
   <ion-grid>
-    <ion-row class="grilla">
-      <ion-col width-25 class="grilla">
-        Cliente
-      </ion-col>
-      <ion-col width-33 class="grilla">
-        Concesionario
-      </ion-col>
-      <ion-col width-25 class="grilla">
-        Factura
-      </ion-col>
-      <ion-col class="grilla">
-        Completo
-      </ion-col>
-    </ion-row>
-
-
     <ion-row>
-      <ion-col width-25>
-        Lumen
-      </ion-col>
-      <ion-col width-33>
-        33
-      </ion-col>
-      <ion-col width-25>
-        FALU234234-3241
+      <ion-col width-80>
+        <ion-list>
+          <ion-item>
+            <h2>Cliente: Lumen</h2>
+            <h3>Concesionario: 3</h3>
+            <p>Factura: FA-DSFK-23423</p>
+          </ion-item>
+        </ion-list>
       </ion-col>
       <ion-col>
-        <ion-checkbox color="secondary" checked="true" item-right></ion-checkbox>
+        <ion-item>
+          <ion-checkbox color="secondary" checked="true" item-right></ion-checkbox>
+        </ion-item>
       </ion-col>
     </ion-row>
 
     <ion-row>
-      <ion-col width-25>
-        Costco
-      </ion-col>
-      <ion-col width-33>
-        0
-      </ion-col>
-      <ion-col width-25>
-        FA-DSFK-23423
+      <ion-col width-80>
+        <ion-list>
+          <ion-item>
+            <h2>Cliente: Walmart</h2>
+            <h3>Concesionario: 0</h3>
+            <p>Factura: FA-WA324-ABFDQ</p>
+          </ion-item>
+        </ion-list>
       </ion-col>
       <ion-col>
-        <ion-checkbox color="secondary" checked="false" item-right></ion-checkbox>
+        <ion-item>
+          <ion-checkbox color="secondary" checked="false" item-right></ion-checkbox>
+        </ion-item>
       </ion-col>
     </ion-row>
 
     <ion-row>
-      <ion-col width-25>
-        Soriana
-      </ion-col>
-      <ion-col width-33>
-        1
-      </ion-col>
-      <ion-col width-25>
-        FASO-32423-324
-      </ion-col>
-      <ion-col>
-        <ion-checkbox color="secondary" checked="true" item-right></ion-checkbox>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col width-25>
-        Walmart
-      </ion-col>
-      <ion-col width-33>
-        3
-      </ion-col>
-      <ion-col width-25>
-        FA-WA-234-23SDFKLJA
+      <ion-col width-80>
+        <ion-list>
+          <ion-item>
+            <h2>Cliente: Chedraui</h2>
+            <h3>Concesionario: 234</h3>
+            <p>Factura: FA-CHQERWIO-13466</p>
+          </ion-item>
+        </ion-list>
       </ion-col>
       <ion-col>
-        <ion-checkbox color="secondary" checked="false" item-right></ion-checkbox>
+        <ion-item>
+          <ion-checkbox color="secondary" checked="true" item-right></ion-checkbox>
+        </ion-item>
       </ion-col>
     </ion-row>
 
@@ -98,6 +73,6 @@
 
 <ion-footer class="bar-stable" padding>
   <div>
-    <button ion-button block round color="danger">Confirmar</button>
+    <button ion-button block round color="danger" (click)="redirectEvidencia()">Confirmar</button>
   </div>
 </ion-footer>
