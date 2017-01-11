@@ -28,11 +28,18 @@
     </ion-item>
 
     <ion-item>
-      <ion-label color="secondary" stacked>Remolque</ion-label>
-      <ion-input type="text" placeholder="Remolque"></ion-input>
+      <ion-label color="secondary" stacked>Comentarios:</ion-label>
+      <ion-input type="text" placeholder=""></ion-input>
     </ion-item>
   </ion-list>
 
+  <button ion-button block icon-left round color="secondary" (click)="dismiss()">        
+        <ion-icon name="camera"></ion-icon>
+        Capturar Evidencia
+      </button>
+  <br>
+  <br>
+  <br>
   <button ion-button block icon-left round color="primary" (click)="dismiss()">        
         <ion-icon name="checkbox"></ion-icon>
         Aceptar

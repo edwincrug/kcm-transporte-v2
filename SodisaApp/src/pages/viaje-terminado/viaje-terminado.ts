@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 
 import { DocumentacionPage } from '../documentacion/documentacion';
@@ -20,7 +20,8 @@ import { ManiobraPage } from '../maniobra/maniobra';
 export class ViajeTerminadoPage {
   map: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,
+    private loadingCtrl: LoadingController) {
     this.loadMap();
     this.map = { lat: 0, lng: 0, zoom: 15 };
   }
@@ -44,15 +45,22 @@ export class ViajeTerminadoPage {
           lng: -99.2118746,
           zoom: 15
         };
-      });
+    });
   }
 
   redirectHome() {
-    this.navCtrl.setRoot(EvidenciaPage);
+    let loading = this.loadingCtrl.create({
+      content: '¡ Trabajo Terminado !',
+      duration: 2000
+    });
+
+    loading.present();
+
+    this.navCtrl.setRoot(HomePage);
   }
 
   redirectManiobra() {
-    this.navCtrl.setRoot(ManiobraPage);
-  } 
+    this.navCtrl.setRoot(HomePage);
+  }
 
 }
