@@ -41,7 +41,14 @@ export class HomePage {
           lng: position.coords.longitude,
           zoom: 15
         };
-    });
+    }).catch((error) => {
+      this.map =
+        {
+          lat: 19.438029,
+          lng: -99.2118746,
+          zoom: 15
+        };
+      });
   }
 
   viajesAsignados() {
