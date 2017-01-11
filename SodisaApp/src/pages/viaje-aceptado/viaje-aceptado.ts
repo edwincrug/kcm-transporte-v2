@@ -7,6 +7,7 @@ import { ModalAccidentePage } from '../modal-accidente/modal-accidente';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { HomePage } from '../home/home';
 import { DocumentacionPage } from '../documentacion/documentacion';
+import { ViajeTerminadoPage } from '../viaje-terminado/viaje-terminado';
 
 /*
   Generated class for the ViajeAceptado page.
@@ -59,7 +60,7 @@ export class ViajeAceptadoPage {
   }
 
   terminaViaje() {
-    this.terminado = true;
+    this.navCtrl.setRoot(ViajeTerminadoPage);
   }
 
   terminarViaje() {

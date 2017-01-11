@@ -19,4 +19,7 @@ export class DocumentacionPage {
     console.log('ionViewDidLoad DocumentacionPage');
   }
 
+redirectHome(){
+    //this.navCtrl.setRoot(HomePage);
+  }
 }
