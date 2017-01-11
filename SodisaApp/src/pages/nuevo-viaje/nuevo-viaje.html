@@ -16,6 +16,14 @@
 
 
 <ion-content padding class="HomePage">
+  <ion-fab top right edge>
+    <button ion-fab mini color="light"><ion-icon name="add"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab color="primary" (click)="viajesAsignados()"><ion-icon name="bus"></ion-icon></button>
+      <button ion-fab color="sync" (click)="redirectSync()"><ion-icon name="sync"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+
   <ion-card>
     <ion-card-content>
       <h2>Concentrado: 050074</h2>
@@ -38,14 +46,14 @@
 <ion-footer class="bar-stable">
   <ion-grid>
     <ion-row>
-      <ion-col offset-15 width-35>
+      <ion-col width-33>
         <button ion-button icon-left round color="primary" (click)="redirectViajeAceptado()">        
         <ion-icon name="checkbox"></ion-icon>
         Aceptar
       </button>
       </ion-col>
-      <ion-col offset-15 width-35>
-        <button ion-button icon-left round color="danger" (click)="muestraMotivos()">        
+      <ion-col offset-25 width-50>
+        <button ion-button icon-left round color="sync" (click)="muestraMotivos()">        
         <ion-icon name="close-circle"></ion-icon>
         Rechazar
       </button>

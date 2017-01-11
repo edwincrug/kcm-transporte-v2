@@ -11,6 +11,8 @@ import { ViajeAceptadoPage } from '../pages/viaje-aceptado/viaje-aceptado';
 import { DocumentacionPage } from '../pages/documentacion/documentacion';
 import { SincronizacionPage } from '../pages/sincronizacion/sincronizacion';
 import { ViajeTerminadoPage } from '../pages/viaje-terminado/viaje-terminado';
+import { EvidenciaPage } from '../pages/evidencia/evidencia';
+import { ManiobraPage } from '../pages/maniobra/maniobra';
 
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-maps-api-wrapper';
@@ -27,7 +29,9 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     ViajeAceptadoPage,
     DocumentacionPage,
     SincronizacionPage,
-    ViajeTerminadoPage
+    ViajeTerminadoPage,
+    EvidenciaPage,
+    ManiobraPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -48,7 +52,9 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     ViajeAceptadoPage,
     DocumentacionPage,
     SincronizacionPage,
-    ViajeTerminadoPage
+    ViajeTerminadoPage,
+    EvidenciaPage,
+    ManiobraPage
   ],
   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleMapsAPIWrapper]
 })

@@ -4,6 +4,8 @@ import { Geolocation } from 'ionic-native';
 
 import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
 import { HomePage } from '../home/home';
+import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
+import { SincronizacionPage } from '../sincronizacion/sincronizacion';
 
 /*
   Generated class for the NuevoViaje page.
@@ -88,6 +90,14 @@ export class NuevoViajePage {
 
   redirectHome() {
     this.navCtrl.setRoot(HomePage);
+  }
+
+  redirectSync() {
+    this.navCtrl.setRoot(SincronizacionPage);;
+  }
+
+  viajesAsignados() {
+    this.navCtrl.setRoot(ViajeAsignadoPage);
   }
 
 }

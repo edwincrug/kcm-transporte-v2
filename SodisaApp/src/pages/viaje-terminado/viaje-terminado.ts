@@ -4,6 +4,8 @@ import { Geolocation } from 'ionic-native';
 
 import { DocumentacionPage } from '../documentacion/documentacion';
 import { HomePage } from '../home/home';
+import { EvidenciaPage } from '../evidencia/evidencia';
+import { ManiobraPage } from '../maniobra/maniobra';
 
 /*
   Generated class for the ViajeTerminado page.
@@ -38,25 +40,12 @@ export class ViajeTerminadoPage {
     });
   }
 
-  showConfirm() {
-    let confirm = this.alertCtrl.create({
-      subTitle: '¿Se realiza entrega de mercancía?',
-      buttons: [
-        {
-          text: 'No',
-          handler: () => {
-            this.navCtrl.setRoot(HomePage);
-          }
-        },
-        {
-          text: 'Si',
-          handler: () => {
-            this.navCtrl.setRoot(DocumentacionPage);
-          }
-        }
-      ]
-    });
-    confirm.present();
+  redirectHome() {
+    this.navCtrl.setRoot(EvidenciaPage);
   }
+
+  redirectManiobra() {
+    this.navCtrl.setRoot(ManiobraPage);
+  } 
 
 }
