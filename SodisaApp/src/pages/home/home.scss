@@ -1,11 +1,8 @@
-page-home {
-  
-}
+page-home {}
 
-.HomePage #map 
- { 
-      width: 100%; 
-      height: 100%; 
-      opacity: 0; 
-      transition: opacity 150ms ease-in 
- }
+#map {
+    width: 400px !important;
+    height: 350px !important;
+    opacity: 0;
+    transition: opacity 150ms ease-in
+}

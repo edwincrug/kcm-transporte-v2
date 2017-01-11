@@ -1,74 +1,212 @@
 <ion-header>
-  <ion-toolbar color="secondary">
-    <ion-title>Juan Pérez Arriaga</ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="secondary">
+        <ion-title>Juan Pérez Arriaga (3)</ion-title>
+    </ion-toolbar>
 </ion-header>
-
-<ion-content class="HomePage">
-  <ion-fab top right edge>
-    <button ion-fab mini color="light"><ion-icon name="add"></ion-icon></button>
-    <ion-fab-list>
-      <button ion-fab color="primary" (click)="viajesAsignados()"><ion-icon name="bus"></ion-icon></button>
-      <button ion-fab color="sync" (click)="redirectSync()"><ion-icon name="sync"></ion-icon></button>
-    </ion-fab-list>
-  </ion-fab>
-
-  <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
-    <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
-      <sebm-google-map-info-window>
-        <strong>My location</strong>
-      </sebm-google-map-info-window>
-    </sebm-google-map-marker>
-  </sebm-google-map>
-
+<ion-content>
+    <ion-fab right top>
+        <button ion-fab>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-fab-list>
+            <button ion-fab color="primary" (click)="viajesAsignados()">
+                <ion-icon name="bus"></ion-icon>
+            </button>
+            <button ion-fab color="sync" (click)="redirectSync()">
+                <ion-icon name="sync"></ion-icon>
+            </button>
+            <button ion-fab color="sync">
+                <ion-icon name="cog"></ion-icon>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+    <ion-card>
+        <!--  <img src="img/advance-card-map-madison.png"> -->
+        <ion-item>
+            <ion-icon name="speedometer" item-left></ion-icon>
+            <h2>Concentrado #XXXXX</h2>
+            <p>Aceptado 11/01/17 11:34</p>
+        </ion-item>
+        <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+            <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+                <sebm-google-map-info-window>
+                    <strong>My location</strong>
+                </sebm-google-map-info-window>
+            </sebm-google-map-marker>
+        </sebm-google-map>
+        <ion-item>
+            <ion-icon name="home" item-left></ion-icon>
+            <h2>Origen</h2>
+            <p>10 - CEDIS COB</p>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="trending-up" item-left></ion-icon>
+            <h2>Destino</h2>
+            <p> 654654|0 - TIENDA DEL SUR, Destino: 654655|0 - TIENDA DEL NORTE, Destino: 654656|0 - TIENDA DEL PACIFICO </p>
+        </ion-item>
+        <ion-item>
+            <span item-left>4 hr</span>
+            <span item-left>(32.6 km)</span>
+        </ion-item>
+        <ion-item>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Finalizar
+            </button>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="alert"></ion-icon>
+                Incidente
+            </button>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="hand"></ion-icon>
+                Parada
+            </button>
+        </ion-item>
+    </ion-card>
+    <ion-card>
+        <!--  <img src="img/advance-card-map-madison.png"> -->
+        <ion-item>
+            <ion-icon name="speedometer" item-left></ion-icon>
+            <h2>Concentrado #XXXXX</h2>
+            <p>Aceptado 11/01/17 11:34</p>
+        </ion-item>
+        <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+            <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+                <sebm-google-map-info-window>
+                    <strong>My location</strong>
+                </sebm-google-map-info-window>
+            </sebm-google-map-marker>
+        </sebm-google-map>
+        <ion-item>
+            <ion-icon name="home" item-left></ion-icon>
+            <h2>Origen</h2>
+            <p>10 - CEDIS COB</p>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="trending-up" item-left></ion-icon>
+            <h2>Destino</h2>
+            <p> 654654|0 - TIENDA DEL SUR, Destino: 654655|0 - TIENDA DEL NORTE, Destino: 654656|0 - TIENDA DEL PACIFICO </p>
+        </ion-item>
+        <ion-item>
+            <span item-left>4 hr</span>
+            <span item-left>(32.6 km)</span>
+        </ion-item>
+        <ion-item>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="play"></ion-icon>
+                Iniciar
+            </button>
+        </ion-item>
+    </ion-card>
+    <ion-card>
+        <!--  <img src="img/advance-card-map-madison.png"> -->
+        <ion-item>
+            <ion-icon name="speedometer" item-left></ion-icon>
+            <h2>Concentrado #XXXXX</h2>
+            <p>Aceptado 11/01/17 11:34</p>
+        </ion-item>
+        <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+            <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+                <sebm-google-map-info-window>
+                    <strong>My location</strong>
+                </sebm-google-map-info-window>
+            </sebm-google-map-marker>
+        </sebm-google-map>
+        <ion-item>
+            <ion-icon name="home" item-left></ion-icon>
+            <h2>Origen</h2>
+            <p>10 - CEDIS COB</p>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="trending-up" item-left></ion-icon>
+            <h2>Destino</h2>
+            <p> 654654|0 - TIENDA DEL SUR, Destino: 654655|0 - TIENDA DEL NORTE, Destino: 654656|0 - TIENDA DEL PACIFICO </p>
+        </ion-item>
+        <ion-item>
+            <span item-left>4 hr</span>
+            <span item-left>(32.6 km)</span>
+        </ion-item>
+        <ion-item>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="play"></ion-icon>
+                Iniciar Maniobra
+            </button>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="checkmark-circle"></ion-icon>
+                Andén
+            </button>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="alert"></ion-icon>
+                Finalizar Maniobra
+            </button>
+        </ion-item>
+    </ion-card>
 </ion-content>
-
-<ion-footer class="bar-stable">
-  <div class="slot">
-    <ion-grid>
-      <ion-row>
-        <ion-col width-100>
-          <ion-card>
-            <ion-card-content>
-              Eco: T-MZ05U
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-
-      <div padding>
-        <ion-segment [(ngModel)]="remolque">
-          <ion-segment-button value="remolque1">
-            Concentrado: IM233
-          </ion-segment-button>
-          <ion-segment-button value="remolque2">
-            Concentrado: PIOU2671
-          </ion-segment-button>
-        </ion-segment>
-      </div>
-
-      <div [ngSwitch]="remolque">
-        <ion-list *ngSwitchCase="'remolque1'">
-          <ion-item>
-            <ion-card (click)="viajeTracking()">
-              <ion-card-content>
-                SLOT 1
-              </ion-card-content>
-            </ion-card>
-          </ion-item>
-        </ion-list>
-
-        <ion-list *ngSwitchCase="'remolque2'">
-          <ion-item>
-            <ion-card>
-              <ion-card-content>
-                SLOT 2
-              </ion-card-content>
-            </ion-card>
-          </ion-item>
-        </ion-list>
-      </div>
-
-    </ion-grid>
-  </div>
-</ion-footer>
+<!-- <ion-content class="HomePage">
+    <ion-fab top right edge>
+        <button ion-fab mini color="light">
+            <ion-icon name="add"></ion-icon>
+        </button>
+        <ion-fab-list>
+            <button ion-fab color="primary" (click)="viajesAsignados()">
+                <ion-icon name="bus"></ion-icon>
+            </button>
+            <button ion-fab color="sync" (click)="redirectSync()">
+                <ion-icon name="sync"></ion-icon>
+            </button>
+        </ion-fab-list>
+    </ion-fab>
+    <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
+        <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
+            <sebm-google-map-info-window>
+                <strong>My location</strong>
+            </sebm-google-map-info-window>
+        </sebm-google-map-marker>
+    </sebm-google-map>
+</ion-content>
+ -->
+<!-- <ion-footer class="bar-stable">
+    <div class="slot">
+        <ion-grid>
+            <ion-row>
+                <ion-col width-100>
+                    <ion-card>
+                        <ion-card-content>
+                            Eco: T-MZ05U
+                        </ion-card-content>
+                    </ion-card>
+                </ion-col>
+            </ion-row>
+            <div padding>
+                <ion-segment [(ngModel)]="remolque">
+                    <ion-segment-button value="remolque1">
+                        Concentrado: IM233
+                    </ion-segment-button>
+                    <ion-segment-button value="remolque2">
+                        Concentrado: PIOU2671
+                    </ion-segment-button>
+                </ion-segment>
+            </div>
+            <div [ngSwitch]="remolque">
+                <ion-list *ngSwitchCase="'remolque1'">
+                    <ion-item>
+                        <ion-card (click)="viajeTracking()">
+                            <ion-card-content>
+                                SLOT 1
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-item>
+                </ion-list>
+                <ion-list *ngSwitchCase="'remolque2'">
+                    <ion-item>
+                        <ion-card>
+                            <ion-card-content>
+                                SLOT 2
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-grid>
+    </div>
+</ion-footer> -->
