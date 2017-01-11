@@ -9,6 +9,8 @@ import { HomePage } from '../home/home';
 import { DocumentacionPage } from '../documentacion/documentacion';
 import { ViajeTerminadoPage } from '../viaje-terminado/viaje-terminado';
 import { SincronizacionPage } from '../sincronizacion/sincronizacion';
+import { ModalParadasPage } from '../modal-paradas/modal-paradas';
+import { ModalIncidentePage } from '../modal-incidente/modal-incidente';
 
 /*
   Generated class for the ViajeAceptado page.
@@ -47,7 +49,7 @@ export class ViajeAceptadoPage {
           lng: -99.2118746,
           zoom: 15
         };
-      });
+    });
   }
 
   ionViewDidLoad() {
@@ -80,17 +82,16 @@ export class ViajeAceptadoPage {
 
     loading.present();
 
-    this.navCtrl.setRoot(DocumentacionPage);
+    this.navCtrl.setRoot(HomePage);
   }
 
   redirectSync() {
     this.navCtrl.setRoot(SincronizacionPage);;
   }
 
-  openIncidentes() {
-    // this.imei = Device.device.uuid;
+  openParadas() {
     let alert = this.alertCtrl.create();
-    alert.setTitle('Incidentes');
+    alert.setTitle('Paradas en ruta');
 
     alert.addInput({
       type: 'radio',
@@ -127,6 +128,24 @@ export class ViajeAceptadoPage {
       checked: false
     });
 
+    alert.addButton('Cerrar');
+    alert.addButton({
+      text: 'Aceptar',
+      handler: data => {
+
+        let modal = this.modalCtrl.create(ModalParadasPage);
+        modal.present();
+
+      }
+    });
+
+    alert.present();
+  }
+
+  openIncidentes() {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Incidentes');
+
     alert.addInput({
       type: 'radio',
       label: 'Bloqueo de tarjeta Iave',
@@ -162,21 +181,13 @@ export class ViajeAceptadoPage {
       checked: false
     });
 
-    alert.addInput({
-      type: 'radio',
-      label: 'Otro',
-      value: '11',
-      checked: false
-    });
-
     alert.addButton('Cerrar');
     alert.addButton({
       text: 'Aceptar',
       handler: data => {
 
-        // if (this.idRechazoSelected != null) {
-        //   this.RechazaViaje(idViaje, idOrigen, idConcentrado, indice);
-        // }
+        let modal = this.modalCtrl.create(ModalIncidentePage);
+        modal.present();
 
       }
     });

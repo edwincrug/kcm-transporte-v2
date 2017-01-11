@@ -13,6 +13,9 @@ import { SincronizacionPage } from '../pages/sincronizacion/sincronizacion';
 import { ViajeTerminadoPage } from '../pages/viaje-terminado/viaje-terminado';
 import { EvidenciaPage } from '../pages/evidencia/evidencia';
 import { ManiobraPage } from '../pages/maniobra/maniobra';
+import { ModalParadasPage } from '../pages/modal-paradas/modal-paradas';
+import { ModalIncidentePage } from '../pages/modal-incidente/modal-incidente';
+
 
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-maps-api-wrapper';
@@ -31,7 +34,9 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     SincronizacionPage,
     ViajeTerminadoPage,
     EvidenciaPage,
-    ManiobraPage
+    ManiobraPage,
+    ModalParadasPage,
+    ModalIncidentePage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -54,7 +59,9 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     SincronizacionPage,
     ViajeTerminadoPage,
     EvidenciaPage,
-    ManiobraPage
+    ManiobraPage,
+    ModalParadasPage,
+    ModalIncidentePage
   ],
   providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleMapsAPIWrapper]
 })
