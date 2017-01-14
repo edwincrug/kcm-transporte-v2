@@ -4,6 +4,9 @@ import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { LoginPage } from '../pages/login/login';
 
+import { WebApiProvider } from '../providers/web-api-provider';
+import { NetworkProvider } from '../providers/network-provider';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -11,7 +14,7 @@ import { LoginPage } from '../pages/login/login';
 export class MyApp {
   rootPage = LoginPage;
 
-  constructor(platform: Platform) {
+  constructor(platform: Platform, public sodisaService: WebApiProvider) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

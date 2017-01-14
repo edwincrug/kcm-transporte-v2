@@ -20,6 +20,9 @@ import { ModalIncidentePage } from '../pages/modal-incidente/modal-incidente';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-maps-api-wrapper';
 
+import { WebApiProvider } from '../providers/web-api-provider';
+import { NetworkProvider} from '../providers/network-provider';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -63,6 +66,6 @@ import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-
     ModalParadasPage,
     ModalIncidentePage
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleMapsAPIWrapper]
+  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleMapsAPIWrapper, WebApiProvider, NetworkProvider]
 })
 export class AppModule { }
