@@ -28,7 +28,7 @@ export class LocalDataProvider {
   }
 
   createTableViaje() {
-    let sql = 'CREATE TABLE IF NOT EXISTS Viaje(idViaje INTEGER PRIMARY KEY AUTOINCREMENT, idOrigen INTEGER, origenNombre TEXT, idConcentrado TEXT, tipoViaje INTEGER, economico TEXT, odometro INTEGER, idEstatus INTEGER, idUsuario INTEGER, idRechazo INTEGER, geolocalizacion TEXT, destino TEXT); ';
+    let sql = 'CREATE TABLE IF NOT EXISTS Viaje(idViaje INTEGER PRIMARY KEY AUTOINCREMENT, idOrigen INTEGER, origenNombre TEXT, idConcentrado TEXT, tipoViaje INTEGER, economico TEXT, odometro INTEGER, idEstatus INTEGER, idUsuario INTEGER, idRechazo INTEGER, geolocalizacion TEXT, destino TEXT, horasDistancia INTEGER, kilometrosDistancia INTEGER); ';
     return this.db.executeSql(sql, []);
   }
 
@@ -92,7 +92,7 @@ export class LocalDataProvider {
       this.db.executeSql(evitaDuplicadosQuery, [travels[x].pIdOrigen, travels[x].pIdConcentradoVc]).then(respuesta => {
         let existe = respuesta.rows.item(0).Existe;
         if (existe == 0) {
-          this.sqlQuery = "INSERT INTO Viaje (idOrigen, origenNombre, idConcentrado, tipoViaje, economico, odometro, idEstatus, idUsuario, idRechazo, geolocalizacion) VALUES (" +
+          this.sqlQuery = "INSERT INTO Viaje (idOrigen, origenNombre, idConcentrado, tipoViaje, economico, odometro, idEstatus, idUsuario, idRechazo, geolocalizacion, horasDistancia, kilometrosDistancia) VALUES (" +
             travels[x].pIdOrigen + ", '" +
             travels[x].pOrigenNombre + "', '" +
             travels[x].pIdConcentradoVc + "', " +
@@ -100,7 +100,9 @@ export class LocalDataProvider {
             travels[x].pNumeroEconomicoRemolque + "', " +
             travels[x].pOdometro + ", " +
             travels[x].pIdEstatus + ", 1, 0, '" +
-            travels[x].pGeoLocalizacionOrigen + "');";
+            travels[x].pGeoLocalizacionOrigen + "', " +
+            travels[x].pHorasDistanciaIn + ", " +
+            travels[x].pKilometrosDistanciaIn + ");";
 
           this.db.executeSql(this.sqlQuery, []);
 

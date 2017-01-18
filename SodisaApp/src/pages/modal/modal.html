@@ -21,17 +21,17 @@
 <ion-content padding>
   <ion-list>
     <ion-item>
-      <ion-label color="secondary" stacked>Odómetro</ion-label>
+      <ion-label [(ngModel)]="odometro" color="secondary" stacked>Odómetro</ion-label>
       <ion-input type="text" placeholder="Odómetro"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label color="secondary" stacked>Remolque</ion-label>
+      <ion-label [(ngModel)]="remolque" color="secondary" stacked>Remolque</ion-label>
       <ion-input type="text" placeholder="Remolque"></ion-input>
     </ion-item>
   </ion-list>
 
-  <button ion-button block icon-left round color="primary" (click)="dismiss()">        
+  <button ion-button block icon-left round color="primary" (click)="validarDatos()">        
         <ion-icon name="checkbox"></ion-icon>
         Aceptar
       </button>

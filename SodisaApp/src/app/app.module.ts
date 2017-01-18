@@ -1,5 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { IonicApp, IonicModule, IonicErrorHandler, NavController } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
@@ -21,7 +21,8 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GoogleMapsAPIWrapper } from 'angular2-google-maps/core/services/google-maps-api-wrapper';
 
 import { WebApiProvider } from '../providers/web-api-provider';
-import { NetworkProvider} from '../providers/network-provider';
+import { NetworkProvider } from '../providers/network-provider';
+import { LocalDataProvider } from '../providers/local-data-provider';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { NetworkProvider} from '../providers/network-provider';
     ModalParadasPage,
     ModalIncidentePage
   ],
-  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler }, GoogleMapsAPIWrapper, WebApiProvider, NetworkProvider]
+  providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
+    GoogleMapsAPIWrapper, WebApiProvider, NetworkProvider, LocalDataProvider]
 })
 export class AppModule { }
