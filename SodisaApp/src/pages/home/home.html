@@ -48,22 +48,33 @@
             <span>({{viaje.kilometrosDistancia}} km)</span>
         </ion-item>
         <ion-item>
-            <button *ngIf="viaje.idEstatus == 2"  ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)" color="sync">
+            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
+                color="sync">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Aceptar
             </button>
-            <button *ngIf="viaje.idEstatus == 2"  ion-button icon-left clear item-right (click)="muestraMotivos(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)" color="danger">
-                <ion-icon name="hand"></ion-icon>
+            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left clear item-right (click)="muestraMotivos(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
+                color="danger">
+                <ion-icon name="close-circle"></ion-icon>
                 Rechazar
             </button>
-            <button *ngIf="viaje.idEstatus == 3"  ion-button icon-left clear item-right (click)="openModal()" color="sync">
+            <button *ngIf="viaje.idEstatus == 3" ion-button icon-left clear item-right (click)="openModal()" color="sync">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Iniciar Viaje
-            </button> 
-            <button *ngIf="viaje.idEstatus == 5"  ion-button icon-left clear item-right (click)="TerminarViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)" color="sync">
+            </button>
+            <button *ngIf="viaje.idEstatus == 3" ion-button icon-left clear item-right (click)="OpenParadas(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)" color="light">
+                <ion-icon name="hand"></ion-icon>
+                Parada
+            </button>
+            <button *ngIf="viaje.idEstatus == 3" ion-button icon-left clear item-right (click)="openModal()" color="danger">
+                <ion-icon name="alert"></ion-icon>
+                Incidente
+            </button>
+            <button *ngIf="viaje.idEstatus == 5" ion-button icon-left clear item-right (click)="TerminarViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
+                color="sync">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Llegada
-            </button>           
+            </button>
         </ion-item>
     </ion-card>
 

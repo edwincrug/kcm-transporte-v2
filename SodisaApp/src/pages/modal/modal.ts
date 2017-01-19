@@ -12,8 +12,8 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
   templateUrl: 'modal.html'
 })
 export class ModalPage {
-  odometro: any;
-  remolque: any;
+  odometro: string;
+  remolque: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) { }
 
@@ -22,27 +22,27 @@ export class ModalPage {
   }
 
   dismiss() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss({ km: 0, remolque: 0 });
   }
 
   validarDatos() {
     let respuesta = '';
 
     if ((this.odometro == null || this.odometro.trim() == '') && (this.remolque == null || this.remolque.trim() == '')) {
-      return 'Los campos Odómetro y Remolque son obligatorios';
+      alert('Los campos Odómetro y Remolque son obligatorios');
     }
     else if (this.odometro == null || this.odometro.trim() == '') {
-      return 'El campo Odómetro es obligatorio';
+      alert('El campo Odómetro es obligatorio');
     }
     else if (this.remolque == null || this.remolque.trim() == '') {
-      return 'El campo Remolque es obligatorio';
+      alert('El campo Remolque es obligatorio');
     }
     else if (!/^([0-9])*$/.test(this.odometro)) {
-      return 'El campo Odómetro sólo permite números';
+      alert('El campo Odómetro sólo permite números');
     }
     else {
-      // this.viewCtrl.dismiss({ km: this.odometro, remolque: this.remolque });
-      this.viewCtrl.dismiss();
+      this.viewCtrl.dismiss({ km: this.odometro, remolque: this.remolque });
+      //this.viewCtrl.dismiss();
     }
   }
 

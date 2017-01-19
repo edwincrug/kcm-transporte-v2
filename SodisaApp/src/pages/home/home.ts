@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Geolocation, Device } from 'ionic-native';
+import { Geolocation, Device, Camera, Transfer } from 'ionic-native';
 import { NavController, Platform, NavParams, ModalController, LoadingController, AlertController, ToastController } from 'ionic-angular';
 
 import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
@@ -453,12 +453,59 @@ export class HomePage {
   openModal() {
     alert('entra modal');
     let modal = this.modalCtrl.create(ModalPage);
-    this.navCtrl.push(modal);
-    // modal.present();
-    // modal.onDidDismiss(res => {
-    //   alert('Odometro: ' + res.km);
-    //   alert('No. remolque: ' + res.remolque);
-    // });
+    modal.present();
+
+    modal.onDidDismiss(res => {
+      alert('Odometro: ' + res.km);
+      alert('No. remolque: ' + res.remolque);
+    });
+  }
+
+  OpenParadas(idViaje, idOrigen, idConcentrado) {
+    Geolocation.getCurrentPosition()
+      .then(position => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
+
+    let coordenadas = this.lat + ',' + this.lng;
+    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
+
+    let fecha = new Date();
+    let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
+
+    let options = {
+      quality: 25,
+      destinationType: Camera.DestinationType.DATA_URL,
+      // destinationType: 0,
+      sourceType: 1,
+      encodingType: Camera.EncodingType.JPEG,
+      correctOrientation: true  //Corrects Android orientation quirks
+    }
+
+    Camera.getPicture(options).then((imageData) => {
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+      // fileTransfer.upload(imageData, 'http://dev1.sodisamovil.kcm.com.mx/_WebAPI/Operador/recibeParadaOIncidente', )
+      //   .then((data) => {
+      //     // success
+      //   }, (err) => {
+      //     // error
+      //   })
+
+      // let cadena = 'Solo Cadena!';
+
+      // // Encode the String
+      // let encodedString = btoa(cadena);
+
+
+      this.sodisaService.RegistraParadaIncidente('M54321', idOrigen, idConcentrado, 1, 1, imageData, 'Con foto', coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
+        alert('Todo OK: ' + data.pResponseCode);
+      });
+    }, (err) => {
+      alert('Hubo error en cámara');
+    });
+
+
   }
 
 
@@ -647,6 +694,6 @@ export class HomePage {
     alert.present();
   }
 
-  
+
 
 }

@@ -6,6 +6,7 @@ import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
 import { HomePage } from '../home/home';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { SincronizacionPage } from '../sincronizacion/sincronizacion';
+import { ModalPage } from '../modal/modal';
 
 /*
   Generated class for the NuevoViaje page.
@@ -23,31 +24,35 @@ export class NuevoViajePage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
     public alertCtrl: AlertController) {
 
-    this.loadMap();
-    this.map = { lat: 0, lng: 0, zoom: 15 };
+
+  }
+
+  openModal() {
+    let profileModal = this.modalCtrl.create(ModalPage);
+    profileModal.present();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad NuevoViajePage');
   }
 
-  loadMap() {
-    Geolocation.getCurrentPosition().then((position) => {
-      this.map =
-        {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          zoom: 15
-        };
-    }).catch((error) => {
-      this.map =
-        {
-          lat: 19.438029,
-          lng: -99.2118746,
-          zoom: 15
-        };
-      });
-  }
+  // loadMap() {
+  //   Geolocation.getCurrentPosition().then((position) => {
+  //     this.map =
+  //       {
+  //         lat: position.coords.latitude,
+  //         lng: position.coords.longitude,
+  //         zoom: 15
+  //       };
+  //   }).catch((error) => {
+  //     this.map =
+  //       {
+  //         lat: 19.438029,
+  //         lng: -99.2118746,
+  //         zoom: 15
+  //       };
+  //   });
+  // }
 
   muestraMotivos() {
     // this.imei = Device.device.uuid;

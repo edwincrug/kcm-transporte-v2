@@ -17,12 +17,12 @@ export class WebApiProvider {
   }
 
   login(pIdOperador, pPasswordOperador, pIMEI): Observable<any> {
-    alert('Ruta: ' + this.url + 'Login/?strIdOperador=' + pIdOperador + '&strPasswordOperador=' + pPasswordOperador + '&strIdDispositivo=' + pIMEI);
+    //alert('Ruta: ' + this.url + 'Login/?strIdOperador=' + pIdOperador + '&strPasswordOperador=' + pPasswordOperador + '&strIdDispositivo=' + pIMEI);
     return this.http.get(this.url + 'Login/?strIdOperador=' + pIdOperador + '&strPasswordOperador=' + pPasswordOperador + '&strIdDispositivo=' + pIMEI)
       .map((res: Response) => {
-        alert('Respuesta original: ' + res);
+        //alert('Respuesta original: ' + res);
         this.data = res.json();
-        alert('Respuesta con json: ' + this.data);
+        //alert('Respuesta con json: ' + this.data);
         return this.data;
       });
   }
@@ -68,6 +68,24 @@ export class WebApiProvider {
       "decKilometrajeEventoDc: 10, strIdNumeroEconomicoRemolqueVc: '' }";
 
     return this.http.post(this.url + 'actualizaEstatusViaje', body, options)
+      .map((res: Response) => {
+        this.data = res.json();
+        return this.data;
+      });
+  }
+
+  RegistraParadaIncidente(idOperador, idLocalidad, idConcentrado, idTipoEvento, idEvento, evidencia, observacion, geolocalizacion, fecha, idDispositivo): Observable<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
+    let body = "{ strIdOperadorVc: '" + idOperador + "', idLocalidadIn: " + idLocalidad + ", idConcentradoVc: " + idConcentrado
+      + ", idTipoEventoIn: " + idTipoEvento + ", idEventoIn: " + idEvento + ", evidenciaFotograficaBy: '" + evidencia
+      + "', observacionVc: '" + observacion + "', geoLocalizacionEventoVc: '" + geolocalizacion + "', fechaEventoDt: '" + fecha
+      + "', strIdDispositivo: '" + idDispositivo + "' }";
+
+    alert('WebApi');
+
+    return this.http.post(this.url + 'recibeParadaOIncidente', body, options)
       .map((res: Response) => {
         this.data = res.json();
         return this.data;
