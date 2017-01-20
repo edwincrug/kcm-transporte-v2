@@ -28,7 +28,7 @@ export class LocalDataProvider {
   }
 
   createTableViaje() {
-    let sql = 'CREATE TABLE IF NOT EXISTS Viaje(idViaje INTEGER PRIMARY KEY AUTOINCREMENT, idOrigen INTEGER, origenNombre TEXT, idConcentrado TEXT, tipoViaje INTEGER, economico TEXT, odometro INTEGER, idEstatus INTEGER, idUsuario INTEGER, idRechazo INTEGER, geolocalizacion TEXT, destino TEXT, horasDistancia INTEGER, kilometrosDistancia INTEGER); ';
+    let sql = 'CREATE TABLE IF NOT EXISTS Viaje(idViaje INTEGER PRIMARY KEY AUTOINCREMENT, idOrigen INTEGER, origenNombre TEXT, idConcentrado TEXT, tipoViaje INTEGER, economico TEXT, odometro INTEGER, idEstatus INTEGER, idUsuario INTEGER, idRechazo INTEGER, geolocalizacion TEXT, destino TEXT, horasDistancia INTEGER, kilometrosDistancia INTEGER, idMovimiento INTEGER); ';
     return this.db.executeSql(sql, []);
   }
 
@@ -38,7 +38,7 @@ export class LocalDataProvider {
   }
 
   createTableViajeSync() {
-    let sql = 'CREATE TABLE IF NOT EXISTS ViajeSync(idViajeSync INTEGER PRIMARY KEY AUTOINCREMENT, idViaje INTEGER, idOrigen INTEGER, idConcentrado TEXT, idOperador TEXT,  idMotivoRechazo INTEGER,  odometro INTEGER, idEstatus INTEGER, idDispositivo TEXT, geolocalizacion TEXT, idDocumento TEXT, fecha TEXT); ';
+    let sql = 'CREATE TABLE IF NOT EXISTS ViajeSync(idViajeSync INTEGER PRIMARY KEY AUTOINCREMENT, idViaje INTEGER, idOrigen INTEGER, idConcentrado TEXT, idOperador TEXT,  idMotivoRechazo INTEGER,  odometro INTEGER, idEstatus INTEGER, idDispositivo TEXT, geolocalizacion TEXT, idDocumento TEXT, fecha TEXT, remolque TEXT); ';
     return this.db.executeSql(sql, []);
   }
 
@@ -75,7 +75,7 @@ export class LocalDataProvider {
   }
 
   checkViajesAsignados() {
-    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (2, 3, 5)';
+    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (3, 5, 6)';
     return this.db.executeSql(sql, [])
       .then(response => {
         let hayViajes = [];
@@ -92,7 +92,7 @@ export class LocalDataProvider {
       this.db.executeSql(evitaDuplicadosQuery, [travels[x].pIdOrigen, travels[x].pIdConcentradoVc]).then(respuesta => {
         let existe = respuesta.rows.item(0).Existe;
         if (existe == 0) {
-          this.sqlQuery = "INSERT INTO Viaje (idOrigen, origenNombre, idConcentrado, tipoViaje, economico, odometro, idEstatus, idUsuario, idRechazo, geolocalizacion, horasDistancia, kilometrosDistancia) VALUES (" +
+          this.sqlQuery = "INSERT INTO Viaje (idOrigen, origenNombre, idConcentrado, tipoViaje, economico, odometro, idEstatus, idUsuario, idRechazo, geolocalizacion, horasDistancia, kilometrosDistancia, idMovimiento) VALUES (" +
             travels[x].pIdOrigen + ", '" +
             travels[x].pOrigenNombre + "', '" +
             travels[x].pIdConcentradoVc + "', " +
@@ -102,7 +102,8 @@ export class LocalDataProvider {
             travels[x].pIdEstatus + ", 1, 0, '" +
             travels[x].pGeoLocalizacionOrigen + "', " +
             travels[x].pHorasDistanciaIn + ", " +
-            travels[x].pKilometrosDistanciaIn + ");";
+            travels[x].pKilometrosDistanciaIn + ", " + 
+            travels[x].pIdTipoMovimientoIn + ");";
 
           this.db.executeSql(this.sqlQuery, []);
 
@@ -168,8 +169,8 @@ export class LocalDataProvider {
     return Promise.resolve('OK');
   }
 
-  actualizaViajeLocal(idEstatus, idRechazo, idViaje) {
-    let sql = "UPDATE Viaje SET idEstatus = " + idEstatus + ", idRechazo = " + idRechazo + " WHERE idViaje = ?";
+  actualizaViajeLocal(idEstatus, idRechazo, idViaje, km, noRemolque) {
+    let sql = "UPDATE Viaje SET idEstatus = " + idEstatus + ", idRechazo = " + idRechazo + ", odometro = " + km + ", economico = '" + noRemolque + "' WHERE idViaje = ?";
     return this.db.executeSql(sql, [idViaje]);
   }
 
@@ -224,8 +225,8 @@ export class LocalDataProvider {
     return this.db.executeSql(viajeQuery, []);
   }
 
-  insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, coordenadas, fecha) {
-    let viajeQuery = "INSERT INTO ViajeSync (idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, geolocalizacion, fecha) VALUES (" +
+  insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, coordenadas, fecha, km, noRemolque) {
+    let viajeQuery = "INSERT INTO ViajeSync (idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, geolocalizacion, fecha, odometro, remolque) VALUES (" +
       idViaje + ", " +
       idOrigen + ", '" +
       idConcentrado + "', '" +
@@ -234,7 +235,9 @@ export class LocalDataProvider {
       idEstatus + ", '" +
       idDispositivo + "', '" +
       coordenadas + "', '" +
-      fecha + "'); ";
+      fecha + "', " +
+      km + ", '" +
+      noRemolque + "'); ";
 
     return this.db.executeSql(viajeQuery, []);
   }

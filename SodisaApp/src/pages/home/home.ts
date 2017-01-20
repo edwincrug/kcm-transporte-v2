@@ -80,9 +80,11 @@ export class HomePage {
       .then(() => this.dataServices.checkViajesAsignados().then(response => {
         if (response.length > 0) {
           this.listaViajesLocales = response;
+          alert('Total Viajes: ' + this.listaViajesLocales.length);
         }
         else {
           this.listaViajesLocales = [];
+          alert('Total Viajes: ' + this.listaViajesLocales.length);
         }
       }));
   }
@@ -98,7 +100,7 @@ export class HomePage {
       // loading.present();
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 3, this.imei).then(() => {
         // loading.dismiss();
-        this.dataServices.actualizaViajeLocal(3, 0, idViaje).then(response => {
+        this.dataServices.actualizaViajeLocal(3, 0, idViaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Viaje Aceptado',
             buttons: ['OK']
@@ -117,7 +119,7 @@ export class HomePage {
         // loading.dismiss();
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
-            .then(() => this.dataServices.actualizaViajeLocal(3, 0, idViaje).then(response => {
+            .then(() => this.dataServices.actualizaViajeLocal(3, 0, idViaje, 0, '').then(response => {
               let alert = this.alertCtrl.create({
                 subTitle: 'Viaje Aceptado',
                 buttons: ['OK']
@@ -191,7 +193,7 @@ export class HomePage {
       });
   }
 
-  muestraMotivos(idViaje, idOrigen, idConcentrado, indice) {
+  MuestraMotivos(idViaje, idOrigen, idConcentrado) {
     this.imei = Device.uuid;
     let alert = this.alertCtrl.create();
     alert.setTitle('Motivos de Rechazo');
@@ -224,7 +226,7 @@ export class HomePage {
         this.idRechazoSelected = data;
 
         if (this.idRechazoSelected != null) {
-          this.RechazaViaje(idViaje, idOrigen, idConcentrado, indice);
+          this.RechazaViaje(idViaje, idOrigen, idConcentrado);
         }
 
       }
@@ -234,7 +236,7 @@ export class HomePage {
 
   }
 
-  RechazaViaje(idViaje, idOrigen, idConcentrado, indice) {
+  RechazaViaje(idViaje, idOrigen, idConcentrado) {
 
     //  let loading = this.loadingCtrl.create({
     //     content: 'Espere por favor ...'
@@ -244,7 +246,7 @@ export class HomePage {
 
     if (this.networkService.noConnection()) {
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, this.idRechazoSelected, 4, Device.uuid).then(() => {
-        this.dataServices.actualizaViajeLocal(4, this.idRechazoSelected, idViaje).then(response => {
+        this.dataServices.actualizaViajeLocal(4, this.idRechazoSelected, idViaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Viaje Rechazado',
             buttons: ['OK']
@@ -283,61 +285,59 @@ export class HomePage {
     }
   }
 
-  IniciarViaje(idViaje, idOrigen, idConcentrado, noEconomico) {
+  IniciarViaje(idViaje, idOrigen, idConcentrado, noEconomico, km, noRemolque) {
     Geolocation.getCurrentPosition()
       .then(position => {
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
       });
 
-    this.showPrompt(noEconomico);
+    let fecha = new Date();
+    let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
+    let coordenadas = this.lat + ',' + this.lng;
 
-    // let fecha = new Date();
-    // let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
-    // let coordenadas = this.lat + ',' + this.lng;
+    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
-    // if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
+    if (this.networkService.noConnection()) {
+      this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 5, Device.uuid, coordenadas, fechaEnviada, km, noRemolque).then(() => {
+        this.dataServices.actualizaViajeLocal(5, 0, idViaje, km, noRemolque).then(response => {
+          let alert = this.alertCtrl.create({
+            subTitle: 'Viaje Iniciado',
+            buttons: ['OK']
+          });
+          alert.present();
 
-    // if (this.networkService.noConnection()) {
-    //   this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 5, Device.device.uuid, coordenadas, fechaEnviada).then(() => {
-    //     this.dataServices.actualizaViajeLocal(5, 0, idViaje).then(response => {
-    //       let alert = this.alertCtrl.create({
-    //         subTitle: 'Viaje Iniciado',
-    //         buttons: ['OK']
-    //       });
-    //       alert.present();
+          this.obtieneViajesInternos();
+        });
+      });
+    }
+    else {
+      this.sodisaService.actualizaViaje(idOrigen, idConcentrado, this.username, 0, 5, Device.uuid, fechaEnviada, coordenadas, km, noRemolque).subscribe(data => {
+        // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 5, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
+        if (data.pResponseCode == 1) {
+          this.dataServices.openDatabase()
+            .then(() => this.dataServices.actualizaViajeLocal(5, 0, idViaje, km, noRemolque).then(response => {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Viaje Iniciado',
+                buttons: ['OK']
+              });
+              alert.present();
 
-    //       this.obtieneViajesInternos();
-    //     });
-    //   });
-    // }
-    // else {
-    //   this.sodisaService.actualizaViaje(idOrigen, idConcentrado, this.username, 0, 5, Device.device.uuid, fechaEnviada, coordenadas).subscribe(data => {
-    //     // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 5, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
-    //     if (data.pResponseCode == 1) {
-    //       this.dataServices.openDatabase()
-    //         .then(() => this.dataServices.actualizaViajeLocal(5, 0, idViaje).then(response => {
-    //           let alert = this.alertCtrl.create({
-    //             subTitle: 'Viaje Iniciado',
-    //             buttons: ['OK']
-    //           });
-    //           alert.present();
+              this.obtieneViajesInternos();
+            }));
+        }
+        else {
+          this.interpretaRespuesta(data);
 
-    //           this.obtieneViajesInternos();
-    //         }));
-    //     }
-    //     else {
-    //       this.interpretaRespuesta(data);
+          if (data.pResponseCode == -8) {
+            this.EliminaViajeDesasociado(idViaje, 0);
+          }
 
-    //       if (data.pResponseCode == -8) {
-    //         this.EliminaViajeDesasociado(idViaje, 0);
-    //       }
+          this.obtieneViajesInternos();
+        }
 
-    //       this.obtieneViajesInternos();
-    //     }
-
-    //   });
-    // }
+      });
+    }
   }
 
   TerminarViaje(idViaje, idOrigen, idConcentrado, indice) {
@@ -354,8 +354,8 @@ export class HomePage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, coordenadas, fechaEnviada).then(() => {
-        this.dataServices.actualizaViajeLocal(6, 0, idViaje).then(response => {
+      this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, coordenadas, fechaEnviada, '', '').then(() => {
+        this.dataServices.actualizaViajeLocal(6, 0, idViaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Viaje Terminado',
             buttons: ['OK']
@@ -367,7 +367,7 @@ export class HomePage {
       });
     }
     else {
-      this.sodisaService.actualizaViaje(idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, fechaEnviada, coordenadas).subscribe(data => {
+      this.sodisaService.actualizaViaje(idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, fechaEnviada, coordenadas, '', '').subscribe(data => {
         // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 6, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
@@ -394,41 +394,41 @@ export class HomePage {
     }
   }
 
-  showPrompt(noEconomico) {
-    let prompt = this.alertCtrl.create({
-      subTitle: 'Iniciar Viaje',
-      message: "",
-      inputs: [
-        {
-          name: 'odometro',
-          placeholder: 'Odómetro'
-        },
-        {
-          name: 'remolque',
-          placeholder: 'Remolque',
-          value: noEconomico
-        },
-      ],
-      buttons: [
-        {
-          text: 'Iniciar Viaje',
-          cssClass: 'customButton',
-          handler: data => {
-            let respMsg = this.validarDatos(data.odometro, data.remolque);
-            if (respMsg != 'OK') {
-              let toast = this.toastCtrl.create({
-                message: respMsg,
-                duration: 2000,
-                position: 'middle'
-              });
-              toast.present();
-            }
-          }
-        }
-      ]
-    });
-    prompt.present();
-  }
+  // showPrompt(noEconomico) {
+  //   let prompt = this.alertCtrl.create({
+  //     subTitle: 'Iniciar Viaje',
+  //     message: "",
+  //     inputs: [
+  //       {
+  //         name: 'odometro',
+  //         placeholder: 'Odómetro'
+  //       },
+  //       {
+  //         name: 'remolque',
+  //         placeholder: 'Remolque',
+  //         value: noEconomico
+  //       },
+  //     ],
+  //     buttons: [
+  //       {
+  //         text: 'Iniciar Viaje',
+  //         cssClass: 'customButton',
+  //         handler: data => {
+  //           let respMsg = this.validarDatos(data.odometro, data.remolque);
+  //           if (respMsg != 'OK') {
+  //             let toast = this.toastCtrl.create({
+  //               message: respMsg,
+  //               duration: 2000,
+  //               position: 'middle'
+  //             });
+  //             toast.present();
+  //           }
+  //         }
+  //       }
+  //     ]
+  //   });
+  //   prompt.present();
+  // }
 
   validarDatos(km, remolque) {
     let respuesta = '';
@@ -450,14 +450,14 @@ export class HomePage {
     }
   }
 
-  openModal() {
-    alert('entra modal');
+  OpenModal(idViaje, idOrigen, idConcentrado, economico) {
     let modal = this.modalCtrl.create(ModalPage);
     modal.present();
 
     modal.onDidDismiss(res => {
-      alert('Odometro: ' + res.km);
-      alert('No. remolque: ' + res.remolque);
+      if (res.km != 0 && res.remolque != 0) {
+        this.IniciarViaje(idViaje, idOrigen, idConcentrado, economico, res.km, res.remolque);
+      }
     });
   }
 
@@ -475,7 +475,7 @@ export class HomePage {
     let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
 
     let options = {
-      quality: 25,
+      quality: 50,
       destinationType: Camera.DestinationType.DATA_URL,
       // destinationType: 0,
       sourceType: 1,
@@ -508,6 +508,10 @@ export class HomePage {
 
   }
 
+  ViajesAsignados() {
+    this.navCtrl.setRoot(ViajeAsignadoPage);
+  }
+
 
   //////////////////////////////////////////////////////////////////////////////
 
@@ -533,9 +537,7 @@ export class HomePage {
     });
   }
 
-  viajesAsignados() {
-    this.navCtrl.setRoot(ViajeAsignadoPage);
-  }
+
 
   viajeTracking() {
     this.navCtrl.setRoot(NuevoViajePage);
