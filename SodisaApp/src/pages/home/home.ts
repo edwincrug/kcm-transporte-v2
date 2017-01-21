@@ -34,8 +34,10 @@ export class HomePage {
   nombre: string;
   economico: string;
   idRechazoSelected;
+  idParadaSelected;
   lat: any;
   lng: any;
+
 
   constructor(public navCtrl: NavController, private platform: Platform, public params: NavParams,
     public modalCtrl: ModalController, private loadingCtrl: LoadingController, public alertCtrl: AlertController,
@@ -80,11 +82,9 @@ export class HomePage {
       .then(() => this.dataServices.checkViajesAsignados().then(response => {
         if (response.length > 0) {
           this.listaViajesLocales = response;
-          alert('Total Viajes: ' + this.listaViajesLocales.length);
         }
         else {
           this.listaViajesLocales = [];
-          alert('Total Viajes: ' + this.listaViajesLocales.length);
         }
       }));
   }
@@ -394,42 +394,6 @@ export class HomePage {
     }
   }
 
-  // showPrompt(noEconomico) {
-  //   let prompt = this.alertCtrl.create({
-  //     subTitle: 'Iniciar Viaje',
-  //     message: "",
-  //     inputs: [
-  //       {
-  //         name: 'odometro',
-  //         placeholder: 'Odómetro'
-  //       },
-  //       {
-  //         name: 'remolque',
-  //         placeholder: 'Remolque',
-  //         value: noEconomico
-  //       },
-  //     ],
-  //     buttons: [
-  //       {
-  //         text: 'Iniciar Viaje',
-  //         cssClass: 'customButton',
-  //         handler: data => {
-  //           let respMsg = this.validarDatos(data.odometro, data.remolque);
-  //           if (respMsg != 'OK') {
-  //             let toast = this.toastCtrl.create({
-  //               message: respMsg,
-  //               duration: 2000,
-  //               position: 'middle'
-  //             });
-  //             toast.present();
-  //           }
-  //         }
-  //       }
-  //     ]
-  //   });
-  //   prompt.present();
-  // }
-
   validarDatos(km, remolque) {
     let respuesta = '';
 
@@ -509,7 +473,80 @@ export class HomePage {
   }
 
   ViajesAsignados() {
-    this.navCtrl.setRoot(ViajeAsignadoPage);
+    this.navCtrl.setRoot(ViajeAsignadoPage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      eco: this.economico
+    });
+  }
+
+  MuestraParadas(idViaje, idOrigen, idConcentrado) {
+    this.imei = Device.uuid;
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Motivos Parada en Ruta');
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Carga de combustible',
+      value: '1',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Manifestación',
+      value: '2',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Mal clima',
+      value: '3',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Comida',
+      value: '4',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Descanso',
+      value: '6',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Otro',
+      value: '7',
+      checked: false
+    });
+
+    alert.addButton('Cerrar');
+    alert.addButton({
+      text: 'Aceptar',
+      handler: data => {
+        this.idParadaSelected = data;
+
+        if (this.idParadaSelected != null) {
+          this.OpenModalParadas(idViaje, idOrigen, idConcentrado);
+        }
+
+      }
+    });
+
+    alert.present();
+
+  }
+
+  OpenModalParadas(idViaje, idOrigen, idConcentrado) {
+    let modal = this.modalCtrl.create(ModalParadasPage);
+    modal.present();
   }
 
 

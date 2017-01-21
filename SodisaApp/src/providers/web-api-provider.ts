@@ -64,7 +64,7 @@ export class WebApiProvider {
 
     let body = "{ intIdOrigenIn: " + idOrigen + ", strIdConcentradoVc: '" + idConcentrado + "', strIdOperadorVc: '" + idOperador
       + "', strIdDocumentoVc: " + idDocumento + ", intIdEstatusViajeIn: " + idEstatusViaje + ", strIdDispositivo: '" + idDispositivo
-      + "', datFechaEventoDt: '" + fecha + "', strGeoLocalizacionEventoVc: '" + coordenadas + "', bytEvidenciaFotrograficaBy: '', " +
+      + "', datFechaEventoDt: '" + fecha + "', strGeoLocalizacionEventoVc: '" + coordenadas + "', evidenciaFotograficaVc: null, " +
       "decKilometrajeEventoDc: " + km + ", strIdNumeroEconomicoRemolqueVc: '" + noRemolque + "' }";
 
     return this.http.post(this.url + 'actualizaEstatusViaje', body, options)

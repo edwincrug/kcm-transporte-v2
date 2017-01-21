@@ -1,6 +1,6 @@
 <ion-header>
     <ion-toolbar color="secondary">
-        <ion-title>Juan Pérez Arriaga (3)</ion-title>
+        <ion-title>{{nombre}} (3)</ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -23,13 +23,13 @@
 
     <ion-card *ngIf="listaViajesLocales.length == 0">
         <ion-card-header>
-            Sin Viajes Aceptados
+            No Has Aceptado Ningún Viaje
         </ion-card-header>
         <ion-item>
             <h2><strong>Importante:</strong></h2>
         </ion-item>
         <ion-card-content>
-            <p>Diríjase a la bandeja de viajes asignados para aceptar los viajes.</p>
+            <p>Por favor dirígete a la bandeja de viajes asignados.</p>
         </ion-card-content>
     </ion-card>
 
@@ -38,8 +38,8 @@
             <ion-icon name="speedometer" item-left></ion-icon>
             <h2>Concentrado #{{viaje.idConcentrado}}</h2>
             <p>Aceptado 11/01/17 11:34</p>
-            <p>Estatus: {{viaje.idEstatus}}</p>
-            <p>IdMovimiento: {{viaje.idMovimiento}}</p>
+            <!--<p>Estatus: {{viaje.idEstatus}}</p>
+            <p>IdMovimiento: {{viaje.idMovimiento}}</p>-->
         </ion-item>
         <sebm-google-map *ngIf="viaje.idEstatus == 2 || viaje.idEstatus == 3 || viaje.idEstatus == 5" id="map" [latitude]="map.lat"
             [longitude]="map.lng" [zoom]="map.zoom">
@@ -79,7 +79,7 @@
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Iniciar Viaje
             </button>
-            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left clear item-right (click)="OpenParadas(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left clear item-right (click)="MuestraParadas(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
                 color="primary">
                 <ion-icon name="hand"></ion-icon>
                 Parada
@@ -95,17 +95,17 @@
                 Llegada
             </button>
 
-            <button *ngIf="viaje.idEstatus == 7 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
+            <button *ngIf="viaje.idEstatus == 9 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
                 color="sync">
                 <ion-icon name="play"></ion-icon>
                 Inicia Maniobra
             </button>
-            <button *ngIf="viaje.idEstatus == 7 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
+            <button *ngIf="viaje.idEstatus == 11 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
                 color="primary">
                 <ion-icon name="move"></ion-icon>
-                Carga/Descarga
+                Andén
             </button>
-            <button *ngIf="viaje.idEstatus == 7 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
+            <button *ngIf="viaje.idEstatus == 12 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, i)"
                 color="alert">
                 <ion-icon name="square"></ion-icon>
                 Terminar Maniobra

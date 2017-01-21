@@ -21,9 +21,9 @@
 <ion-content padding>
   <ion-list>
     <ion-item>
-      <ion-label color="secondary" stacked>Motivo: </ion-label>
+      <ion-label color="secondary" stacked>Motivo</ion-label>
       <br>
-      <ion-label color="primary" stacked>Manifestación </ion-label>
+      <ion-label color="primary" stacked>Mal clima</ion-label>
 
     </ion-item>
 
@@ -33,14 +33,27 @@
     </ion-item>
   </ion-list>
 
-  <button ion-button block icon-left round color="secondary" (click)="dismiss()">        
+  <br>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col width-50>
+        <ion-card>
+          <img [src]="base64Image" *ngIf="base64Image" />
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <button ion-button block icon-left round color="secondary" (click)="CapturaEvidencia()">        
         <ion-icon name="camera"></ion-icon>
         Capturar Evidencia
       </button>
   <br>
   <br>
   <br>
-  <button ion-button block icon-left round color="primary" (click)="dismiss()">        
+  <button ion-button block icon-left round color="primary" (click)="EnviaEvidencia()">        
         <ion-icon name="checkbox"></ion-icon>
         Aceptar
       </button>

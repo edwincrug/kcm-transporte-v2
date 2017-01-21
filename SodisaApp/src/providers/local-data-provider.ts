@@ -75,7 +75,7 @@ export class LocalDataProvider {
   }
 
   checkViajesAsignados() {
-    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (3, 5, 6)';
+    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (3, 5, 6, 9, 11, 12)';
     return this.db.executeSql(sql, [])
       .then(response => {
         let hayViajes = [];
@@ -102,7 +102,7 @@ export class LocalDataProvider {
             travels[x].pIdEstatus + ", 1, 0, '" +
             travels[x].pGeoLocalizacionOrigen + "', " +
             travels[x].pHorasDistanciaIn + ", " +
-            travels[x].pKilometrosDistanciaIn + ", " + 
+            travels[x].pKilometrosDistanciaIn + ", " +
             travels[x].pIdTipoMovimientoIn + ");";
 
           this.db.executeSql(this.sqlQuery, []);
@@ -240,6 +240,18 @@ export class LocalDataProvider {
       noRemolque + "'); ";
 
     return this.db.executeSql(viajeQuery, []);
+  }
+
+  ViajeManiobraAsignados() {
+    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (2, 8)';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        let hayViajes = [];
+        for (let index = 0; index < response.rows.length; index++) {
+          hayViajes.push(response.rows.item(index));
+        }
+        return Promise.resolve(hayViajes);
+      });
   }
 
 }
