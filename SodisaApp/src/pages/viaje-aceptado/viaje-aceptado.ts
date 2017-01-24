@@ -6,7 +6,6 @@ import { ModalPage } from '../modal/modal';
 import { ModalAccidentePage } from '../modal-accidente/modal-accidente';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { HomePage } from '../home/home';
-import { DocumentacionPage } from '../documentacion/documentacion';
 import { ViajeTerminadoPage } from '../viaje-terminado/viaje-terminado';
 import { SincronizacionPage } from '../sincronizacion/sincronizacion';
 import { ModalParadasPage } from '../modal-paradas/modal-paradas';

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { Geolocation, Device, Camera, Transfer } from 'ionic-native';
+import { Geolocation, Device } from 'ionic-native';
 import { NavController, Platform, NavParams, ModalController, LoadingController, AlertController, ToastController } from 'ionic-angular';
 
 import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { ModalPage } from '../modal/modal';
-import { ModalAccidentePage } from '../modal-accidente/modal-accidente';
 import { SincronizacionPage } from '../sincronizacion/sincronizacion';
 import { ModalParadasPage } from '../modal-paradas/modal-paradas';
 import { ModalIncidentePage } from '../modal-incidente/modal-incidente';
@@ -37,6 +36,7 @@ export class HomePage {
   idParadaSelected;
   lat: any;
   lng: any;
+  idIncidenteSelected;
 
 
   constructor(public navCtrl: NavController, private platform: Platform, public params: NavParams,
@@ -340,7 +340,7 @@ export class HomePage {
     }
   }
 
-  TerminarViaje(idViaje, idOrigen, idConcentrado, indice) {
+  TerminarViaje(idViaje, idOrigen, idConcentrado, noEconomico, km, noRemolque) {
     Geolocation.getCurrentPosition()
       .then(position => {
         this.lat = position.coords.latitude;
@@ -354,31 +354,49 @@ export class HomePage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, coordenadas, fechaEnviada, '', '').then(() => {
+      this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, coordenadas, fechaEnviada, km, noRemolque).then(() => {
         this.dataServices.actualizaViajeLocal(6, 0, idViaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
-            subTitle: 'Viaje Terminado',
+            subTitle: 'Llegada exitosa',
             buttons: ['OK']
           });
           alert.present();
 
-          this.obtieneViajesInternos();
+          this.navCtrl.setRoot(ViajeTerminadoPage, {
+            usuario: this.username,
+            nombre: this.nombre,
+            eco: this.economico,
+            odometroFinal: km,
+            noRemolque: noRemolque,
+            idViaje: idViaje,
+            idOrigen: idOrigen,
+            idConcentrado: idConcentrado
+          });
         });
       });
     }
     else {
-      this.sodisaService.actualizaViaje(idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, fechaEnviada, coordenadas, '', '').subscribe(data => {
+      this.sodisaService.actualizaViaje(idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, fechaEnviada, coordenadas, km, noRemolque).subscribe(data => {
         // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 6, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.eliminaViajeLocal(idViaje).then(response => {
               let alert = this.alertCtrl.create({
-                subTitle: 'Viaje Terminado',
+                subTitle: 'Llegada exitosa',
                 buttons: ['OK']
               });
               alert.present();
 
-              this.obtieneViajesInternos();
+              this.navCtrl.setRoot(ViajeTerminadoPage, {
+                usuario: this.username,
+                nombre: this.nombre,
+                eco: this.economico,
+                odometroFinal: km,
+                noRemolque: noRemolque,
+                idViaje: idViaje,
+                idOrigen: idOrigen,
+                idConcentrado: idConcentrado
+              });
             }));
         }
         else {
@@ -395,8 +413,6 @@ export class HomePage {
   }
 
   validarDatos(km, remolque) {
-    let respuesta = '';
-
     if ((km == null || km.trim() == '') && (remolque == null || remolque.trim() == '')) {
       return 'Los campos Odómetro y Remolque son obligatorios';
     }
@@ -414,62 +430,22 @@ export class HomePage {
     }
   }
 
-  OpenModal(idViaje, idOrigen, idConcentrado, economico) {
-    let modal = this.modalCtrl.create(ModalPage);
+  OpenModal(idViaje, idOrigen, idConcentrado, economico, idTipoOdometro) {
+    let modal = this.modalCtrl.create(ModalPage, {
+      idTipoOdometro: idTipoOdometro
+    });
     modal.present();
 
     modal.onDidDismiss(res => {
       if (res.km != 0 && res.remolque != 0) {
-        this.IniciarViaje(idViaje, idOrigen, idConcentrado, economico, res.km, res.remolque);
+        if (idTipoOdometro == 1) {
+          this.IniciarViaje(idViaje, idOrigen, idConcentrado, economico, res.km, res.remolque);
+        }
+        else {          
+          this.TerminarViaje(idViaje, idOrigen, idConcentrado, economico, res.km, res.remolque);
+        }
       }
     });
-  }
-
-  OpenParadas(idViaje, idOrigen, idConcentrado) {
-    Geolocation.getCurrentPosition()
-      .then(position => {
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
-      });
-
-    let coordenadas = this.lat + ',' + this.lng;
-    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
-
-    let fecha = new Date();
-    let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
-
-    let options = {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      // destinationType: 0,
-      sourceType: 1,
-      encodingType: Camera.EncodingType.JPEG,
-      correctOrientation: true  //Corrects Android orientation quirks
-    }
-
-    Camera.getPicture(options).then((imageData) => {
-      let base64Image = 'data:image/jpeg;base64,' + imageData;
-      // fileTransfer.upload(imageData, 'http://dev1.sodisamovil.kcm.com.mx/_WebAPI/Operador/recibeParadaOIncidente', )
-      //   .then((data) => {
-      //     // success
-      //   }, (err) => {
-      //     // error
-      //   })
-
-      // let cadena = 'Solo Cadena!';
-
-      // // Encode the String
-      // let encodedString = btoa(cadena);
-
-
-      this.sodisaService.RegistraParadaIncidente('M54321', idOrigen, idConcentrado, 1, 1, imageData, 'Con foto', coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
-        alert('Todo OK: ' + data.pResponseCode);
-      });
-    }, (err) => {
-      alert('Hubo error en cámara');
-    });
-
-
   }
 
   ViajesAsignados() {
@@ -546,6 +522,74 @@ export class HomePage {
 
   OpenModalParadas(idViaje, idOrigen, idConcentrado) {
     let modal = this.modalCtrl.create(ModalParadasPage);
+    modal.present();
+  }
+
+  MuestraIncidentes(idViaje, idOrigen, idConcentrado) {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Incidentes');
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Bloqueo de tarjeta Iave',
+      value: '1',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Desvió de ruta',
+      value: '2',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Falla mecánica',
+      value: '3',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Intento de robo',
+      value: '4',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Siniestro Unidad',
+      value: '6',
+      checked: false
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Otro',
+      value: '7',
+      checked: false
+    });
+
+    alert.addButton('Cerrar');
+    alert.addButton({
+      text: 'Aceptar',
+      handler: data => {
+        this.idIncidenteSelected = data;
+
+        if (this.idIncidenteSelected != null) {
+          this.OpenModalIncidentes(idViaje, idOrigen, idConcentrado);
+        }
+
+      }
+    });
+
+    alert.present();
+
+  }
+
+  OpenModalIncidentes(idViaje, idOrigen, idConcentrado) {
+    let modal = this.modalCtrl.create(ModalIncidentePage);
     modal.present();
   }
 

@@ -16,6 +16,7 @@ import { WebApiProvider } from '../../providers/web-api-provider';
 })
 export class ModalParadasPage {
   base64Image;
+  imagenSend;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
     public sodisaService: WebApiProvider) { }
@@ -31,34 +32,31 @@ export class ModalParadasPage {
   CapturaEvidencia() {
     let options = {
       quality: 50,
-      destinationType: Camera.DestinationType.NATIVE_URI,
-      // destinationType: 0,
-      sourceType: 1,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      allowEdit: false,
       encodingType: Camera.EncodingType.JPEG,
-      correctOrientation: true  //Corrects Android orientation quirks
-    }
+      saveToPhotoAlbum: false,
+      correctOrientation: true
+    };
 
     Camera.getPicture(options).then((imageData) => {
-      this.base64Image = 'data:image/jpeg;base64,' + imageData;
+      this.base64Image = "data:image/jpeg;base64," + imageData;
+      this.imagenSend = imageData;
 
     });
   }
 
   EnviaEvidencia() {
-    Camera.getPicture({
-      sourceType: Camera.PictureSourceType.CAMERA,
-      destinationType: Camera.DestinationType.DATA_URL
-    }).then((imageData) => {
+    if (this.imagenSend != null) {
 
-      this.sodisaService.RegistraParadaIncidente('M54321', 22, 605343, 1, 1, imageData, 'Con foto', '0,0', '2017-01-20 17:50', Device.uuid).subscribe(data => {
+      this.sodisaService.RegistraParadaIncidente('M54321', 22, 605343, 1, 1, this.imagenSend, 'Con foto', '0,0', '2017-01-20 17:50', Device.uuid).subscribe(data => {
         alert('Todo OK: ' + data.pResponseCode);
       }, (err) => {
         alert('Hubo error en cámara');
       });
 
-    }, (err) => {
-      console.log(err);
-    });
+    }
   }
 
 }

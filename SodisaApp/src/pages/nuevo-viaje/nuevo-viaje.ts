@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, AlertController, Platform, ViewController } from 'ionic-angular';
-import { Geolocation } from 'ionic-native';
+import { NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 
 import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
 import { HomePage } from '../home/home';

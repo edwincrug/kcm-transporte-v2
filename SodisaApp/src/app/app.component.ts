@@ -6,7 +6,6 @@ import { Http } from '@angular/http';
 import { LoginPage } from '../pages/login/login';
 
 import { WebApiProvider } from '../providers/web-api-provider';
-import { NetworkProvider } from '../providers/network-provider';
 import { LocalDataProvider } from '../providers/local-data-provider';
 
 

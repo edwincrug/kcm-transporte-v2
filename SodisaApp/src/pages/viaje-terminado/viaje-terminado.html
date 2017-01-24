@@ -13,7 +13,7 @@
 </ion-header>
 
 
-<ion-content padding class="HomePage">
+<ion-content padding>
   <sebm-google-map id="map" [latitude]="map.lat" [longitude]="map.lng" [zoom]="map.zoom">
     <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
       <sebm-google-map-info-window>
@@ -34,10 +34,10 @@
     <br>
     <ion-row>
       <ion-col width-33>
-        <button ion-button round color="primary" (click)="redirectHome()">Terminar Viaje</button>
+        <button ion-button round color="primary" (click)="TerminarViaje()">Terminar Viaje</button>
       </ion-col>
       <ion-col offset-25 width-50>
-        <button ion-button round color="sync" (click)="redirectManiobra()">Maniobra</button>
+        <button ion-button round color="sync" (click)="RedirectManiobra()">Maniobra</button>
       </ion-col>
     </ion-row>
   </ion-grid>

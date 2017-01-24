@@ -14,8 +14,16 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
 export class ModalPage {
   odometro: string;
   remolque: string;
+  tipoOdometro: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) { }
+  constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController) {
+    if (params.get('idTipoOdometro') == 1) {
+      this.tipoOdometro = 'Inicial';
+    }
+    else {
+      this.tipoOdometro = 'Final';
+    }
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalPage');
@@ -26,8 +34,6 @@ export class ModalPage {
   }
 
   validarDatos() {
-    let respuesta = '';
-
     if ((this.odometro == null || this.odometro.trim() == '') && (this.remolque == null || this.remolque.trim() == '')) {
       alert('Los campos Odómetro y Remolque son obligatorios');
     }
@@ -42,7 +48,6 @@ export class ModalPage {
     }
     else {
       this.viewCtrl.dismiss({ km: this.odometro, remolque: this.remolque });
-      //this.viewCtrl.dismiss();
     }
   }
 
