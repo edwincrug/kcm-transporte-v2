@@ -25,7 +25,7 @@ export class ViajeTerminadoPage {
   lng: any;
   username: string;
   nombre: string;
-  economico: string;
+  noTracto: string;
   mensaje: string;
   odometro: number;
   remolque: string;
@@ -39,12 +39,12 @@ export class ViajeTerminadoPage {
 
     this.username = params.get('usuario');
     this.nombre = params.get('nombre');
-    this.economico = params.get('eco');
+    this.noTracto = params.get('noTracto');
     this.odometro = params.get('odometroFinal');
     this.remolque = params.get('noRemolque');
     this.viaje = params.get('idViaje');
     this.origen = params.get('idOrigen');
-    this.concentrado = params.get('idConcentrado');    
+    this.concentrado = params.get('idConcentrado');
 
     this.loadMap();
     this.map = { lat: 0, lng: 0, zoom: 15 };
@@ -73,7 +73,6 @@ export class ViajeTerminadoPage {
   }
 
   TerminarViaje() {
-    alert('Entra a terminar viaje');
     Geolocation.getCurrentPosition()
       .then(position => {
         this.lat = position.coords.latitude;
@@ -98,13 +97,13 @@ export class ViajeTerminadoPage {
           this.navCtrl.setRoot(HomePage, {
             usuario: this.username,
             nombre: this.nombre,
-            eco: this.economico
+            eco: this.noTracto
           });
         });
       });
     }
     else {
-      this.sodisaService.actualizaViaje(this.origen, this.concentrado, this.username, 0, 7, Device.uuid, fechaEnviada, coordenadas, this.odometro, this.remolque).subscribe(data => {
+      this.sodisaService.actualizaViaje(this.origen, this.concentrado, this.username, 0, 7, Device.uuid, fechaEnviada, coordenadas, this.odometro, this.remolque, null).subscribe(data => {
         // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 7, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
@@ -118,7 +117,7 @@ export class ViajeTerminadoPage {
               this.navCtrl.setRoot(HomePage, {
                 usuario: this.username,
                 nombre: this.nombre,
-                eco: this.economico
+                eco: this.noTracto
               });
 
             }));
@@ -133,7 +132,7 @@ export class ViajeTerminadoPage {
           this.navCtrl.setRoot(HomePage, {
             usuario: this.username,
             nombre: this.nombre,
-            eco: this.economico
+            eco: this.noTracto
           });
         }
       });
@@ -165,13 +164,13 @@ export class ViajeTerminadoPage {
           this.navCtrl.setRoot(HomePage, {
             usuario: this.username,
             nombre: this.nombre,
-            eco: this.economico
+            eco: this.noTracto
           });
         });
       });
     }
     else {
-      this.sodisaService.actualizaViaje(this.origen, this.concentrado, this.username, 0, 9, Device.uuid, fechaEnviada, coordenadas, 0, '').subscribe(data => {
+      this.sodisaService.actualizaViaje(this.origen, this.concentrado, this.username, 0, 9, Device.uuid, fechaEnviada, coordenadas, 0, '', null).subscribe(data => {
         // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 9, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
@@ -185,7 +184,7 @@ export class ViajeTerminadoPage {
               this.navCtrl.setRoot(HomePage, {
                 usuario: this.username,
                 nombre: this.nombre,
-                eco: this.economico
+                eco: this.noTracto
               });
 
             }));
@@ -200,7 +199,7 @@ export class ViajeTerminadoPage {
           this.navCtrl.setRoot(HomePage, {
             usuario: this.username,
             nombre: this.nombre,
-            eco: this.economico
+            eco: this.noTracto
           });
         }
       });

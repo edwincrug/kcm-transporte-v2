@@ -24,13 +24,13 @@
         <p>
           Destino: {{viaje.destino}}
         </p>
-        <button round ion-button icon-left color="light" (click)="ViajeTracking()">
+        <!--<button round ion-button icon-left color="light" (click)="ViajeTracking()">
           <ion-icon name="eye"></ion-icon>
               Ver
-         </button>
+         </button>-->
       </ion-item>
       <ion-item-options>
-        <button ion-button color="primary" icon-left (click)="AceptaViajeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.idMovimiento)">
+        <button ion-button color="primary" icon-left (click)="AceptaViajeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.idMovimiento, viaje.economico)">
           <ion-icon name="checkbox"></ion-icon>
           Aceptar
         </button>

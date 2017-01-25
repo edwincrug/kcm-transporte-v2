@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
-import { Camera, Device } from 'ionic-native';
+import { NavController, NavParams, ViewController, ToastController, AlertController } from 'ionic-angular';
+import { Camera, Device, Geolocation } from 'ionic-native';
+
+import { LoginPage } from '../login/login';
 
 import { WebApiProvider } from '../../providers/web-api-provider';
 
@@ -17,9 +19,34 @@ import { WebApiProvider } from '../../providers/web-api-provider';
 export class ModalParadasPage {
   base64Image;
   imagenSend;
+  lat: any;
+  lng: any;
+  idViaje;
+  idOrigen;
+  idConcentrado;
+  userName: string;
+  idParada;
+  observaciones: string;
+  mensaje: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
-    public sodisaService: WebApiProvider) { }
+
+  constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
+    public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController) {
+
+    this.idViaje = params.get('viaje');
+    this.idOrigen = params.get('origen');
+    this.idConcentrado = params.get('concentrado');
+    this.userName = params.get('usuario');
+    this.idParada = params.get('parada');
+
+
+    Geolocation.getCurrentPosition()
+      .then(position => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
+
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalParadasPage');
@@ -48,15 +75,72 @@ export class ModalParadasPage {
   }
 
   EnviaEvidencia() {
-    if (this.imagenSend != null) {
+    Geolocation.getCurrentPosition()
+      .then(position => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
 
-      this.sodisaService.RegistraParadaIncidente('M54321', 22, 605343, 1, 1, this.imagenSend, 'Con foto', '0,0', '2017-01-20 17:50', Device.uuid).subscribe(data => {
-        alert('Todo OK: ' + data.pResponseCode);
+    let fecha = new Date();
+    let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
+    let coordenadas = this.lat + ',' + this.lng;
+
+    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
+
+    if (this.imagenSend != null) {
+      this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 1, this.idParada, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
+        if (data.pResponseCode == 1) {
+          let alert = this.alertCtrl.create({
+            subTitle: 'Parada Permitida Registrada',
+            buttons: ['OK']
+          });
+          alert.present();
+
+          this.dismiss();
+        }
+        else {
+          this.interpretaRespuesta(data);
+        }
+
       }, (err) => {
         alert('Hubo error en cámara');
+        this.dismiss();
       });
 
     }
   }
+  
+  interpretaRespuesta(codigoRespuesta) {
+    switch (codigoRespuesta.pResponseCode) {
+      case -1:
+        this.mensaje = "Usuario no registrado";
+        break;
+      case -2:
+        this.mensaje = "Más de un dispositivo asignado";
+        break;
+      case -3:
+        this.mensaje = "Credenciales incorrectas";
+        break;
+      case -4:
+        this.mensaje = "Dispositivo no asignado";
+        break;
+      case -5:
+        this.mensaje = "La sesión expiro";
+        break;
+      case -8:
+        this.mensaje = "Este viaje fue desasignado";
+        break;
+    }
 
+    let toast = this.toastCtrl.create({
+      message: this.mensaje,
+      duration: 2000,
+      position: 'middle'
+    });
+    toast.present();
+
+    if (codigoRespuesta.pResponseCode == -5) {
+      this.navCtrl.setRoot(LoginPage);
+    }
+  }
 }

@@ -58,14 +58,14 @@ export class WebApiProvider {
       });
   }
 
-  actualizaViaje(idOrigen, idConcentrado, idOperador, idDocumento, idEstatusViaje, idDispositivo, fecha, coordenadas, km, noRemolque): Observable<any> {
+  actualizaViaje(idOrigen, idConcentrado, idOperador, idDocumento, idEstatusViaje, idDispositivo, fecha, coordenadas, km, noRemolque, evidencia): Observable<any> {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
     let body = "{ intIdOrigenIn: " + idOrigen + ", strIdConcentradoVc: '" + idConcentrado + "', strIdOperadorVc: '" + idOperador
       + "', strIdDocumentoVc: " + idDocumento + ", intIdEstatusViajeIn: " + idEstatusViaje + ", strIdDispositivo: '" + idDispositivo
-      + "', datFechaEventoDt: '" + fecha + "', strGeoLocalizacionEventoVc: '" + coordenadas + "', evidenciaFotograficaVc: null, " +
-      "decKilometrajeEventoDc: " + km + ", strIdNumeroEconomicoRemolqueVc: '" + noRemolque + "' }";
+      + "', datFechaEventoDt: '" + fecha + "', strGeoLocalizacionEventoVc: '" + coordenadas + "', evidenciaFotograficaVc: '" + evidencia
+      + "', decKilometrajeEventoDc: " + km + ", strIdNumeroEconomicoRemolqueVc: '" + noRemolque + "' }";
 
     return this.http.post(this.url + 'actualizaEstatusViaje', body, options)
       .map((res: Response) => {
@@ -83,7 +83,7 @@ export class WebApiProvider {
       + "', observacionVc: '" + observacion + "', geoLocalizacionEventoVc: '" + geolocalizacion + "', fechaEventoDt: '" + fecha
       + "', strIdDispositivo: '" + idDispositivo + "' }";
 
-    alert('WebApi');
+    // alert('WebApi');
 
     return this.http.post(this.url + 'recibeParadaOIncidente', body, options)
       .map((res: Response) => {

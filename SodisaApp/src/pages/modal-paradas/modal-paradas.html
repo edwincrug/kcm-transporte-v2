@@ -29,7 +29,7 @@
 
     <ion-item>
       <ion-label color="secondary" stacked>Comentarios:</ion-label>
-      <ion-input type="text" placeholder=""></ion-input>
+      <ion-input [(ngModel)]="observaciones" type="text" placeholder=""></ion-input>
     </ion-item>
   </ion-list>
 
@@ -37,7 +37,7 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col width-80>
+      <ion-col offset-10 width-80>
         <ion-card>
           <img [src]="base64Image" *ngIf="base64Image" />
         </ion-card>

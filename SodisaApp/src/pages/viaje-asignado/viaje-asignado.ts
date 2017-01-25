@@ -70,7 +70,7 @@ export class ViajeAsignadoPage {
     });
   }
 
-  AceptaViajeManiobra(idViaje, idOrigen, idConcentrado, idTipoViaje) {
+  AceptaViajeManiobra(idViaje, idOrigen, idConcentrado, idTipoViaje, noRemolque) {
     if (idTipoViaje == 1) {
       this.subTitulo = 'Viaje Aceptado';
       this.idEstatusActualizar = 3;
@@ -88,7 +88,7 @@ export class ViajeAsignadoPage {
       loading.present();
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, this.imei).then(() => {
         loading.dismiss();
-        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, '', '').then(response => {
+        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
           let alert = this.alertCtrl.create({
             subTitle: this.subTitulo,
             buttons: ['OK']
@@ -107,7 +107,7 @@ export class ViajeAsignadoPage {
         loading.dismiss();
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
-            .then(() => this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, '').then(response => {
+            .then(() => this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
               let alert = this.alertCtrl.create({
                 subTitle: this.subTitulo,
                 buttons: ['OK']

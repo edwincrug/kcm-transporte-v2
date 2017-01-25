@@ -82,7 +82,6 @@ export class LoginPage {
       this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
         loading.dismiss();
         this.credenciales = data;
-        alert('Viajes en login: ' + data.pListaViajeMovil.length);
         this.interpretaRespuesta(this.credenciales);
       });
     }

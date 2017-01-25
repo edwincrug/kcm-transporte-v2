@@ -16,19 +16,8 @@
 <ion-content padding>
   <ion-grid>
     <ion-row>
-      <ion-col width-50>
-        <img src="../../assets/images/factura.jpg">
-      </ion-col>
-      <ion-col width-50>
-        <img src="../../assets/images/factura2.jpg">
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col width-50>
-        <img src="../../assets/images/factura2.jpg">
-      </ion-col>
-      <ion-col width-50>
-        <img src="../../assets/images/factura.jpg">
+      <ion-col offset-10 width-80>
+        <img [src]="base64Image" *ngIf="base64Image" />
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -37,11 +26,13 @@
 <ion-footer padding class="bar-stable">
   <ion-grid>
     <ion-row>
-      <ion-col width-33>
-        <button ion-button round color="secondary" (click)="openCamera()">Capturar Evidencia</button>
+      <ion-col offset-10 width-80>
+        <button ion-button round color="secondary" (click)="CapturaEvidencia()">Capturar Evidencia</button>
       </ion-col>
-      <ion-col offset-25 width-50>
-        <button ion-button round color="danger" (click)="redirectHome()">Finalizar</button>
+    </ion-row>
+    <ion-row>
+      <ion-col offset-10 width-80>
+        <button ion-button round color="danger" (click)="EnviaEvidencia()">Finalizar</button>
       </ion-col>
     </ion-row>
   </ion-grid>

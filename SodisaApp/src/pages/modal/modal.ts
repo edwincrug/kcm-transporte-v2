@@ -17,6 +17,8 @@ export class ModalPage {
   tipoOdometro: string;
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController) {
+    this.remolque = params.get('noRemolque');
+
     if (params.get('idTipoOdometro') == 1) {
       this.tipoOdometro = 'Inicial';
     }

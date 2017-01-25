@@ -91,7 +91,7 @@ export class LocalDataProvider {
       let evitaDuplicadosQuery = "SELECT COUNT(*) AS Existe FROM Viaje WHERE idOrigen = ? AND idConcentrado = ?";
       this.db.executeSql(evitaDuplicadosQuery, [travels[x].pIdOrigen, travels[x].pIdConcentradoVc]).then(respuesta => {
         let existe = respuesta.rows.item(0).Existe;
-        if (existe == 0) {
+        if (existe == 0) {          
           this.sqlQuery = "INSERT INTO Viaje (idOrigen, origenNombre, idConcentrado, tipoViaje, economico, odometro, idEstatus, idUsuario, idRechazo, geolocalizacion, horasDistancia, kilometrosDistancia, idMovimiento) VALUES (" +
             travels[x].pIdOrigen + ", '" +
             travels[x].pOrigenNombre + "', '" +
