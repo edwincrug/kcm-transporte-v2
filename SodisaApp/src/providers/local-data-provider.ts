@@ -91,7 +91,7 @@ export class LocalDataProvider {
       let evitaDuplicadosQuery = "SELECT COUNT(*) AS Existe FROM Viaje WHERE idOrigen = ? AND idConcentrado = ?";
       this.db.executeSql(evitaDuplicadosQuery, [travels[x].pIdOrigen, travels[x].pIdConcentradoVc]).then(respuesta => {
         let existe = respuesta.rows.item(0).Existe;
-        if (existe == 0) {          
+        if (existe == 0) {
           this.sqlQuery = "INSERT INTO Viaje (idOrigen, origenNombre, idConcentrado, tipoViaje, economico, odometro, idEstatus, idUsuario, idRechazo, geolocalizacion, horasDistancia, kilometrosDistancia, idMovimiento) VALUES (" +
             travels[x].pIdOrigen + ", '" +
             travels[x].pOrigenNombre + "', '" +
@@ -245,6 +245,18 @@ export class LocalDataProvider {
   ViajeManiobraAsignados() {
     let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (2, 8)';
     return this.db.executeSql(sql, [])
+      .then(response => {
+        let hayViajes = [];
+        for (let index = 0; index < response.rows.length; index++) {
+          hayViajes.push(response.rows.item(index));
+        }
+        return Promise.resolve(hayViajes);
+      });
+  }
+
+  checkDetalleViaje(idViaje) {
+    let sql = 'SELECT * FROM ViajeDetalle WHERE ViajeDetalle.idViaje = ?';
+    return this.db.executeSql(sql, [idViaje])
       .then(response => {
         let hayViajes = [];
         for (let index = 0; index < response.rows.length; index++) {

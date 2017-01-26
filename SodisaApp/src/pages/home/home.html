@@ -67,17 +67,17 @@
         </ion-item>
         <ion-item>
 
-            <button *ngIf="viaje.idEstatus == 9 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 11)"
+            <button *ngIf="viaje.idEstatus == 9" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 11)"
                 color="sync">
                 <ion-icon name="play"></ion-icon>
                 Inicia Maniobra
             </button>
-            <button *ngIf="viaje.idEstatus == 11 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 12)"
+            <button *ngIf="viaje.idEstatus == 11" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 12)"
                 color="primary">
                 <ion-icon name="move"></ion-icon>
                 Andén
             </button>
-            <button *ngIf="viaje.idEstatus == 12 && viaje.idMovimiento == 2" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 13)"
+            <button *ngIf="viaje.idEstatus == 12" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 13)"
                 color="alert">
                 <ion-icon name="square"></ion-icon>
                 Terminar Maniobra

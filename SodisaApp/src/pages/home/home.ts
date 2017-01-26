@@ -380,7 +380,7 @@ export class HomePage {
         // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 6, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
-            .then(() => this.dataServices.eliminaViajeLocal(idViaje).then(response => {
+            .then(() => this.dataServices.actualizaViajeLocal(6, 0, idViaje, km, noRemolque).then(response => {
               let alert = this.alertCtrl.create({
                 subTitle: 'Llegada exitosa',
                 buttons: ['OK']
@@ -530,17 +530,6 @@ export class HomePage {
       parada: idParada
     });
     modal.present();
-
-    // modal.onDidDismiss(res => {
-    //   if (res.km != 0 && res.remolque != 0) {
-    //     if (idTipoOdometro == 1) {
-    //       this.IniciarViaje(idViaje, idOrigen, idConcentrado, res.km, res.remolque);
-    //     }
-    //     else {          
-    //       this.TerminarViaje(idViaje, idOrigen, idConcentrado, res.km, res.remolque);
-    //     }
-    //   }
-    // });
   }
 
   MuestraIncidentes(idViaje, idOrigen, idConcentrado) {
@@ -672,7 +661,7 @@ export class HomePage {
 
               if (idEstatus == 13) {
                 if (idTipoViaje == 2) {
-                  this.ManejoMercancia();
+                  this.ManejoMercancia(idViaje, idOrigen, idConcentrado);
                 }
                 else {
                   this.navCtrl.setRoot(EvidenciaPage, {
@@ -703,20 +692,33 @@ export class HomePage {
     }
   }
 
-  ManejoMercancia() {
+  ManejoMercancia(idViaje, idOrigen, idConcentrado) {
     let confirm = this.alertCtrl.create({
       subTitle: '¿Se realiza entrega de mercancía?',
       buttons: [
         {
           text: 'No',
           handler: () => {
-            this.navCtrl.setRoot(EvidenciaPage);
+            this.navCtrl.setRoot(EvidenciaPage, {
+              origen: idOrigen,
+              concentrado: idConcentrado,
+              usuario: this.username,
+              tipoEntrega: 2,
+              eco: this.noTracto
+            });
           }
         },
         {
           text: 'Si',
           handler: () => {
-            this.navCtrl.setRoot(DocumentacionPage);
+            this.navCtrl.setRoot(DocumentacionPage, {
+              idViaje: idViaje,
+              origen: idOrigen,
+              concentrado: idConcentrado,
+              usuario: this.username,
+              eco: this.noTracto,
+              nombre: this.nombre
+            });
           }
         }
       ]

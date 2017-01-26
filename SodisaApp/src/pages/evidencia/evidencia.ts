@@ -31,6 +31,9 @@ export class EvidenciaPage {
   idEstatus: any;
   noTracto: string;
   nombre: string;
+  listaFacturas = [];
+  estatusDoc: number;
+  lstDocumento = [];
 
   constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController,
     public sodisaService: WebApiProvider, public alertCtrl: AlertController, public toastCtrl: ToastController) {
@@ -40,6 +43,7 @@ export class EvidenciaPage {
     this.userName = params.get('usuario');
     this.idTipoEntrega = params.get('tipoEntrega');
     this.noTracto = params.get('eco');
+    this.listaFacturas = params.get('lstFacturas');
   }
 
   ionViewDidLoad() {
@@ -88,13 +92,63 @@ export class EvidenciaPage {
     if (this.idTipoEntrega == 1) {
       this.idDocumento = 0;
       this.idEstatus = 14
+
+      if (this.imagenSend != null) {
+        this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
+          if (data.pResponseCode == 1) {
+            let alert = this.alertCtrl.create({
+              subTitle: 'Trabajo Terminado',
+              buttons: ['OK']
+            });
+            alert.present();
+
+            this.navCtrl.setRoot(HomePage, {
+              usuario: this.userName,
+              nombre: this.nombre,
+              eco: this.noTracto
+            });
+          }
+          else {
+            this.interpretaRespuesta(data);
+          }
+
+        }, (err) => {
+          alert('Hubo error en cámara');
+        });
+
+      }
     }
     else {
-      this.idEstatus = 15
-    }
+      this.idEstatus = 15;
+      
+      for (let x = 0; x < this.listaFacturas.length; x++) {
 
-    if (this.imagenSend != null) {
-      this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
+        if (this.listaFacturas[x].idEstatus == true) {
+          this.estatusDoc = 14;
+        }
+        else {
+          this.estatusDoc = 15;
+        }
+
+        let detalleDocumento = {
+          pIdOperadorVc: this.userName,
+          pIdDispositvoVc: Device.uuid,
+          pIdLocalidadIn: this.idOrigen,
+          pIdDestinoIn: this.listaFacturas[x].cliente,
+          pIdConcentradoVc: this.idConcentrado,
+          pIdClienteAnteriorIn: this.listaFacturas[x].cliente,
+          pIdConsignatarioIn: this.listaFacturas[x].consignatario,
+          pIdDocumentoVc: this.listaFacturas[x].noFactura,
+          pIdEstatusViajeIn: this.estatusDoc,
+          pEvidenciaFotograficaVc: ' ',
+          pFechaEventoDt: fechaEnviada,
+          pGeoLocalizacionEventoVc: coordenadas
+        }
+
+        this.lstDocumento.push(detalleDocumento);
+      }
+
+      this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
         if (data.pResponseCode == 1) {
           let alert = this.alertCtrl.create({
             subTitle: 'Trabajo Terminado',
@@ -111,12 +165,12 @@ export class EvidenciaPage {
         else {
           this.interpretaRespuesta(data);
         }
-
       }, (err) => {
-        alert('Hubo error en cámara');
+        alert('Error webapi: ' + err);
       });
-
     }
+
+
   }
 
   interpretaRespuesta(codigoRespuesta) {

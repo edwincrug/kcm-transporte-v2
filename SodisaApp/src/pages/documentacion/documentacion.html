@@ -14,65 +14,29 @@
 
 
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
-      <ion-col width-80>
-        <ion-list>
-          <ion-item>
-            <h2>Cliente: Lumen</h2>
-            <h3>Concesionario: 3</h3>
-            <p>Factura: FA-DSFK-23423</p>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-checkbox color="secondary" checked="true" item-right></ion-checkbox>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+  <ion-card *ngFor="let factura of listaFacturas; let i = index">
 
-    <ion-row>
-      <ion-col width-80>
-        <ion-list>
-          <ion-item>
-            <h2>Cliente: Walmart</h2>
-            <h3>Concesionario: 0</h3>
-            <p>Factura: FA-WA324-ABFDQ</p>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-checkbox color="secondary" checked="false" item-right></ion-checkbox>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+    <ion-item>
+      <h2>Cliente:{{factura.cliente}}</h2>
+      <p>Consignatario: {{factura.consignatario}}</p>
+    </ion-item>
 
-    <ion-row>
-      <ion-col width-80>
-        <ion-list>
-          <ion-item>
-            <h2>Cliente: Chedraui</h2>
-            <h3>Concesionario: 234</h3>
-            <p>Factura: FA-CHQERWIO-13466</p>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-checkbox color="secondary" checked="true" item-right></ion-checkbox>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+    <ion-card-content>
+      <p>Factura: {{factura.noFactura}}</p>
+    </ion-card-content>
 
-  </ion-grid>
+    <ion-item>
+      <ion-label>Entrega: {{factura.labelEntrega}}</ion-label>
+      <ion-toggle [checked]="factura.idEstatus" (ionChange)="CambiaEtiqueta(factura.idEstatus, i)"></ion-toggle>
+    </ion-item>
 
+  </ion-card>
 
 </ion-content>
 
 <ion-footer class="bar-stable" padding>
   <div>
-    <button ion-button block round color="danger" (click)="redirectEvidencia()">Confirmar</button>
+    <button ion-button block round color="danger" (click)="RedirectEvidencia()">Confirmar</button>
   </div>
 </ion-footer>
+<!--[(ngModel)]="factura.idEstatus"-->

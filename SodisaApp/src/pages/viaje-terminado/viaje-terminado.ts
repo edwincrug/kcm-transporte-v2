@@ -171,10 +171,9 @@ export class ViajeTerminadoPage {
     }
     else {
       this.sodisaService.actualizaViaje(this.origen, this.concentrado, this.username, 0, 9, Device.uuid, fechaEnviada, coordenadas, 0, '', null).subscribe(data => {
-        // this.sodisaService.actualizaViaje(idOrigen, idConcentrado, 'C55163', 0, 9, 'aa1add0d87db4099', fechaEnviada, coordenadas).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
-            .then(() => this.dataServices.eliminaViajeLocal(this.viaje).then(response => {
+            .then(() => this.dataServices.actualizaViajeLocal(9, 0, this.viaje, this.odometro, this.remolque).then(response => {
               let alert = this.alertCtrl.create({
                 subTitle: 'Maniobra Aceptada',
                 buttons: ['OK']

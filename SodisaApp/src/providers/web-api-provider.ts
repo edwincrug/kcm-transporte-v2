@@ -91,4 +91,17 @@ export class WebApiProvider {
         return this.data;
       });
   }
+
+  actualizaViajeEntrega(idOperador, idDispositivo, facturaXML, evidencia): Observable<any> {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+
+    let body = "{ strIdOperadorVc: '" + idOperador + "', strIdDispositivo: '" + idDispositivo + "', strEvidenciaFotografica: '" + evidencia + "', lstDocumento: " + JSON.stringify(facturaXML) + " }";
+
+    return this.http.post(this.url + 'actualizaEstatusViajeEntrega', body, options)
+      .map((res: Response) => {
+        this.data = res.json();
+        return this.data;
+      });
+  }
 }
