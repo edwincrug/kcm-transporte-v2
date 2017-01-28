@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { Device } from 'ionic-native';
 
 import { NetworkProvider } from '../../providers/network-provider';
@@ -28,17 +28,14 @@ export class LoginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController,
     private loadingCtrl: LoadingController, public networkService: NetworkProvider, public dataServices: LocalDataProvider,
-    private sodisaService: WebApiProvider) { }
+    private sodisaService: WebApiProvider, public alertCtrl: AlertController) { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }
 
   validaCredenciales() {
-    // this.sodisaService.aceptaRechazaViaje(0, '101010', 'M72580', 0, 3, '6a98398898fe140c').subscribe(data => {
-    //     this.credenciales = data;
-    // });
-
+    alert('Entra a validar');
     this.imei = Device.uuid;
 
     let loading = this.loadingCtrl.create({
@@ -46,48 +43,57 @@ export class LoginPage {
       duration: 10000
     });
 
-    if (this.networkService.noConnection()) {
-      loading.present();
+    this.dataServices.openDatabase()
+      .then(() => this.dataServices.checkUsuario(this.username, this.password, this.imei).then(respuesta => {
+        if (respuesta == 'KO') {
+          alert('Credenciales incorrectas');
+          if (this.networkService.noConnection()) {
+            loading.dismiss();
 
-      this.dataServices.openDatabase()
-        .then(() => this.dataServices.checkUsuario(this.username, this.password, this.imei).then(respuesta => {
-          loading.dismiss();
-
-          if (respuesta == 'KO') {
-            alert('Credenciales incorrectas');
+            let alert = this.alertCtrl.create({
+              title: 'Sin Cobertura',
+              subTitle: 'Inténtelo más tarde',
+              buttons: ['OK']
+            });
+            alert.present();
           }
           else {
-            let toast = this.toastCtrl.create({
-              message: '¡Bienvenido ' + respuesta.Nombre + ' !',
-              duration: 1000,
-              position: 'middle'
-            });
-            toast.present();
-
-            this.navCtrl.setRoot(ViajeAsignadoPage, {
-              usuario: this.username,
-              nombre: respuesta.Nombre,
-              eco: respuesta.tracto
+            alert('Va al servicio');
+            this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
+              loading.dismiss();
+              this.credenciales = data;
+              this.interpretaRespuesta(this.credenciales);
             });
           }
-        }).catch(error => {
+
+        }
+        else {
           loading.dismiss();
-        }));
 
-    }
-    else {
-      loading.present();
+          let toast = this.toastCtrl.create({
+            message: '¡Bienvenido ' + respuesta.nombreCompleto + ' !',
+            duration: 2000,
+            position: 'middle'
+          });
+          toast.present();
 
-      // this.sodisaService.login('C55163', 'C55163', 'aa1add0d87db4099').subscribe(data => {
-      this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
+          this.navCtrl.setRoot(HomePage, {
+            usuario: this.username,
+            nombre: respuesta.nombreCompleto,
+            eco: respuesta.tracto
+          });
+        }
+      }).catch(error => {
+        alert('Error lectura BD 1');
         loading.dismiss();
-        this.credenciales = data;
-        this.interpretaRespuesta(this.credenciales);
+      })).catch(error => {
+        alert('Error lectura BD 2');
+        loading.dismiss();
       });
-    }
   }
 
   interpretaRespuesta(codigoRespuesta) {
+    alert('REspuesta del servicio: ' + codigoRespuesta.pResponseCode);
     switch (codigoRespuesta.pResponseCode) {
       case -1:
         this.mensaje = "Usuario no registrado";
@@ -116,14 +122,38 @@ export class LoginPage {
     toast.present();
 
     if (codigoRespuesta.pResponseCode == 1) {
-      this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei);
 
-      this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
+      this.validaCredencialLocal().then(res => {
+        alert('Resultado de la comparacion: ' + res);
 
-      this.navCtrl.setRoot(HomePage, {
-        usuario: codigoRespuesta.pIdOperador,
-        nombre: codigoRespuesta.pOperadorNombre,
-        eco: codigoRespuesta.pNumeroEconomicoTractocamion
+        if (res == 'KO') {
+          alert('Elimina info local');
+          this.eliminaInfoLocal();
+
+          alert('Registra usuario nuevo');
+          alert('Operador: ' + codigoRespuesta.pIdOperador);
+          alert('Pwd: ' + this.password);
+          alert('Tracto: ' + codigoRespuesta.pNumeroEconomicoTractocamion);
+          alert('Nombre: ' + codigoRespuesta.pOperadorNombre);
+          alert('Disopositivo: ' + this.imei);
+
+          this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
+            alert('Usuario registrado correctamente');
+
+            alert('Registra viajes asignados');
+            this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
+          }).catch(error => {
+            alert('Error al insertar usuario');
+          });
+
+
+        }
+
+        this.navCtrl.setRoot(HomePage, {
+          usuario: codigoRespuesta.pIdOperador,
+          nombre: codigoRespuesta.pOperadorNombre,
+          eco: codigoRespuesta.pNumeroEconomicoTractocamion
+        });
       });
 
     }
@@ -139,11 +169,40 @@ export class LoginPage {
   }
 
   registraUsuario(userName, password, noTracto, nombreCompleto, imei) {
-    this.dataServices.openDatabase()
+    return this.dataServices.openDatabase()
       .then(response => {
         this.dataServices.insertaUsuario(userName, password, noTracto, nombreCompleto, imei);
       });
   }
 
+  validaCredencialLocal() {
+    let respuesta: string = '';
+
+    return this.dataServices.openDatabase()
+      .then(() => this.dataServices.ObtieneUsuario().then(respuesta => {
+
+        let usuarioLocal = respuesta.userName;
+        let pwdLocal = respuesta.password;
+
+        alert('Usuario en BD: ' + respuesta.userName);
+        alert('Pwd en BD: ' + respuesta.password);
+
+        if (this.username == usuarioLocal && this.password == pwdLocal) {
+          return Promise.resolve('OK');
+        }
+        else {
+          return Promise.resolve('KO');
+        }
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      }));
+  }
+
+  eliminaInfoLocal() {
+    this.dataServices.openDatabase()
+      .then(response => {
+        this.dataServices.EliminaInfoLocal();
+      });
+  }
 
 }

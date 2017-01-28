@@ -28,6 +28,7 @@ export class ModalParadasPage {
   idParada;
   observaciones: string;
   mensaje: string;
+  descripcionParada: string;
 
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
@@ -38,6 +39,8 @@ export class ModalParadasPage {
     this.idConcentrado = params.get('concentrado');
     this.userName = params.get('usuario');
     this.idParada = params.get('parada');
+
+    this.descripcionParada = this.RegresaDescripcion(this.idParada);
 
 
     Geolocation.getCurrentPosition()
@@ -109,7 +112,7 @@ export class ModalParadasPage {
 
     }
   }
-  
+
   interpretaRespuesta(codigoRespuesta) {
     switch (codigoRespuesta.pResponseCode) {
       case -1:
@@ -142,5 +145,32 @@ export class ModalParadasPage {
     if (codigoRespuesta.pResponseCode == -5) {
       this.navCtrl.setRoot(LoginPage);
     }
+  }
+
+  RegresaDescripcion(idParada) {
+    let descripcion = '';
+
+    switch (idParada) {
+      case 1:
+        descripcion = 'Carga de combustible';
+        break;
+      case 2:
+        descripcion = 'Manifestación';
+        break;
+      case 3:
+        descripcion = 'Mal clima';
+        break;
+      case 4:
+        descripcion = 'Comida';
+        break;
+      case 5:
+        descripcion = 'Descanso';
+        break;
+      case 6:
+        descripcion = 'Otro';
+        break;
+    }
+
+    return descripcion;
   }
 }

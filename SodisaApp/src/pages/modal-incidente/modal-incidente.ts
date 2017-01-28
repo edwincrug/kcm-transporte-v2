@@ -28,6 +28,7 @@ export class ModalIncidentePage {
   idIncidente;
   observaciones: string;
   mensaje: string;
+  descripcionIncidente: string;
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
     public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController) {
@@ -38,6 +39,7 @@ export class ModalIncidentePage {
     this.userName = params.get('usuario');
     this.idIncidente = params.get('incidente');
 
+    this.descripcionIncidente = this.RegresaDescripcion(this.idIncidente);
 
     Geolocation.getCurrentPosition()
       .then(position => {
@@ -141,6 +143,34 @@ export class ModalIncidentePage {
     if (codigoRespuesta.pResponseCode == -5) {
       this.navCtrl.setRoot(LoginPage);
     }
+  }
+
+  RegresaDescripcion(idParada) {
+    let descripcion = '';
+
+    switch (idParada) {
+      case 1:
+        descripcion = 'Bloqueo de tarjeta Iave';
+        break;
+      case 2:
+        descripcion = 'Desvio de ruta';
+        break;
+      case 3:
+        descripcion = 'Falla mecánica';
+        break;
+      case 4:
+        descripcion = 'Intento de robo';
+        break;
+      case 5:
+        descripcion = 'Siniestro Unidad';
+        break;
+      case 6:
+        descripcion = 'Otro';
+        break;
+    }
+
+    return descripcion;
+
   }
 
 }

@@ -17,7 +17,7 @@ export class LocalDataProvider {
 
   openDatabase() {
     return this.db.openDatabase({
-      name: 'sodisa.db',
+      name: 'sodisav2.db',
       location: 'default' // the location field is required      
     });
   }
@@ -60,9 +60,14 @@ export class LocalDataProvider {
   }
 
   checkUsuario(usuario, pwd, imei) {
-    let sql = 'SELECT nombreCompleto AS Nombre, tracto FROM Usuario WHERE userName = ? AND password = ? AND imei = ?';
-    return this.db.executeSql(sql, [usuario, pwd, imei])
+    alert('Usuario enviado: ' + usuario);
+    alert('Pwd enviado: ' + pwd);
+    alert('Imei enviado: ' + imei);
+
+    let sql = 'SELECT * FROM Usuario ';
+    return this.db.executeSql(sql, [])
       .then(response => {
+        alert('Cantidad de registros: ' + response.rows.length);
         if (response.rows.length > 0) {
           return Promise.resolve(response.rows.item(0));
         }
@@ -70,7 +75,7 @@ export class LocalDataProvider {
           return Promise.resolve('KO');
         }
       }).catch(error => {
-        return Promise.resolve('KO');
+        return Promise.resolve('ERROR');
       });
   }
 
@@ -176,7 +181,7 @@ export class LocalDataProvider {
 
   insertaUsuario(userName, password, noTracto, nombreCompleto, imei) {
     let usuarioQuery = "SELECT COUNT(*) AS Existe FROM Usuario WHERE userName = ? AND password = ? AND imei = ?";
-    this.db.executeSql(usuarioQuery, [userName, password, imei]).then(respuesta => {
+    return this.db.executeSql(usuarioQuery, [userName, password, imei]).then(respuesta => {
       let existe = respuesta.rows.item(0).Existe;
       if (existe == 0) {
         usuarioQuery = "INSERT INTO Usuario (nombreCompleto, imei, userName, password, estatus, tracto) VALUES ('" +
@@ -186,7 +191,12 @@ export class LocalDataProvider {
           password + "', 1, '" +
           noTracto + "'); ";
 
-        this.db.executeSql(usuarioQuery, []);
+        this.db.executeSql(usuarioQuery, []).then(res => {
+          usuarioQuery = "SELECT * FROM Usuario";
+          this.db.executeSql(usuarioQuery, []).then(resp => {
+            alert('Usuarios Insertados: ' + resp.rows.length);
+          });
+        });
       }
     });
   }
@@ -264,6 +274,35 @@ export class LocalDataProvider {
         }
         return Promise.resolve(hayViajes);
       });
+  }
+
+  ObtieneUsuario() {
+    let sql = 'SELECT * FROM Usuario ';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+        else {
+          return Promise.resolve('KO');
+        }
+      }).catch(error => {
+        return Promise.resolve('KO');
+      });
+  }
+
+  EliminaInfoLocal() {
+    let sql = "DELETE FROM ViajeSync ";
+    return this.db.executeSql(sql, []).then(res => {
+      sql = "DELETE FROM ViajeDetalle ";
+      this.db.executeSql(sql, []).then(res => {
+        sql = "DELETE FROM Viaje ";
+        this.db.executeSql(sql, []).then(res => {
+          sql = "DELETE FROM Usuario ";
+          this.db.executeSql(sql, []);
+        });
+      });
+    });
   }
 
 }

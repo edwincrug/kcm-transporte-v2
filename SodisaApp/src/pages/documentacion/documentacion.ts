@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { Camera, Device, Geolocation } from 'ionic-native';
 
 import { EvidenciaPage } from '../evidencia/evidencia';
 
