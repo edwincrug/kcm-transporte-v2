@@ -127,8 +127,8 @@ export class LoginPage {
         alert('Resultado de la comparacion: ' + res);
 
         if (res == 'KO') {
-          alert('Elimina info local');
-          this.eliminaInfoLocal();
+          // alert('Elimina base local');
+          // this.eliminaInfoLocal();
 
           alert('Registra usuario nuevo');
           alert('Operador: ' + codigoRespuesta.pIdOperador);
@@ -171,7 +171,7 @@ export class LoginPage {
   registraUsuario(userName, password, noTracto, nombreCompleto, imei) {
     return this.dataServices.openDatabase()
       .then(response => {
-        this.dataServices.insertaUsuario(userName, password, noTracto, nombreCompleto, imei);
+        this.dataServices.insertaUsuario(userName.toUpperCase(), password.toUpperCase(), noTracto.toUpperCase(), nombreCompleto.toUpperCase(), imei.toUpperCase());
       });
   }
 
@@ -187,14 +187,18 @@ export class LoginPage {
         alert('Usuario en BD: ' + respuesta.userName);
         alert('Pwd en BD: ' + respuesta.password);
 
-        if (this.username == usuarioLocal && this.password == pwdLocal) {
-          return Promise.resolve('OK');
-        }
-        else {
+        if (respuesta.userName != undefined && respuesta.password != undefined) {
+          if (this.username.toUpperCase() == usuarioLocal.toUpperCase() && this.password.toUpperCase() == pwdLocal.toUpperCase()) {
+            return Promise.resolve('OK');
+          }
+          else {
+            return Promise.resolve('KO');
+          }
+        } else {
           return Promise.resolve('KO');
         }
       }).catch(error => {
-        return Promise.resolve('ERROR');
+        return Promise.resolve('ERROR: ' + error);
       }));
   }
 

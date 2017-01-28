@@ -64,8 +64,8 @@ export class LocalDataProvider {
     alert('Pwd enviado: ' + pwd);
     alert('Imei enviado: ' + imei);
 
-    let sql = 'SELECT * FROM Usuario ';
-    return this.db.executeSql(sql, [])
+    let sql = 'SELECT * FROM Usuario WHERE userName = ?';
+    return this.db.executeSql(sql, [usuario.toUpperCase()])
       .then(response => {
         alert('Cantidad de registros: ' + response.rows.length);
         if (response.rows.length > 0) {
