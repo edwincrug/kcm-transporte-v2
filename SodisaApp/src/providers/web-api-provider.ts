@@ -78,8 +78,8 @@ export class WebApiProvider {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
-    let body = "{ strIdOperadorVc: '" + idOperador + "', idLocalidadIn: " + idLocalidad + ", idConcentradoVc: " + idConcentrado
-      + ", idTipoEventoIn: " + idTipoEvento + ", idEventoIn: " + idEvento + ", evidenciaFotograficaBy: '" + evidencia
+    let body = "{ strIdOperadorVc: '" + idOperador + "', idLocalidadIn: " + idLocalidad + ", idConcentradoVc: '" + idConcentrado
+      + "', idTipoEventoIn: " + idTipoEvento + ", idEventoIn: " + idEvento + ", evidenciaFotograficaBy: '" + evidencia
       + "', observacionVc: '" + observacion + "', geoLocalizacionEventoVc: '" + geolocalizacion + "', fechaEventoDt: '" + fecha
       + "', strIdDispositivo: '" + idDispositivo + "' }";
 

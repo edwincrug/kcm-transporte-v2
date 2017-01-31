@@ -17,7 +17,7 @@ export class LocalDataProvider {
 
   openDatabase() {
     return this.db.openDatabase({
-      name: 'sodisav2.db',
+      name: 'sodisa.db',
       location: 'default' // the location field is required      
     });
   }
@@ -60,14 +60,10 @@ export class LocalDataProvider {
   }
 
   checkUsuario(usuario, pwd, imei) {
-    alert('Usuario enviado: ' + usuario);
-    alert('Pwd enviado: ' + pwd);
-    alert('Imei enviado: ' + imei);
-
     let sql = 'SELECT * FROM Usuario WHERE userName = ?';
     return this.db.executeSql(sql, [usuario.toUpperCase()])
       .then(response => {
-        alert('Cantidad de registros: ' + response.rows.length);
+        //alert('Cantidad de registros: ' + response.rows.length);
         if (response.rows.length > 0) {
           return Promise.resolve(response.rows.item(0));
         }
@@ -194,7 +190,7 @@ export class LocalDataProvider {
         this.db.executeSql(usuarioQuery, []).then(res => {
           usuarioQuery = "SELECT * FROM Usuario";
           this.db.executeSql(usuarioQuery, []).then(resp => {
-            alert('Usuarios Insertados: ' + resp.rows.length);
+            //alert('Usuarios Insertados: ' + resp.rows.length);
           });
         });
       }
@@ -291,18 +287,23 @@ export class LocalDataProvider {
       });
   }
 
-  EliminaInfoLocal() {
+  EliminaTablaViajeSync() {
     let sql = "DELETE FROM ViajeSync ";
-    return this.db.executeSql(sql, []).then(res => {
-      sql = "DELETE FROM ViajeDetalle ";
-      this.db.executeSql(sql, []).then(res => {
-        sql = "DELETE FROM Viaje ";
-        this.db.executeSql(sql, []).then(res => {
-          sql = "DELETE FROM Usuario ";
-          this.db.executeSql(sql, []);
-        });
-      });
-    });
+    return this.db.executeSql(sql, []);
   }
 
+  EliminaTablaViajeDetalle() {
+    let sql = "DELETE FROM ViajeDetalle ";
+    return this.db.executeSql(sql, []);
+  }
+
+  EliminaTablaViaje() {
+    let sql = "DELETE FROM Viaje ";
+    return this.db.executeSql(sql, []);
+  }
+
+  EliminaTablaUsuario() {
+    let sql = "DELETE FROM Usuario ";
+    return this.db.executeSql(sql, []);
+  }
 }

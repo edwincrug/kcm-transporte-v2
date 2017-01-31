@@ -45,7 +45,7 @@ import { LocalDataProvider } from '../providers/local-data-provider';
   imports: [
     IonicModule.forRoot(MyApp),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDDkS1LB8ob5FqMWhesQpyGXRmY0tMGZZo',
+      apiKey: 'AIzaSyAI77psI4o9uLihSJSDF5cm4-eZUxG6-Ng',
       libraries: ['places']
     })
   ],

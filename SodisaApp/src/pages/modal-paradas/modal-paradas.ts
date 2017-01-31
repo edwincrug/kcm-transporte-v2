@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, ToastController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ToastController, AlertController, LoadingController } from 'ionic-angular';
 import { Camera, Device, Geolocation } from 'ionic-native';
 
 import { LoginPage } from '../login/login';
@@ -25,14 +25,15 @@ export class ModalParadasPage {
   idOrigen;
   idConcentrado;
   userName: string;
-  idParada;
+  idParada: number;
   observaciones: string;
   mensaje: string;
   descripcionParada: string;
 
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
-    public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController) {
+    public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController) {
 
     this.idViaje = params.get('viaje');
     this.idOrigen = params.get('origen');
@@ -40,8 +41,7 @@ export class ModalParadasPage {
     this.userName = params.get('usuario');
     this.idParada = params.get('parada');
 
-    this.descripcionParada = this.RegresaDescripcion(this.idParada);
-
+    this.RegresaDescripcion(this.idParada);
 
     Geolocation.getCurrentPosition()
       .then(position => {
@@ -90,8 +90,14 @@ export class ModalParadasPage {
 
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor'
+    });
+    loading.present();
+
     if (this.imagenSend != null) {
       this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 1, this.idParada, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
+        loading.dismiss();
         if (data.pResponseCode == 1) {
           let alert = this.alertCtrl.create({
             subTitle: 'Parada Permitida Registrada',
@@ -107,6 +113,7 @@ export class ModalParadasPage {
 
       }, (err) => {
         alert('Hubo error en cámara');
+        loading.dismiss();
         this.dismiss();
       });
 
@@ -148,29 +155,23 @@ export class ModalParadasPage {
   }
 
   RegresaDescripcion(idParada) {
-    let descripcion = '';
-
-    switch (idParada) {
-      case 1:
-        descripcion = 'Carga de combustible';
-        break;
-      case 2:
-        descripcion = 'Manifestación';
-        break;
-      case 3:
-        descripcion = 'Mal clima';
-        break;
-      case 4:
-        descripcion = 'Comida';
-        break;
-      case 5:
-        descripcion = 'Descanso';
-        break;
-      case 6:
-        descripcion = 'Otro';
-        break;
+    if (idParada == 1) {
+      this.descripcionParada = 'Carga de combustible';
     }
-
-    return descripcion;
+    else if (idParada == 2) {
+      this.descripcionParada = 'Manifestación';
+    }
+    else if (idParada == 3) {
+      this.descripcionParada = 'Mal clima';
+    }
+    else if (idParada == 4) {
+      this.descripcionParada = 'Comida';
+    }
+    else if (idParada == 5) {
+      this.descripcionParada = 'Descanso';
+    }
+    else if (idParada == 6) {
+      this.descripcionParada = 'Otro';
+    }
   }
 }

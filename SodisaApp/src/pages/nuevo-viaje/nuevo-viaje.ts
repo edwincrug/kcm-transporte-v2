@@ -1,11 +1,17 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, AlertController, LoadingController, ToastController } from 'ionic-angular';
+import { Device } from 'ionic-native';
 
 import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
 import { HomePage } from '../home/home';
 import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { SincronizacionPage } from '../sincronizacion/sincronizacion';
 import { ModalPage } from '../modal/modal';
+import { LoginPage } from '../login/login';
+
+import { WebApiProvider } from '../../providers/web-api-provider';
+import { LocalDataProvider } from '../../providers/local-data-provider';
+import { NetworkProvider } from '../../providers/network-provider';
 
 /*
   Generated class for the NuevoViaje page.
@@ -19,11 +25,33 @@ import { ModalPage } from '../modal/modal';
 })
 export class NuevoViajePage {
   map: any;
+  username: string;
+  nombre: string;
+  remolque: string;
+  viaje: any;
+  origen: any;
+  concentrado: any;
+  origenNombre: any;
+  destino: any;
+  idRechazoSelected;
+  subTitulo: string;
+  idEstatusActualizar: number;
+  listaViajeManiobraLocales: any[] = [];
+  mensaje: string;
+  economico: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
-    public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public params: NavParams, public modalCtrl: ModalController,
+    public alertCtrl: AlertController, public loadingCtrl: LoadingController, public dataServices: LocalDataProvider,
+    public networkService: NetworkProvider, public sodisaService: WebApiProvider, public toastCtrl: ToastController) {
 
-
+    this.username = params.get('usuario');
+    this.nombre = params.get('nombre');
+    this.remolque = params.get('noRemolque');
+    this.viaje = params.get('idViaje');
+    this.origen = params.get('idOrigen');
+    this.concentrado = params.get('idConcentrado');
+    this.origenNombre = params.get('origenNombre');
+    this.destino = params.get('destino');
   }
 
   openModal() {
@@ -53,8 +81,7 @@ export class NuevoViajePage {
   //   });
   // }
 
-  muestraMotivos() {
-    // this.imei = Device.device.uuid;
+  MuestraMotivos(idViaje, idOrigen, idConcentrado, idTipoViaje) {
     let alert = this.alertCtrl.create();
     alert.setTitle('Motivos de Rechazo');
 
@@ -84,9 +111,11 @@ export class NuevoViajePage {
       text: 'Aceptar',
       handler: data => {
 
-        // if (this.idRechazoSelected != null) {
-        //   this.RechazaViaje(idViaje, idOrigen, idConcentrado, indice);
-        // }
+        this.idRechazoSelected = data;
+
+        if (this.idRechazoSelected != null) {
+          this.RechazaViaje(idViaje, idOrigen, idConcentrado, idTipoViaje);
+        }
 
       }
     });
@@ -109,6 +138,195 @@ export class NuevoViajePage {
 
   viajesAsignados() {
     this.navCtrl.setRoot(ViajeAsignadoPage);
+  }
+
+  AceptaViajeManiobra(idViaje, idOrigen, idConcentrado, idTipoViaje, noRemolque) {
+    if (idTipoViaje == 1) {
+      this.subTitulo = 'Viaje Aceptado';
+      this.idEstatusActualizar = 3;
+    }
+    else {
+      this.subTitulo = 'Maniobra Aceptada';
+      this.idEstatusActualizar = 9;
+    }
+
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor ...'
+    });
+
+    if (this.networkService.noConnection()) {
+      loading.present();
+      this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, Device.uuid).then(() => {
+        loading.dismiss();
+        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
+          let alert = this.alertCtrl.create({
+            subTitle: this.subTitulo,
+            buttons: ['OK']
+          });
+          alert.present();
+
+          this.ObtieneViajeManiobraInternos();
+        });
+      }).catch(error => {
+        loading.dismiss();
+      });
+    }
+    else {
+      this.sodisaService.aceptaRechazaViaje(idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, Device.uuid).subscribe(data => {
+        loading.dismiss();
+        if (data.pResponseCode == 1) {
+          this.dataServices.openDatabase()
+            .then(() => this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
+              let alert = this.alertCtrl.create({
+                subTitle: this.subTitulo,
+                buttons: ['OK']
+              });
+              alert.present();
+
+              this.ObtieneViajeManiobraInternos();
+            }));
+        }
+        else {
+          this.interpretaRespuesta(data);
+
+          if (data.pResponseCode == -8) {
+            this.EliminaViajeDesasociado(idViaje, 0);
+          }
+
+          this.ObtieneViajeManiobraInternos();
+        }
+      });
+    }
+  }
+
+  RechazaViaje(idViaje, idOrigen, idConcentrado, idTipoViaje) {
+    if (idTipoViaje == 1) {
+      this.subTitulo = 'Viaje Rechazado';
+      this.idEstatusActualizar = 4;
+    }
+    else {
+      this.subTitulo = 'Maniobra Rechazada';
+      this.idEstatusActualizar = 10;
+    }
+
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor ...'
+    });
+
+    loading.present();
+
+    if (this.networkService.noConnection()) {
+      this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, this.idRechazoSelected, this.idEstatusActualizar, Device.uuid).then(() => {
+        loading.dismiss();
+        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, this.idRechazoSelected, idViaje, '', '').then(response => {
+          let alert = this.alertCtrl.create({
+            subTitle: this.subTitulo,
+            buttons: ['OK']
+          });
+          alert.present();
+
+          this.ObtieneViajeManiobraInternos();
+        });
+      });
+    }
+    else {
+      this.sodisaService.aceptaRechazaViaje(idOrigen, idConcentrado, this.username, this.idRechazoSelected, this.idEstatusActualizar, Device.uuid).subscribe(data => {
+        loading.dismiss();
+        // this.sodisaService.aceptaRechazaViaje(idOrigen, idConcentrado, 'C55163', this.idRechazoSelected, 4, 'aa1add0d87db4099').subscribe(data => {
+        if (data.pResponseCode == 1) {
+          this.dataServices.openDatabase()
+            .then(() => this.dataServices.eliminaViajeLocal(idViaje).then(response => {
+              let alert = this.alertCtrl.create({
+                subTitle: this.subTitulo,
+                buttons: ['OK']
+              });
+              alert.present();
+
+              this.ObtieneViajeManiobraInternos();
+            }));
+        }
+        else {
+          this.interpretaRespuesta(data);
+
+          if (data.pResponseCode == -8) {
+            this.EliminaViajeDesasociado(idViaje, 0);
+          }
+          this.ObtieneViajeManiobraInternos();
+        }
+
+      });
+    }
+  }
+
+  ObtieneViajeManiobraInternos() {
+    this.dataServices.openDatabase()
+      .then(() => this.dataServices.ViajeManiobraAsignados().then(response => {
+        if (response.length > 0) {
+          this.listaViajeManiobraLocales = response;
+        }
+        else {
+          this.listaViajeManiobraLocales = [];
+        }
+      }));
+  }
+
+  EliminaViajeDesasociado(idViaje, idViajeSync) {
+    this.dataServices.openDatabase()
+      .then(() => {
+
+        this.dataServices.eliminaViajeLocal(idViaje).then(() => {
+          // alert('Eliminado Local');
+        });
+
+        this.dataServices.eliminaViajeSync(idViajeSync).then(() => {
+          //alert('Eliminado sync');
+        });
+      });
+  }
+
+  interpretaRespuesta(codigoRespuesta) {
+    switch (codigoRespuesta.pResponseCode) {
+      case -1:
+        this.mensaje = "Usuario no registrado";
+        break;
+      case -2:
+        this.mensaje = "Más de un dispositivo asignado";
+        break;
+      case -3:
+        this.mensaje = "Credenciales incorrectas";
+        break;
+      case -4:
+        this.mensaje = "Dispositivo no asignado";
+        break;
+      case -5:
+        this.mensaje = "La sesión expiro";
+        break;
+      case -8:
+        this.mensaje = "Este viaje fue desasignado";
+        break;
+    }
+
+    let toast = this.toastCtrl.create({
+      message: this.mensaje,
+      duration: 2000,
+      position: 'middle'
+    });
+    toast.present();
+
+    if (codigoRespuesta.pResponseCode == 1) {
+      this.RedirectHome();
+    }
+    else if (codigoRespuesta.pResponseCode == -5) {
+      this.navCtrl.setRoot(LoginPage);
+    }
+  }
+
+  RedirectHome() {
+    this.navCtrl.setRoot(HomePage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      eco: this.economico
+    });
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ViewController, ToastController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ToastController, AlertController, LoadingController } from 'ionic-angular';
 import { Camera, Device, Geolocation } from 'ionic-native';
 
 import { LoginPage } from '../login/login';
@@ -25,13 +25,14 @@ export class ModalIncidentePage {
   idOrigen;
   idConcentrado;
   userName: string;
-  idIncidente;
+  idIncidente: number;
   observaciones: string;
   mensaje: string;
   descripcionIncidente: string;
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
-    public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController) {
+    public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController,
+    public loadingCtrl: LoadingController) {
 
     this.idViaje = params.get('viaje');
     this.idOrigen = params.get('origen');
@@ -39,7 +40,7 @@ export class ModalIncidentePage {
     this.userName = params.get('usuario');
     this.idIncidente = params.get('incidente');
 
-    this.descripcionIncidente = this.RegresaDescripcion(this.idIncidente);
+    this.RegresaDescripcion(this.idIncidente);
 
     Geolocation.getCurrentPosition()
       .then(position => {
@@ -88,8 +89,14 @@ export class ModalIncidentePage {
 
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor'
+    });
+    loading.present();
+
     if (this.imagenSend != null) {
       this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 2, this.idIncidente, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
+        loading.dismiss();
         if (data.pResponseCode == 1) {
           let alert = this.alertCtrl.create({
             subTitle: 'Incidente Registrado',
@@ -105,6 +112,7 @@ export class ModalIncidentePage {
 
       }, (err) => {
         alert('Hubo error en cámara');
+        loading.dismiss();
         this.dismiss();
       });
 
@@ -145,31 +153,25 @@ export class ModalIncidentePage {
     }
   }
 
-  RegresaDescripcion(idParada) {
-    let descripcion = '';
-
-    switch (idParada) {
-      case 1:
-        descripcion = 'Bloqueo de tarjeta Iave';
-        break;
-      case 2:
-        descripcion = 'Desvio de ruta';
-        break;
-      case 3:
-        descripcion = 'Falla mecánica';
-        break;
-      case 4:
-        descripcion = 'Intento de robo';
-        break;
-      case 5:
-        descripcion = 'Siniestro Unidad';
-        break;
-      case 6:
-        descripcion = 'Otro';
-        break;
+  RegresaDescripcion(idIncidente) {
+    if (idIncidente == 1) {
+      this.descripcionIncidente = 'Bloqueo de tarjeta Iave';
     }
-
-    return descripcion;
+    else if (idIncidente == 2) {
+      this.descripcionIncidente = 'Desvio de ruta';
+    }
+    else if (idIncidente == 3) {
+      this.descripcionIncidente = 'Falla mecánica';
+    }
+    else if (idIncidente == 4) {
+      this.descripcionIncidente = 'Intento de robo';
+    }
+    else if (idIncidente == 5) {
+      this.descripcionIncidente = 'Siniestro Unidad';
+    }
+    else if (idIncidente == 6) {
+      this.descripcionIncidente = 'Otro';
+    }
 
   }
 

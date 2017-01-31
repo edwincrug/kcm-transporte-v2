@@ -6,7 +6,6 @@ import { NetworkProvider } from '../../providers/network-provider';
 import { LocalDataProvider } from '../../providers/local-data-provider';
 import { WebApiProvider } from '../../providers/web-api-provider';
 
-import { ViajeAsignadoPage } from '../viaje-asignado/viaje-asignado';
 import { HomePage } from '../home/home';
 
 /*
@@ -35,7 +34,7 @@ export class LoginPage {
   }
 
   validaCredenciales() {
-    alert('Entra a validar');
+    //alert('Entra a validar');
     this.imei = Device.uuid;
 
     let loading = this.loadingCtrl.create({
@@ -46,7 +45,6 @@ export class LoginPage {
     this.dataServices.openDatabase()
       .then(() => this.dataServices.checkUsuario(this.username, this.password, this.imei).then(respuesta => {
         if (respuesta == 'KO') {
-          alert('Credenciales incorrectas');
           if (this.networkService.noConnection()) {
             loading.dismiss();
 
@@ -58,7 +56,6 @@ export class LoginPage {
             alert.present();
           }
           else {
-            alert('Va al servicio');
             this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
               loading.dismiss();
               this.credenciales = data;
@@ -93,7 +90,6 @@ export class LoginPage {
   }
 
   interpretaRespuesta(codigoRespuesta) {
-    alert('REspuesta del servicio: ' + codigoRespuesta.pResponseCode);
     switch (codigoRespuesta.pResponseCode) {
       case -1:
         this.mensaje = "Usuario no registrado";
@@ -123,38 +119,49 @@ export class LoginPage {
 
     if (codigoRespuesta.pResponseCode == 1) {
 
-      this.validaCredencialLocal().then(res => {
-        alert('Resultado de la comparacion: ' + res);
+      this.dataServices.openDatabase()
+        .then(() => this.dataServices.ObtieneUsuario().then(respuesta => {
+          let usuarioLocal = respuesta.userName;
+          let pwdLocal = respuesta.password;
 
-        if (res == 'KO') {
-          // alert('Elimina base local');
-          // this.eliminaInfoLocal();
+          if (usuarioLocal != undefined && pwdLocal != undefined) {
+            if (this.username == usuarioLocal && this.password == pwdLocal) {
+              this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
+                this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
 
-          alert('Registra usuario nuevo');
-          alert('Operador: ' + codigoRespuesta.pIdOperador);
-          alert('Pwd: ' + this.password);
-          alert('Tracto: ' + codigoRespuesta.pNumeroEconomicoTractocamion);
-          alert('Nombre: ' + codigoRespuesta.pOperadorNombre);
-          alert('Disopositivo: ' + this.imei);
+              }).catch(error => {
+                alert('Error al insertar usuario');
+              });
+            }
+            else {
+              this.eliminaInfoLocal().then(() => {
+              this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
+                this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
 
-          this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
-            alert('Usuario registrado correctamente');
+              }).catch(error => {
+                alert('Error al insertar usuario');
+              });
+            });
+            }
+          }
+          else {
+            this.eliminaInfoLocal().then(() => {
+              this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
+                this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
 
-            alert('Registra viajes asignados');
-            this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
-          }).catch(error => {
-            alert('Error al insertar usuario');
+              }).catch(error => {
+                alert('Error al insertar usuario');
+              });
+            });
+          }
+
+          this.navCtrl.setRoot(HomePage, {
+            usuario: codigoRespuesta.pIdOperador,
+            nombre: codigoRespuesta.pOperadorNombre,
+            eco: codigoRespuesta.pNumeroEconomicoTractocamion
           });
 
-
-        }
-
-        this.navCtrl.setRoot(HomePage, {
-          usuario: codigoRespuesta.pIdOperador,
-          nombre: codigoRespuesta.pOperadorNombre,
-          eco: codigoRespuesta.pNumeroEconomicoTractocamion
-        });
-      });
+        }));
 
     }
   }
@@ -176,16 +183,11 @@ export class LoginPage {
   }
 
   validaCredencialLocal() {
-    let respuesta: string = '';
-
     return this.dataServices.openDatabase()
       .then(() => this.dataServices.ObtieneUsuario().then(respuesta => {
 
         let usuarioLocal = respuesta.userName;
         let pwdLocal = respuesta.password;
-
-        alert('Usuario en BD: ' + respuesta.userName);
-        alert('Pwd en BD: ' + respuesta.password);
 
         if (respuesta.userName != undefined && respuesta.password != undefined) {
           if (this.username.toUpperCase() == usuarioLocal.toUpperCase() && this.password.toUpperCase() == pwdLocal.toUpperCase()) {
@@ -203,10 +205,11 @@ export class LoginPage {
   }
 
   eliminaInfoLocal() {
-    this.dataServices.openDatabase()
-      .then(response => {
-        this.dataServices.EliminaInfoLocal();
-      });
+    return this.dataServices.openDatabase()
+      .then(() => this.dataServices.EliminaTablaViajeSync())
+      .then(() => this.dataServices.EliminaTablaViajeDetalle())
+      .then(() => this.dataServices.EliminaTablaViaje())
+      .then(() => this.dataServices.EliminaTablaUsuario());
   }
 
 }

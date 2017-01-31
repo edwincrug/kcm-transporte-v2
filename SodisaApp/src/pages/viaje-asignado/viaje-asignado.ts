@@ -58,8 +58,17 @@ export class ViajeAsignadoPage {
       }));
   }
 
-  ViajeTracking() {
-    this.navCtrl.setRoot(NuevoViajePage);
+  ViajeTracking(idViaje, idOrigen, origenNombre, destino, idConcentrado, economico) {
+    this.navCtrl.setRoot(NuevoViajePage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      noRemolque: economico,
+      idViaje: idViaje,
+      idOrigen: idOrigen,
+      idConcentrado: idConcentrado,
+      origenNombre: origenNombre,
+      destino: destino
+    });
   }
 
   RedirectHome() {
@@ -210,7 +219,7 @@ export class ViajeAsignadoPage {
     alert.addButton({
       text: 'Aceptar',
       handler: data => {
-        
+
         this.idRechazoSelected = data;
 
         if (this.idRechazoSelected != null) {

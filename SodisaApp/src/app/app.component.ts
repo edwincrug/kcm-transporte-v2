@@ -26,7 +26,7 @@ export class MyApp {
 
       this.dataServices.openDatabase()
         .then(() => this.dataServices.ObtieneUsuario().then(res => {
-          alert('Usuarios locales: ' + res);
+          //alert('Usuarios locales: ' + res);
         }))
         .then(() => this.dataServices.createTableUsuario())
         .then(() => this.dataServices.createTableViaje())
@@ -38,7 +38,7 @@ export class MyApp {
 
       let wsSodisa = new WebApiProvider(this.http);
       document.addEventListener("online", function () {
-        alert('Entra a la base');
+        //alert('Entra a la base');
         let dbService = new LocalDataProvider();
 
         dbService.openDatabase()
