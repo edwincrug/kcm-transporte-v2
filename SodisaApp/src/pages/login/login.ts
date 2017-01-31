@@ -42,6 +42,8 @@ export class LoginPage {
       duration: 10000
     });
 
+    loading.present();
+
     this.dataServices.openDatabase()
       .then(() => this.dataServices.checkUsuario(this.username, this.password, this.imei).then(respuesta => {
         if (respuesta == 'KO') {
@@ -67,12 +69,19 @@ export class LoginPage {
         else {
           loading.dismiss();
 
-          let toast = this.toastCtrl.create({
-            message: '¡Bienvenido ' + respuesta.nombreCompleto + ' !',
-            duration: 2000,
-            position: 'middle'
-          });
-          toast.present();
+          let alert = this.alertCtrl.create({
+              title: '¡Bienvenido!',
+              subTitle: respuesta.nombreCompleto,
+              buttons: ['OK']
+            });
+            alert.present();
+
+          // let toast = this.toastCtrl.create({
+          //   message: '¡Bienvenido ' + respuesta.nombreCompleto + ' !',
+          //   duration: 2000,
+          //   position: 'middle'
+          // });
+          // toast.present();
 
           this.navCtrl.setRoot(HomePage, {
             usuario: this.username,
@@ -135,13 +144,13 @@ export class LoginPage {
             }
             else {
               this.eliminaInfoLocal().then(() => {
-              this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
-                this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
+                this.registraUsuario(codigoRespuesta.pIdOperador, this.password, codigoRespuesta.pNumeroEconomicoTractocamion, codigoRespuesta.pOperadorNombre, this.imei).then(res => {
+                  this.registraViajesAsignados(codigoRespuesta.pListaViajeMovil);
 
-              }).catch(error => {
-                alert('Error al insertar usuario');
+                }).catch(error => {
+                  alert('Error al insertar usuario');
+                });
               });
-            });
             }
           }
           else {

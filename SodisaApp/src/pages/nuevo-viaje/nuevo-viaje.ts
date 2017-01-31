@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, AlertController, LoadingController, ToastController } from 'ionic-angular';
-import { Device } from 'ionic-native';
+import { Device, Geolocation } from 'ionic-native';
 
 import { ViajeAceptadoPage } from '../viaje-aceptado/viaje-aceptado';
 import { HomePage } from '../home/home';
@@ -39,6 +39,9 @@ export class NuevoViajePage {
   listaViajeManiobraLocales: any[] = [];
   mensaje: string;
   economico: string;
+  lat: any;
+  lng: any;
+  idTipoViaje: any;
 
   constructor(public navCtrl: NavController, public params: NavParams, public modalCtrl: ModalController,
     public alertCtrl: AlertController, public loadingCtrl: LoadingController, public dataServices: LocalDataProvider,
@@ -52,6 +55,16 @@ export class NuevoViajePage {
     this.concentrado = params.get('idConcentrado');
     this.origenNombre = params.get('origenNombre');
     this.destino = params.get('destino');
+    this.idTipoViaje = params.get('tipoViaje');
+
+    Geolocation.getCurrentPosition()
+      .then(position => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
+
+    this.loadMap();
+    this.map = { lat: 0, lng: 0, zoom: 15 };
   }
 
   openModal() {
@@ -63,23 +76,23 @@ export class NuevoViajePage {
     console.log('ionViewDidLoad NuevoViajePage');
   }
 
-  // loadMap() {
-  //   Geolocation.getCurrentPosition().then((position) => {
-  //     this.map =
-  //       {
-  //         lat: position.coords.latitude,
-  //         lng: position.coords.longitude,
-  //         zoom: 15
-  //       };
-  //   }).catch((error) => {
-  //     this.map =
-  //       {
-  //         lat: 19.438029,
-  //         lng: -99.2118746,
-  //         zoom: 15
-  //       };
-  //   });
-  // }
+  loadMap() {
+    Geolocation.getCurrentPosition().then((position) => {
+      this.map =
+        {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          zoom: 15
+        };
+    }).catch((error) => {
+      this.map =
+        {
+          lat: 19.438029,
+          lng: -99.2118746,
+          zoom: 15
+        };
+    });
+  }
 
   MuestraMotivos(idViaje, idOrigen, idConcentrado, idTipoViaje) {
     let alert = this.alertCtrl.create();
@@ -114,7 +127,7 @@ export class NuevoViajePage {
         this.idRechazoSelected = data;
 
         if (this.idRechazoSelected != null) {
-          this.RechazaViaje(idViaje, idOrigen, idConcentrado, idTipoViaje);
+          this.RechazaViaje(this.viaje, this.origen, this.concentrado, this.idTipoViaje);
         }
 
       }
@@ -129,7 +142,11 @@ export class NuevoViajePage {
   }
 
   redirectHome() {
-    this.navCtrl.setRoot(HomePage);
+    this.navCtrl.setRoot(HomePage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      eco: this.economico
+    });
   }
 
   redirectSync() {
@@ -140,8 +157,8 @@ export class NuevoViajePage {
     this.navCtrl.setRoot(ViajeAsignadoPage);
   }
 
-  AceptaViajeManiobra(idViaje, idOrigen, idConcentrado, idTipoViaje, noRemolque) {
-    if (idTipoViaje == 1) {
+  AceptaViajeManiobra() {
+    if (this.idTipoViaje == 1) {
       this.subTitulo = 'Viaje Aceptado';
       this.idEstatusActualizar = 3;
     }
@@ -156,44 +173,44 @@ export class NuevoViajePage {
 
     if (this.networkService.noConnection()) {
       loading.present();
-      this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, Device.uuid).then(() => {
+      this.dataServices.insertaAceptaRechazaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, this.idEstatusActualizar, Device.uuid).then(() => {
         loading.dismiss();
-        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
+        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, this.viaje, 0, this.remolque).then(response => {
           let alert = this.alertCtrl.create({
             subTitle: this.subTitulo,
             buttons: ['OK']
           });
           alert.present();
 
-          this.ObtieneViajeManiobraInternos();
+          this.RedirectHome();
         });
       }).catch(error => {
         loading.dismiss();
       });
     }
     else {
-      this.sodisaService.aceptaRechazaViaje(idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, Device.uuid).subscribe(data => {
+      this.sodisaService.aceptaRechazaViaje(this.origen, this.concentrado, this.username, 0, this.idEstatusActualizar, Device.uuid).subscribe(data => {
         loading.dismiss();
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
-            .then(() => this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
+            .then(() => this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, this.viaje, 0, this.remolque).then(response => {
               let alert = this.alertCtrl.create({
                 subTitle: this.subTitulo,
                 buttons: ['OK']
               });
               alert.present();
 
-              this.ObtieneViajeManiobraInternos();
+              this.RedirectHome();
             }));
         }
         else {
           this.interpretaRespuesta(data);
 
           if (data.pResponseCode == -8) {
-            this.EliminaViajeDesasociado(idViaje, 0);
+            this.EliminaViajeDesasociado(this.viaje, 0);
           }
 
-          this.ObtieneViajeManiobraInternos();
+          this.RedirectHome();
         }
       });
     }
@@ -242,7 +259,7 @@ export class NuevoViajePage {
               });
               alert.present();
 
-              this.ObtieneViajeManiobraInternos();
+              this.RedirectHome();
             }));
         }
         else {
@@ -251,7 +268,7 @@ export class NuevoViajePage {
           if (data.pResponseCode == -8) {
             this.EliminaViajeDesasociado(idViaje, 0);
           }
-          this.ObtieneViajeManiobraInternos();
+          this.RedirectHome();
         }
 
       });

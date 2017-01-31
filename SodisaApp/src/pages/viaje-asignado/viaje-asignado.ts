@@ -3,8 +3,8 @@ import { NavController, NavParams, AlertController, LoadingController, ToastCont
 import { Device } from 'ionic-native';
 
 import { HomePage } from '../home/home';
-import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
 import { LoginPage } from '../login/login';
+import { NuevoViajePage } from '../nuevo-viaje/nuevo-viaje';
 
 import { LocalDataProvider } from '../../providers/local-data-provider';
 import { NetworkProvider } from '../../providers/network-provider';
@@ -58,7 +58,7 @@ export class ViajeAsignadoPage {
       }));
   }
 
-  ViajeTracking(idViaje, idOrigen, origenNombre, destino, idConcentrado, economico) {
+  ViajeTracking(idViaje, idOrigen, origenNombre, destino, idConcentrado, economico, idTipoViaje) {
     this.navCtrl.setRoot(NuevoViajePage, {
       usuario: this.username,
       nombre: this.nombre,
@@ -67,7 +67,8 @@ export class ViajeAsignadoPage {
       idOrigen: idOrigen,
       idConcentrado: idConcentrado,
       origenNombre: origenNombre,
-      destino: destino
+      destino: destino,
+      tipoViaje: idTipoViaje
     });
   }
 
