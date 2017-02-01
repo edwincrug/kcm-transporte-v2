@@ -12,7 +12,7 @@ import { NavController, NavParams, ViewController } from 'ionic-angular';
   templateUrl: 'modal.html'
 })
 export class ModalPage {
-  odometro: string;
+  odometro: number;
   remolque: string;
   tipoOdometro: string;
 
@@ -36,17 +36,20 @@ export class ModalPage {
   }
 
   validarDatos() {
-    if ((this.odometro == null || this.odometro.trim() == '') && (this.remolque == null || this.remolque.trim() == '')) {
-      alert('Los campos Odómetro y Remolque son obligatorios');
+    if ((this.odometro == null) && (this.remolque == null || this.remolque.trim() == '')) {
+      alert('Los campos odómetro y remolque son obligatorios');
     }
-    else if (this.odometro == null || this.odometro.trim() == '') {
-      alert('El campo Odómetro es obligatorio');
+    else if (this.odometro == null) {
+      alert('El campo odómetro es obligatorio');
+    }
+    else if (this.odometro <= 0) {
+      alert('El campo odómetro debe ser mayor a cero');
     }
     else if (this.remolque == null || this.remolque.trim() == '') {
-      alert('El campo Remolque es obligatorio');
+      alert('El campo remolque es obligatorio');
     }
-    else if (!/^([0-9])*$/.test(this.odometro)) {
-      alert('El campo Odómetro sólo permite números');
+    else if (!/^([0-9])*$/.test(this.odometro.toString())) {
+      alert('El campo odómetro sólo permite números');
     }
     else {
       this.viewCtrl.dismiss({ km: this.odometro, remolque: this.remolque });
