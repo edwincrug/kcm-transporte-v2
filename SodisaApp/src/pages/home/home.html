@@ -67,48 +67,48 @@
         </ion-item>
         <ion-item>
 
-            <button *ngIf="viaje.idEstatus == 9" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 11)"
+            <button *ngIf="viaje.idEstatus == 9" ion-button icon-left round item-right size (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 11)"
                 color="sync">
                 <ion-icon name="play"></ion-icon>
                 Inicia Maniobra
             </button>
-            <button *ngIf="viaje.idEstatus == 11" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 12)"
+            <button *ngIf="viaje.idEstatus == 11" ion-button icon-left round item-right size (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 12)"
                 color="primary">
                 <ion-icon name="move"></ion-icon>
                 Andén
             </button>
-            <button *ngIf="viaje.idEstatus == 12" ion-button icon-left clear item-right (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 13)"
+            <button *ngIf="viaje.idEstatus == 12" ion-button icon-left round item-right size (click)="ManejoDeManiobra(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.tipoViaje, 13)"
                 color="alert">
                 <ion-icon name="square"></ion-icon>
                 Terminar Maniobra
             </button>
 
-            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left clear item-right (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left round item-right size (click)="AceptaViaje(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
                 color="sync">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Aceptar
             </button>
-            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left clear item-right (click)="MuestraMotivos(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+            <button *ngIf="viaje.idEstatus == 2" ion-button icon-left round item-right size (click)="MuestraMotivos(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
                 color="danger">
                 <ion-icon name="close-circle"></ion-icon>
                 Rechazar
             </button>
-            <button *ngIf="viaje.idEstatus == 3" ion-button icon-left clear item-right (click)="OpenModal(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.economico, 1)"
+            <button *ngIf="viaje.idEstatus == 3" ion-button icon-left round item-right size (click)="OpenModal(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.economico, 1)"
                 color="sync">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Iniciar Viaje
             </button>
-            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left clear item-right (click)="MuestraParadas(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left round item-right size (click)="MuestraParadas(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
                 color="primary">
                 <ion-icon name="hand"></ion-icon>
                 Parada
             </button>
-            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left clear item-right (click)="MuestraIncidentes(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
+            <button *ngIf="viaje.idEstatus == 3 || viaje.idEstatus == 5" ion-button icon-left round item-right size (click)="MuestraIncidentes(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado)"
                 color="danger">
                 <ion-icon name="alert"></ion-icon>
                 Incidente
             </button>
-            <button *ngIf="viaje.idEstatus == 5" ion-button icon-left clear item-right (click)="OpenModal(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.economico, 2)"
+            <button *ngIf="viaje.idEstatus == 5" ion-button icon-left round item-right size (click)="OpenModal(viaje.idViaje, viaje.idOrigen, viaje.idConcentrado, viaje.economico, 2)"
                 color="sync">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Llegada
