@@ -52,7 +52,7 @@ export class LoginPage {
             loading.dismiss();
 
             let alert = this.alertCtrl.create({
-              title: 'Sin Cobertura',
+              title: 'Sin cobertura',
               subTitle: 'Inténtelo más tarde',
               buttons: ['OK']
             });
