@@ -613,20 +613,20 @@ export class HomePage {
     let subTitulo = '';
 
     if (idEstatus == 11) {
-      subTitulo = 'Maniobra Iniciada';
+      subTitulo = 'Maniobra iniciada';
     }
     else if (idEstatus == 12) {
-      subTitulo = 'En Andén';
+      subTitulo = 'En andén';
     }
     else {
-      subTitulo = 'Maniobra Finalizada'
+      subTitulo = 'Maniobra finalizada, por favor capture evidencia'
     }
 
     let fecha = new Date();
     let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
     let coordenadas = this.lat + ',' + this.lng;
 
-    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
+    if (this.lat == null || this.lng == null) { coordenadas = 'Sin cobertura'; }
 
     let loading = this.loadingCtrl.create({
       content: 'Espere por favor'
