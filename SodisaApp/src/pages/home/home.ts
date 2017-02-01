@@ -729,10 +729,12 @@ export class HomePage {
     confirm.present();
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-
-  ViajeDetalle() {
-    this.navCtrl.setRoot(NuevoViajePage);
+  redirectSync() {
+    this.navCtrl.setRoot(SincronizacionPage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      eco: this.noTracto
+    });
   }
 
   loadMap() {
@@ -752,106 +754,5 @@ export class HomePage {
         };
     });
   }
-
-  redirectSync() {
-    this.navCtrl.setRoot(SincronizacionPage);;
-  }
-
-  terminaViaje() {
-    this.navCtrl.setRoot(ViajeTerminadoPage);
-  }
-
-  openParadas() {
-    let alert = this.alertCtrl.create();
-    alert.setTitle('Paradas en ruta');
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Carga de combustible',
-      value: '1',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Manifestación',
-      value: '2',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Mal clima',
-      value: '3',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Comida',
-      value: '4',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Descanso',
-      value: '5',
-      checked: false
-    });
-
-    alert.addButton('Cerrar');
-    alert.addButton({
-      text: 'Aceptar',
-      handler: data => {
-
-        let modal = this.modalCtrl.create(ModalParadasPage);
-        modal.present();
-
-      }
-    });
-
-    alert.present();
-  }
-
-  startManionbra() {
-    let loading = this.loadingCtrl.create({
-      content: 'Maniobra iniciada ...',
-      duration: 2000
-    });
-
-    loading.present();
-  }
-
-  finishManiobra() {
-    let confirm = this.alertCtrl.create({
-      subTitle: '¿Se realiza entrega de mercancía?',
-      buttons: [
-        {
-          text: 'No',
-          handler: () => {
-            this.navCtrl.setRoot(EvidenciaPage);
-          }
-        },
-        {
-          text: 'Si',
-          handler: () => {
-            this.navCtrl.setRoot(DocumentacionPage);
-          }
-        }
-      ]
-    });
-    confirm.present();
-  }
-
-  showAnden() {
-    let loading = this.loadingCtrl.create({
-      content: 'Puesta en andén ...',
-      duration: 2000
-    });
-
-    loading.present();
-  }
-
 
 }

@@ -14,18 +14,30 @@ import { HomePage } from '../home/home';
   templateUrl: 'sincronizacion.html'
 })
 export class SincronizacionPage {
+  username: any;
+  nombre: string;
+  economico: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private loadingCtrl: LoadingController) { }
+  constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController) {
+    this.username = params.get('usuario');
+    this.nombre = params.get('nombre');
+    this.economico = params.get('eco');
+
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SincronizacionPage');
   }
 
   redirectHome() {
-    this.navCtrl.setRoot(HomePage);
+    this.navCtrl.setRoot(HomePage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      eco: this.economico
+    });
   }
 
-  sincronizaViajes(){
+  sincronizaViajes() {
     let loading = this.loadingCtrl.create({
       content: '¡ Información sincronizada !',
       duration: 2000
