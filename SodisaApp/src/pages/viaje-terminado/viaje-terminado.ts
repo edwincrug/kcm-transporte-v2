@@ -235,7 +235,11 @@ export class ViajeTerminadoPage {
     toast.present();
 
     if (codigoRespuesta.pResponseCode == 1) {
-      this.navCtrl.push(HomePage);
+      this.navCtrl.push(HomePage, {
+        usuario: this.username,
+        nombre: this.nombre,
+        eco: this.noTracto
+      });
     }
     else if (codigoRespuesta.pResponseCode == -5) {
       this.navCtrl.setRoot(LoginPage);

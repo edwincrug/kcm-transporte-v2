@@ -44,6 +44,7 @@ export class EvidenciaPage {
     this.idTipoEntrega = params.get('tipoEntrega');
     this.noTracto = params.get('eco');
     this.listaFacturas = params.get('lstFacturas');
+    this.nombre = params.get('nombre');
   }
 
   ionViewDidLoad() {
@@ -102,11 +103,7 @@ export class EvidenciaPage {
             });
             alert.present();
 
-            this.navCtrl.setRoot(HomePage, {
-              usuario: this.userName,
-              nombre: this.nombre,
-              eco: this.noTracto
-            });
+            this.redirectHome();
           }
           else {
             this.interpretaRespuesta(data);
@@ -120,54 +117,71 @@ export class EvidenciaPage {
     }
     else {
       this.idEstatus = 15;
-      
-      for (let x = 0; x < this.listaFacturas.length; x++) {
 
-        if (this.listaFacturas[x].idEstatus == true) {
-          this.estatusDoc = 14;
-        }
-        else {
-          this.estatusDoc = 15;
+      if (this.listaFacturas != null) {
+        for (let x = 0; x < this.listaFacturas.length; x++) {
+
+          if (this.listaFacturas[x].idEstatus == true) {
+            this.estatusDoc = 14;
+          }
+          else {
+            this.estatusDoc = 15;
+          }
+
+          let detalleDocumento = {
+            pIdOperadorVc: this.userName,
+            pIdDispositvoVc: Device.uuid,
+            pIdLocalidadIn: this.idOrigen,
+            pIdDestinoIn: this.listaFacturas[x].cliente,
+            pIdConcentradoVc: this.idConcentrado,
+            pIdClienteAnteriorIn: this.listaFacturas[x].cliente,
+            pIdConsignatarioIn: this.listaFacturas[x].consignatario,
+            pIdDocumentoVc: this.listaFacturas[x].noFactura,
+            pIdEstatusViajeIn: this.estatusDoc,
+            pEvidenciaFotograficaVc: ' ',
+            pFechaEventoDt: fechaEnviada,
+            pGeoLocalizacionEventoVc: coordenadas
+          }
+
+          this.lstDocumento.push(detalleDocumento);
         }
 
-        let detalleDocumento = {
-          pIdOperadorVc: this.userName,
-          pIdDispositvoVc: Device.uuid,
-          pIdLocalidadIn: this.idOrigen,
-          pIdDestinoIn: this.listaFacturas[x].cliente,
-          pIdConcentradoVc: this.idConcentrado,
-          pIdClienteAnteriorIn: this.listaFacturas[x].cliente,
-          pIdConsignatarioIn: this.listaFacturas[x].consignatario,
-          pIdDocumentoVc: this.listaFacturas[x].noFactura,
-          pIdEstatusViajeIn: this.estatusDoc,
-          pEvidenciaFotograficaVc: ' ',
-          pFechaEventoDt: fechaEnviada,
-          pGeoLocalizacionEventoVc: coordenadas
-        }
+        this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+          if (data.pResponseCode == 1) {
+            let alert = this.alertCtrl.create({
+              subTitle: 'Trabajo Terminado',
+              buttons: ['OK']
+            });
+            alert.present();
 
-        this.lstDocumento.push(detalleDocumento);
+            this.redirectHome();
+          }
+          else {
+            this.interpretaRespuesta(data);
+          }
+        }, (err) => {
+          alert('Error webapi: ' + err);
+        });
+      }
+      else {
+        this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, 0, 14, Device.uuid, fechaEnviada, coordenadas, 0, 0, this.imagenSend).subscribe(data => {
+          if (data.pResponseCode == 1) {
+            let alert = this.alertCtrl.create({
+              subTitle: 'Trabajo Terminado',
+              buttons: ['OK']
+            });
+            alert.present();
+
+            this.redirectHome();
+          }
+          else {
+            this.interpretaRespuesta(data);
+          }
+        }, (err) => {
+          alert('Error webapi: ' + err);
+        });
       }
 
-      this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
-        if (data.pResponseCode == 1) {
-          let alert = this.alertCtrl.create({
-            subTitle: 'Trabajo Terminado',
-            buttons: ['OK']
-          });
-          alert.present();
-
-          this.navCtrl.setRoot(HomePage, {
-            usuario: this.userName,
-            nombre: this.nombre,
-            eco: this.noTracto
-          });
-        }
-        else {
-          this.interpretaRespuesta(data);
-        }
-      }, (err) => {
-        alert('Error webapi: ' + err);
-      });
     }
 
 

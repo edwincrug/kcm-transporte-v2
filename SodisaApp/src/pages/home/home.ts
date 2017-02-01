@@ -527,7 +527,9 @@ export class HomePage {
       origen: idOrigen,
       concentrado: idConcentrado,
       usuario: this.username,
-      parada: idParada
+      parada: idParada,
+      eco: this.noTracto,
+      nombre: this.nombre
     });
     modal.present();
   }
@@ -704,7 +706,8 @@ export class HomePage {
               concentrado: idConcentrado,
               usuario: this.username,
               tipoEntrega: 2,
-              eco: this.noTracto
+              eco: this.noTracto,
+              nombre: this.nombre
             });
           }
         },
@@ -748,12 +751,6 @@ export class HomePage {
           zoom: 15
         };
     });
-  }
-
-
-
-  viajeTracking() {
-    this.navCtrl.setRoot(NuevoViajePage);
   }
 
   redirectSync() {
@@ -855,60 +852,6 @@ export class HomePage {
 
     loading.present();
   }
-
-  openIncidentes() {
-    let alert = this.alertCtrl.create();
-    alert.setTitle('Incidentes');
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Bloqueo de tarjeta Iave',
-      value: '6',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Desvió de ruta',
-      value: '7',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Falla mecánica',
-      value: '8',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Intento de robo',
-      value: '9',
-      checked: false
-    });
-
-    alert.addInput({
-      type: 'radio',
-      label: 'Siniestro Unidad',
-      value: '10',
-      checked: false
-    });
-
-    alert.addButton('Cerrar');
-    alert.addButton({
-      text: 'Aceptar',
-      handler: data => {
-
-        let modal = this.modalCtrl.create(ModalIncidentePage);
-        modal.present();
-
-      }
-    });
-
-    alert.present();
-  }
-
 
 
 }

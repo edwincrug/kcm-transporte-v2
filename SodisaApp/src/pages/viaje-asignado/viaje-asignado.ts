@@ -63,7 +63,7 @@ export class ViajeAsignadoPage {
     this.navCtrl.setRoot(NuevoViajePage, {
       usuario: this.username,
       nombre: this.nombre,
-      noRemolque: economico,
+      eco: this.economico,
       idViaje: idViaje,
       idOrigen: idOrigen,
       idConcentrado: idConcentrado,

@@ -3,6 +3,7 @@ import { NavController, NavParams, ViewController, ToastController, AlertControl
 import { Camera, Device, Geolocation } from 'ionic-native';
 
 import { LoginPage } from '../login/login';
+import { HomePage } from '../home/home';
 
 import { WebApiProvider } from '../../providers/web-api-provider';
 
@@ -29,6 +30,8 @@ export class ModalParadasPage {
   observaciones: string;
   mensaje: string;
   descripcionParada: string;
+  nombre: string;
+  noTracto: any;
 
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
@@ -40,6 +43,8 @@ export class ModalParadasPage {
     this.idConcentrado = params.get('concentrado');
     this.userName = params.get('usuario');
     this.idParada = params.get('parada');
+    this.nombre = params.get('nombre');
+    this.noTracto = params.get('eco');
 
     this.RegresaDescripcion(this.idParada);
 
@@ -173,5 +178,13 @@ export class ModalParadasPage {
     else if (idParada == 6) {
       this.descripcionParada = 'Otro';
     }
+  }
+
+  RedirectHome() {
+    this.navCtrl.setRoot(HomePage, {
+      usuario: this.userName,
+      nombre: this.nombre,
+      eco: this.noTracto
+    });
   }
 }

@@ -33,11 +33,13 @@ export class DocumentacionPage {
 
   constructor(public navCtrl: NavController, public params: NavParams, public dataServices: LocalDataProvider) {
 
+    this.userName = params.get('usuario');
+    this.noTracto = params.get('eco');
+    this.nombre = params.get('nombre');
+
     this.idOrigen = params.get('origen');
     this.idConcentrado = params.get('concentrado');
-    this.userName = params.get('usuario');
     this.idTipoEntrega = params.get('tipoEntrega');
-    this.noTracto = params.get('eco');
     this.idViaje = params.get('idViaje');
 
   }
@@ -54,7 +56,8 @@ export class DocumentacionPage {
       usuario: this.userName,
       tipoEntrega: this.idTipoEntrega,
       eco: this.noTracto,
-      lstFacturas: this.listaFacturas
+      lstFacturas: this.listaFacturas,
+      nombre: this.nombre
     });
   }
 

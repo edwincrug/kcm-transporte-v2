@@ -49,7 +49,7 @@ export class NuevoViajePage {
 
     this.username = params.get('usuario');
     this.nombre = params.get('nombre');
-    this.remolque = params.get('noRemolque');
+    this.remolque = params.get('eco');
     this.viaje = params.get('idViaje');
     this.origen = params.get('idOrigen');
     this.concentrado = params.get('idConcentrado');
@@ -139,14 +139,6 @@ export class NuevoViajePage {
 
   redirectViajeAceptado() {
     this.navCtrl.setRoot(ViajeAceptadoPage);
-  }
-
-  redirectHome() {
-    this.navCtrl.setRoot(HomePage, {
-      usuario: this.username,
-      nombre: this.nombre,
-      eco: this.economico
-    });
   }
 
   redirectSync() {
@@ -342,7 +334,7 @@ export class NuevoViajePage {
     this.navCtrl.setRoot(HomePage, {
       usuario: this.username,
       nombre: this.nombre,
-      eco: this.economico
+      eco: this.remolque
     });
   }
 
