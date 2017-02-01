@@ -6,9 +6,9 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class WebApiProvider {
-  url: string = 'http://dev1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
+  //url: string = 'http://dev1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
   //url: string = 'http://www.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
-  //url: string = 'http://qa1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
+  url: string = 'http://qa1.sodisamovil.kcm.com.mx/_WebAPI/Operador/';
   data: any;
   parametros: any;
 
@@ -17,7 +17,7 @@ export class WebApiProvider {
   }
 
   login(pIdOperador, pPasswordOperador, pIMEI): Observable<any> {
-    // let imei = "'" + pIMEI + "'";
+    //let imei = "'" + pIMEI + "'";
     return this.http.get(this.url + 'Login/?strIdOperador=' + pIdOperador + '&strPasswordOperador=' + pPasswordOperador + '&strIdDispositivo=' + pIMEI)
       .map((res: Response) => {
         //alert('Respuesta original: ' + res);
@@ -27,22 +27,32 @@ export class WebApiProvider {
       });
   }
 
-  viajesAsignados(pIdOperador, pIMEI) {
-    if (this.data) {
-      // already loaded data
-      return Promise.resolve(this.data);
-    }
-
-    // don't have the data yet
-    return new Promise(resolve => {
-      this.http.get(this.url + 'viajeAsignado/?strIdOperador=' + pIdOperador + '&strIdDispositivo=' + pIMEI)
-        .map(res => res.json())
-        .subscribe(data => {
-          this.data = data;
-          resolve(this.data);
-        });
-    });
+  viajesAsignados(pIdOperador, pIMEI): Observable<any> {
+    return this.http.get(this.url + 'viajeAsignado/?strIdOperador=' + pIdOperador + '&strIdDispositivo=' + pIMEI)
+      .map((res: Response) => {
+        //alert('Respuesta original: ' + res);
+        this.data = res.json();
+        //alert('Respuesta con json: ' + this.data);
+        return this.data;
+      });
   }
+
+  // viajesAsignados(pIdOperador, pIMEI) {
+  //   if (this.data) {
+  //     // already loaded data
+  //     return Promise.resolve(this.data);
+  //   }
+
+  //   // don't have the data yet
+  //   return new Promise(resolve => {
+  //     this.http.get(this.url + 'viajeAsignado/?strIdOperador=' + pIdOperador + '&strIdDispositivo=' + pIMEI)
+  //       .map(res => res.json())
+  //       .subscribe(data => {
+  //         this.data = data;
+  //         resolve(this.data);
+  //       });
+  //   });
+  // }
 
   aceptaRechazaViaje(idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstautsViaje, idDispositivo): Observable<any> {
     let headers = new Headers({ 'Content-Type': 'application/json' });

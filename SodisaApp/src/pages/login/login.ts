@@ -24,6 +24,7 @@ export class LoginPage {
   password: string;
   public credenciales: any;
   mensaje: string;
+  listaViajesAsignados: any[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public toastCtrl: ToastController,
     private loadingCtrl: LoadingController, public networkService: NetworkProvider, public dataServices: LocalDataProvider,
@@ -67,27 +68,38 @@ export class LoginPage {
 
         }
         else {
-          loading.dismiss();
 
-          let alert = this.alertCtrl.create({
-              title: '¡Bienvenido!',
-              subTitle: respuesta.nombreCompleto,
-              buttons: ['OK']
-            });
-            alert.present();
+          this.sodisaService.viajesAsignados(this.username, Device.uuid).subscribe(data => {
+            loading.dismiss();
+            this.listaViajesAsignados = data.pListaViajeMovil;
+            if (data.pResponseCode == 1) {
+              if (data.pListaViajeMovil.length > 0) {
+                this.dataServices.openDatabase()
+                  .then(() => this.dataServices.insertaViajesAsignados(data.pListaViajeMovil).then(result => {
 
-          // let toast = this.toastCtrl.create({
-          //   message: '¡Bienvenido ' + respuesta.nombreCompleto + ' !',
-          //   duration: 2000,
-          //   position: 'middle'
-          // });
-          // toast.present();
+                  }));
+              }
+            }
+            else {
+              if (data.pResponseCode == -5) {
+                this.navCtrl.push(LoginPage);
+              }
+            }
+          });
+
+          let presentacion = this.loadingCtrl.create({
+            content: '¡Bienvenido..' + respuesta.nombreCompleto + ' !',
+            duration: 3000
+          });
+          presentacion.present();
 
           this.navCtrl.setRoot(HomePage, {
             usuario: this.username,
             nombre: respuesta.nombreCompleto,
             eco: respuesta.tracto
           });
+
+
         }
       }).catch(error => {
         alert('Error lectura BD 1');

@@ -30,6 +30,7 @@ export class ViajeAsignadoPage {
   subTitulo: string;
   idEstatusActualizar: number;
   idRechazoSelected;
+  listaViajesAsignados: any[] = [];
 
   constructor(public navCtrl: NavController, public params: NavParams, public dataServices: LocalDataProvider,
     public networkService: NetworkProvider, public sodisaService: WebApiProvider, public alertCtrl: AlertController,
@@ -291,5 +292,52 @@ export class ViajeAsignadoPage {
 
       });
     }
+  }
+
+  obtieneViajesAsignados(refresher) {
+    setTimeout(() => {
+      // this.sodisaService.viajesAsignados('C55163', 'aa1add0d87db4099')
+      this.sodisaService.viajesAsignados(this.username, Device.uuid)
+        .subscribe(data => {
+          this.listaViajesAsignados = data.pListaViajeMovil;
+          if (data.pResponseCode == 1) {
+            if (data.pListaViajeMovil.length > 0) {
+              this.dataServices.openDatabase()
+                .then(() => this.dataServices.insertaViajesAsignados(data.pListaViajeMovil).then(result => {
+                  let loading = this.loadingCtrl.create({
+                    content: 'Recuperando información...'
+                  });
+
+                  loading.present();
+
+                  setTimeout(() => {
+                    this.ObtieneViajeManiobraInternos();
+                    loading.dismiss();
+                  }, 3000);
+                }));
+            }
+            else {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Sin nuevos viajes asignados',
+                buttons: ['OK']
+              });
+              alert.present();
+            }
+          }
+          else {
+            let toast = this.toastCtrl.create({
+              message: data.pMessage,
+              duration: 2000,
+              position: 'middle'
+            });
+            toast.present();
+
+            if (data.pResponseCode == -5) {
+              this.navCtrl.push(LoginPage);
+            }
+          }
+        });
+      refresher.complete();
+    }, 2000);
   }
 }

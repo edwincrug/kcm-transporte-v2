@@ -14,6 +14,10 @@
 
 
 <ion-content padding>
+  <ion-refresher (ionRefresh)="obtieneViajesAsignados($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Suelte para actualizar" refreshingSpinner="circles" refreshingText="Actualizando ...">
+    </ion-refresher-content>
+  </ion-refresher>
 
   <ion-list>
 
