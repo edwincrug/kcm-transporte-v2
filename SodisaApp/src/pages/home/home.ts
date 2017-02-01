@@ -102,7 +102,7 @@ export class HomePage {
         // loading.dismiss();
         this.dataServices.actualizaViajeLocal(3, 0, idViaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
-            subTitle: 'Viaje Aceptado',
+            subTitle: 'Viaje aceptado',
             buttons: ['OK']
           });
           alert.present();
@@ -121,7 +121,7 @@ export class HomePage {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.actualizaViajeLocal(3, 0, idViaje, 0, '').then(response => {
               let alert = this.alertCtrl.create({
-                subTitle: 'Viaje Aceptado',
+                subTitle: 'Viaje aceptado',
                 buttons: ['OK']
               });
               alert.present();
@@ -184,7 +184,7 @@ export class HomePage {
       .then(() => {
 
         this.dataServices.eliminaViajeLocal(idViaje).then(() => {
-          // alert('Eliminado Local');
+          // alert('Eliminado local');
         });
 
         this.dataServices.eliminaViajeSync(idViajeSync).then(() => {
@@ -196,7 +196,7 @@ export class HomePage {
   MuestraMotivos(idViaje, idOrigen, idConcentrado) {
     this.imei = Device.uuid;
     let alert = this.alertCtrl.create();
-    alert.setTitle('Motivos de Rechazo');
+    alert.setTitle('Motivos de rechazo');
 
     alert.addInput({
       type: 'radio',
@@ -214,7 +214,7 @@ export class HomePage {
 
     alert.addInput({
       type: 'radio',
-      label: 'Negativa del Operador',
+      label: 'Negativa del operador',
       value: '3',
       checked: false
     });
@@ -248,7 +248,7 @@ export class HomePage {
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, this.idRechazoSelected, 4, Device.uuid).then(() => {
         this.dataServices.actualizaViajeLocal(4, this.idRechazoSelected, idViaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
-            subTitle: 'Viaje Rechazado',
+            subTitle: 'Viaje rechazado',
             buttons: ['OK']
           });
           alert.present();
@@ -264,7 +264,7 @@ export class HomePage {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.eliminaViajeLocal(idViaje).then(response => {
               let alert = this.alertCtrl.create({
-                subTitle: 'Viaje Rechazado',
+                subTitle: 'Viaje rechazado',
                 buttons: ['OK']
               });
               alert.present();
@@ -302,7 +302,7 @@ export class HomePage {
       this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 5, Device.uuid, coordenadas, fechaEnviada, km, noRemolque).then(() => {
         this.dataServices.actualizaViajeLocal(5, 0, idViaje, km, noRemolque).then(response => {
           let alert = this.alertCtrl.create({
-            subTitle: 'Viaje Iniciado',
+            subTitle: 'Viaje iniciado',
             buttons: ['OK']
           });
           alert.present();
@@ -318,7 +318,7 @@ export class HomePage {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.actualizaViajeLocal(5, 0, idViaje, km, noRemolque).then(response => {
               let alert = this.alertCtrl.create({
-                subTitle: 'Viaje Iniciado',
+                subTitle: 'Viaje iniciado',
                 buttons: ['OK']
               });
               alert.present();
@@ -460,7 +460,7 @@ export class HomePage {
   MuestraParadas(idViaje, idOrigen, idConcentrado) {
     this.imei = Device.uuid;
     let alert = this.alertCtrl.create();
-    alert.setTitle('Motivos Parada en Ruta');
+    alert.setTitle('Motivos parada en ruta');
 
     alert.addInput({
       type: 'radio',
@@ -568,7 +568,7 @@ export class HomePage {
 
     alert.addInput({
       type: 'radio',
-      label: 'Siniestro Unidad',
+      label: 'Siniestro unidad',
       value: '5',
       checked: false
     });

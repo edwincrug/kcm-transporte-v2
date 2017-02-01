@@ -98,7 +98,7 @@ export class EvidenciaPage {
         this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
           if (data.pResponseCode == 1) {
             let alert = this.alertCtrl.create({
-              subTitle: 'Trabajo Terminado',
+              subTitle: 'Trabajo terminado',
               buttons: ['OK']
             });
             alert.present();
@@ -149,7 +149,7 @@ export class EvidenciaPage {
         this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
           if (data.pResponseCode == 1) {
             let alert = this.alertCtrl.create({
-              subTitle: 'Trabajo Terminado',
+              subTitle: 'Trabajo terminado',
               buttons: ['OK']
             });
             alert.present();
@@ -167,7 +167,7 @@ export class EvidenciaPage {
         this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, 0, 14, Device.uuid, fechaEnviada, coordenadas, 0, 0, this.imagenSend).subscribe(data => {
           if (data.pResponseCode == 1) {
             let alert = this.alertCtrl.create({
-              subTitle: 'Trabajo Terminado',
+              subTitle: 'Trabajo terminado',
               buttons: ['OK']
             });
             alert.present();

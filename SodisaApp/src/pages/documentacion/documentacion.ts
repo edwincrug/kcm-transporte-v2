@@ -97,7 +97,7 @@ export class DocumentacionPage {
           this.listaFacturas = [];
         }
       }).catch(error => {
-        alert('Viaje Detalle ERROR: ' + error);
+        alert('Viaje detalle error: ' + error);
       }));
   }
 
