@@ -75,7 +75,7 @@ export class ViajeAceptadoPage {
 
   terminarViaje() {
     let loading = this.loadingCtrl.create({
-      content: '¡ Trabajo Terminado !',
+      content: '¡ Trabajo terminado !',
       duration: 2000
     });
 
