@@ -13,7 +13,7 @@ import { LocalDataProvider } from '../providers/local-data-provider';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage = null;
+  rootPage: any = null;
 
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
     public http: Http) {
@@ -25,9 +25,6 @@ export class MyApp {
       Splashscreen.hide();
 
       this.dataServices.openDatabase()
-        .then(() => this.dataServices.ObtieneUsuario().then(res => {
-          //alert('Usuarios locales: ' + res);
-        }))
         .then(() => this.dataServices.createTableUsuario())
         .then(() => this.dataServices.createTableViaje())
         .then(() => this.dataServices.createTableViajeDetalle())

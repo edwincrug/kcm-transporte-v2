@@ -76,7 +76,7 @@ export class LocalDataProvider {
   }
 
   checkViajesAsignados() {
-    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (3, 5, 6, 9, 11, 12)';
+    let sql = 'SELECT * FROM Viaje WHERE Viaje.idEstatus IN (3, 5, 6, 9, 11, 12, 13)';
     return this.db.executeSql(sql, [])
       .then(response => {
         let hayViajes = [];

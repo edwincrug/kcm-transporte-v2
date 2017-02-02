@@ -83,11 +83,11 @@ export class ViajeAsignadoPage {
 
   AceptaViajeManiobra(idViaje, idOrigen, idConcentrado, idTipoViaje, noRemolque) {
     if (idTipoViaje == 1) {
-      this.subTitulo = 'Viaje Aceptado';
+      this.subTitulo = 'Viaje aceptado';
       this.idEstatusActualizar = 3;
     }
     else {
-      this.subTitulo = 'Maniobra Aceptada';
+      this.subTitulo = 'Maniobra aceptada';
       this.idEstatusActualizar = 9;
     }
 
