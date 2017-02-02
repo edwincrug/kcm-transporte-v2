@@ -60,8 +60,8 @@ export class LocalDataProvider {
   }
 
   checkUsuario(usuario, pwd, imei) {
-    let sql = 'SELECT * FROM Usuario WHERE userName = ?';
-    return this.db.executeSql(sql, [usuario.toUpperCase()])
+    let sql = 'SELECT * FROM Usuario WHERE userName = ? AND password = ?';
+    return this.db.executeSql(sql, [usuario.toUpperCase(), pwd])
       .then(response => {
         //alert('Cantidad de registros: ' + response.rows.length);
         if (response.rows.length > 0) {
