@@ -115,12 +115,12 @@
             </button>
             <!-- INICIA botones para cuando el estatus es 6 y por algun motivo se apago el celular y se quedo en dicho estatus -->
             <button *ngIf="viaje.idEstatus == 6" ion-button icon-left round item-right size (click)="RedireccionaViajeTerminado(viaje)"
-                color="sync">
+                color="light">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Terminar
             </button>            
             <button *ngIf="viaje.idEstatus == 13" ion-button icon-left round item-right size (click)="RedireccionaEvidencias(viaje)"
-                color="sync">
+                color="light">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Evidencia
             </button>

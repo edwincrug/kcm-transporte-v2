@@ -5,37 +5,20 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar color="primary">
-    <ion-title>Evidencia</ion-title>
-  </ion-navbar>
-
+    <ion-navbar color="primary">
+        <ion-title>Evidencia</ion-title>
+    </ion-navbar>
 </ion-header>
-
-
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
-      <ion-col offset-10 width-80>
-        <img [src]="base64Image" *ngIf="base64Image" />
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+    <ion-grid>
+        <ion-row>
+            <ion-col offset-10 width-80>
+                <img [src]="base64Image" *ngIf="base64Image" />
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>
-
 <ion-footer padding class="bar-stable">
-  <ion-grid>
-    <ion-row>
-      <ion-col offset-10 width-80>
-        <button ion-button round color="secondary" (click)="CapturaEvidencia()">Capturar Evidencia</button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col offset-10 width-80>
-        <button ion-button round color="danger" (click)="EnviaEvidencia()">Finalizar</button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-
+    <button ion-button round small color="secondary" (click)="CapturaEvidencia()">Capturar Evidencia</button>
+    <button ion-button round small color="danger" (click)="EnviaEvidencia()">Finalizar</button>
 </ion-footer>
