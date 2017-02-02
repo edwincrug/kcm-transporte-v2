@@ -69,7 +69,8 @@ export class ViajeAsignadoPage {
       idConcentrado: idConcentrado,
       origenNombre: origenNombre,
       destino: destino,
-      tipoViaje: idTipoViaje
+      tipoViaje: idTipoViaje,
+      noRemolque: economico
     });
   }
 

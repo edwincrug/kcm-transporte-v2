@@ -49,13 +49,14 @@ export class NuevoViajePage {
 
     this.username = params.get('usuario');
     this.nombre = params.get('nombre');
-    this.remolque = params.get('eco');
+    this.economico = params.get('eco');
     this.viaje = params.get('idViaje');
     this.origen = params.get('idOrigen');
     this.concentrado = params.get('idConcentrado');
     this.origenNombre = params.get('origenNombre');
     this.destino = params.get('destino');
     this.idTipoViaje = params.get('tipoViaje');
+    this.remolque = params.get('noRemolque');
 
     Geolocation.getCurrentPosition()
       .then(position => {
@@ -334,7 +335,7 @@ export class NuevoViajePage {
     this.navCtrl.setRoot(HomePage, {
       usuario: this.username,
       nombre: this.nombre,
-      eco: this.remolque
+      eco: this.economico
     });
   }
 
