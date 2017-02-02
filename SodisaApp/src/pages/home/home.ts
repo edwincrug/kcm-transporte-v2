@@ -755,4 +755,28 @@ export class HomePage {
     });
   }
 
+  RedireccionaViajeTerminado(viaje) {
+    console.log('entre');
+    this.navCtrl.setRoot(ViajeTerminadoPage, {
+            usuario: this.username,
+            nombre: this.nombre,
+            noTracto: this.noTracto,
+            odometroFinal: viaje.odometro,
+            noRemolque: viaje.economico,
+            idViaje: viaje.idViaje,
+            idOrigen: viaje.idOrigen,
+            idConcentrado: viaje.idConcentrado
+          });
+  }
+  RedireccionaEvidencias(viaje) {
+    console.log('entre');
+    this.navCtrl.setRoot(EvidenciaPage, {
+                    tipoEntrega: 1,
+                    origen: viaje.idOrigen,
+                    concentrado: viaje.idConcentrado,
+                    usuario: this.username,
+                    eco: this.noTracto,
+                    nombre: this.nombre
+                  });
+  }
 }
