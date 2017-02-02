@@ -6,6 +6,8 @@ import { LoginPage } from '../login/login';
 import { HomePage } from '../home/home';
 
 import { WebApiProvider } from '../../providers/web-api-provider';
+import { LocalDataProvider } from '../../providers/local-data-provider';
+import { NetworkProvider } from '../../providers/network-provider';
 
 /*
   Generated class for the ModalParadas page.
@@ -36,7 +38,7 @@ export class ModalParadasPage {
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
     public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController) {
+    public loadingCtrl: LoadingController, public networkService: NetworkProvider, public dataServices: LocalDataProvider) {
 
     this.idViaje = params.get('viaje');
     this.idOrigen = params.get('origen');
@@ -101,28 +103,56 @@ export class ModalParadasPage {
     loading.present();
 
     if (this.imagenSend != null) {
-      this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 1, this.idParada, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
-        loading.dismiss();
-        if (data.pResponseCode == 1) {
+      if (this.networkService.noConnection()) {
+        this.dataServices.insertaParadaIncidenteSync(this.userName, this.idOrigen, this.idConcentrado, 1, this.idParada, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).then(() => {
+          loading.dismiss();
+
           let alert = this.alertCtrl.create({
             subTitle: 'Parada permitida registrada',
             buttons: ['OK']
           });
           alert.present();
 
+          this.RedirectHome();
+
+        }).catch(error => {
+          loading.dismiss();
+          alert('Error al guardar la evidencia local: ' + error);
+        });
+      }
+      else {
+        this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 1, this.idParada, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
+          loading.dismiss();
+          if (data.pResponseCode == 1) {
+            let alert = this.alertCtrl.create({
+              subTitle: 'Parada permitida registrada',
+              buttons: ['OK']
+            });
+            alert.present();
+
+            this.dismiss();
+          }
+          else {
+            this.interpretaRespuesta(data);
+          }
+
+        }, (err) => {
+          alert('Hubo error en cámara');
+          loading.dismiss();
           this.dismiss();
-        }
-        else {
-          this.interpretaRespuesta(data);
-        }
-
-      }, (err) => {
-        alert('Hubo error en cámara');
-        loading.dismiss();
-        this.dismiss();
-      });
-
+        });
+      }
     }
+    else {
+      loading.dismiss();
+
+      let alert = this.alertCtrl.create({
+        subTitle: 'Por favor capture una evidencia',
+        buttons: ['OK']
+      });
+      alert.present();
+    }
+
   }
 
   interpretaRespuesta(codigoRespuesta) {

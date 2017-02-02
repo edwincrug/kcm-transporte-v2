@@ -42,6 +42,11 @@ export class LocalDataProvider {
     return this.db.executeSql(sql, []);
   }
 
+  createTableParadaIncidenteSync() {
+    let sql = 'CREATE TABLE IF NOT EXISTS ParadaIncidenteSync(idParadaIncidenteSync INTEGER PRIMARY KEY AUTOINCREMENT, idOperador TEXT, idLocalidad INTEGER, idConcentrado TEXT, idTipoEvento INTEGER, idEvento INTEGER, evidencia TEXT, observacion TEXT, geolocalizacion TEXT, fecha TEXT, idDispositivo TEXT); ';
+    return this.db.executeSql(sql, []);
+  }
+
   getAll() {
     let sql = 'SELECT * FROM Usuario';
     return this.db.executeSql(sql, [])
@@ -61,7 +66,7 @@ export class LocalDataProvider {
 
   checkUsuario(usuario, pwd, imei) {
     let sql = 'SELECT * FROM Usuario WHERE userName = ? AND password = ?';
-    return this.db.executeSql(sql, [usuario.toUpperCase(), pwd])
+    return this.db.executeSql(sql, [usuario, pwd])
       .then(response => {
         //alert('Cantidad de registros: ' + response.rows.length);
         if (response.rows.length > 0) {
@@ -306,4 +311,21 @@ export class LocalDataProvider {
     let sql = "DELETE FROM Usuario ";
     return this.db.executeSql(sql, []);
   }
+
+  insertaParadaIncidenteSync(idOperador, idLocalidad, idConcentrado, idTipoEvento, idEvento, evidencia, observacion, geolocalizacion, fecha, idDispositivo) {
+    let viajeQuery = "INSERT INTO ParadaIncidenteSync (idOperador, idLocalidad, idConcentrado, idTipoEvento, idEvento, evidencia, observacion, geolocalizacion, fecha, idDispositivo) VALUES ('" +
+      idOperador + "', " +
+      idLocalidad + ", '" +
+      idConcentrado + "', " +
+      idTipoEvento + ", " +
+      idEvento + ", '" +
+      evidencia + "', '" +
+      observacion + "', '" +
+      geolocalizacion + "', '" +
+      fecha + "', '" +
+      idDispositivo + "'); ";
+
+    return this.db.executeSql(viajeQuery, []);
+  }
+
 }

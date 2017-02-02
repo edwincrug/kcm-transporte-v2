@@ -635,7 +635,7 @@ export class HomePage {
     loading.present();
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, idEstatus, this.imei).then(() => {
+      this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, idEstatus, Device.uuid, coordenadas, fechaEnviada, 0, '').then(() => {
         loading.dismiss();
         this.dataServices.actualizaViajeLocal(idEstatus, 0, idViaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({
