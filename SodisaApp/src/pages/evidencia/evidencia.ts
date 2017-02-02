@@ -114,6 +114,13 @@ export class EvidenciaPage {
         });
 
       }
+      else {
+        let alert = this.alertCtrl.create({
+          subTitle: 'Debe capturar una evidencia',
+          buttons: ['OK']
+        });
+        alert.present();
+      }
     }
     else {
       this.idEstatus = 15;
@@ -146,40 +153,58 @@ export class EvidenciaPage {
           this.lstDocumento.push(detalleDocumento);
         }
 
-        this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
-          if (data.pResponseCode == 1) {
-            let alert = this.alertCtrl.create({
-              subTitle: 'Trabajo terminado',
-              buttons: ['OK']
-            });
-            alert.present();
+        if (this.imagenSend != null) {
+          this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+            if (data.pResponseCode == 1) {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Trabajo terminado',
+                buttons: ['OK']
+              });
+              alert.present();
 
-            this.redirectHome();
-          }
-          else {
-            this.interpretaRespuesta(data);
-          }
-        }, (err) => {
-          alert('Error webapi: ' + err);
-        });
+              this.redirectHome();
+            }
+            else {
+              this.interpretaRespuesta(data);
+            }
+          }, (err) => {
+            alert('Error webapi: ' + err);
+          });
+        }
+        else {
+          let alert = this.alertCtrl.create({
+            subTitle: 'Debe capturar una evidencia',
+            buttons: ['OK']
+          });
+          alert.present();
+        }
       }
       else {
-        this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, 0, 14, Device.uuid, fechaEnviada, coordenadas, 0, 0, this.imagenSend).subscribe(data => {
-          if (data.pResponseCode == 1) {
-            let alert = this.alertCtrl.create({
-              subTitle: 'Trabajo terminado',
-              buttons: ['OK']
-            });
-            alert.present();
+        if (this.imagenSend != null) {
+          this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, 0, 14, Device.uuid, fechaEnviada, coordenadas, 0, 0, this.imagenSend).subscribe(data => {
+            if (data.pResponseCode == 1) {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Trabajo terminado',
+                buttons: ['OK']
+              });
+              alert.present();
 
-            this.redirectHome();
-          }
-          else {
-            this.interpretaRespuesta(data);
-          }
-        }, (err) => {
-          alert('Error webapi: ' + err);
-        });
+              this.redirectHome();
+            }
+            else {
+              this.interpretaRespuesta(data);
+            }
+          }, (err) => {
+            alert('Error webapi: ' + err);
+          });
+        }
+        else {
+          let alert = this.alertCtrl.create({
+            subTitle: 'Debe capturar una evidencia',
+            buttons: ['OK']
+          });
+          alert.present();
+        }
       }
 
     }
