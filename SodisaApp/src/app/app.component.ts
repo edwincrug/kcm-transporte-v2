@@ -13,7 +13,7 @@ import { LocalDataProvider } from '../providers/local-data-provider';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = null;
+  rootPage: any = LoginPage;
 
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
     public http: Http) {

@@ -6,6 +6,8 @@ import { HomePage } from '../home/home';
 import { LoginPage } from '../login/login';
 
 import { WebApiProvider } from '../../providers/web-api-provider';
+import { LocalDataProvider } from '../../providers/local-data-provider';
+import { NetworkProvider } from '../../providers/network-provider';
 
 /*
   Generated class for the Evidencia page.
@@ -34,9 +36,11 @@ export class EvidenciaPage {
   listaFacturas = [];
   estatusDoc: number;
   lstDocumento = [];
+  idViaje: number;
 
   constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController,
-    public sodisaService: WebApiProvider, public alertCtrl: AlertController, public toastCtrl: ToastController) {
+    public sodisaService: WebApiProvider, public alertCtrl: AlertController, public toastCtrl: ToastController,
+    public networkService: NetworkProvider, public dataServices: LocalDataProvider) {
 
     this.idOrigen = params.get('origen');
     this.idConcentrado = params.get('concentrado');
@@ -45,6 +49,7 @@ export class EvidenciaPage {
     this.noTracto = params.get('eco');
     this.listaFacturas = params.get('lstFacturas');
     this.nombre = params.get('nombre');
+    this.idViaje = params.get('idViaje');
   }
 
   ionViewDidLoad() {
@@ -90,13 +95,20 @@ export class EvidenciaPage {
 
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor ...'
+    });
+
+    loading.present();
+
     if (this.idTipoEntrega == 1) {
       this.idDocumento = 0;
       this.idEstatus = 14
 
-      if (this.imagenSend != null) {
-        this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
-          if (data.pResponseCode == 1) {
+      if (this.networkService.noConnection()) {
+        this.dataServices.insertaAceptaRechazaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid).then(() => {
+          loading.dismiss();
+          this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
             let alert = this.alertCtrl.create({
               subTitle: 'Trabajo terminado',
               buttons: ['OK']
@@ -104,23 +116,45 @@ export class EvidenciaPage {
             alert.present();
 
             this.redirectHome();
-          }
-          else {
-            this.interpretaRespuesta(data);
-          }
-
-        }, (err) => {
-          alert('Hubo error en cámara');
+          });
+        }).catch(error => {
+          loading.dismiss();
         });
-
       }
       else {
-        let alert = this.alertCtrl.create({
-          subTitle: 'Debe capturar una evidencia',
-          buttons: ['OK']
-        });
-        alert.present();
+
+        if (this.imagenSend != null) {
+          this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
+            loading.dismiss();
+            if (data.pResponseCode == 1) {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Trabajo terminado',
+                buttons: ['OK']
+              });
+              alert.present();
+
+              this.redirectHome();
+            }
+            else {
+              this.interpretaRespuesta(data);
+            }
+
+          }, (err) => {
+            alert('Hubo error en cámara');
+          });
+
+        }
+        else {
+          loading.dismiss();
+          let alert = this.alertCtrl.create({
+            subTitle: 'Debe capturar una evidencia',
+            buttons: ['OK']
+          });
+          alert.present();
+        }
+
       }
+
     }
     else {
       this.idEstatus = 15;
@@ -155,6 +189,7 @@ export class EvidenciaPage {
 
         if (this.imagenSend != null) {
           this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+            loading.dismiss();
             if (data.pResponseCode == 1) {
               let alert = this.alertCtrl.create({
                 subTitle: 'Trabajo terminado',
@@ -172,6 +207,7 @@ export class EvidenciaPage {
           });
         }
         else {
+          loading.dismiss();
           let alert = this.alertCtrl.create({
             subTitle: 'Debe capturar una evidencia',
             buttons: ['OK']
@@ -182,6 +218,7 @@ export class EvidenciaPage {
       else {
         if (this.imagenSend != null) {
           this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, 0, 14, Device.uuid, fechaEnviada, coordenadas, 0, 0, this.imagenSend).subscribe(data => {
+            loading.dismiss();
             if (data.pResponseCode == 1) {
               let alert = this.alertCtrl.create({
                 subTitle: 'Trabajo terminado',
