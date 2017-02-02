@@ -175,7 +175,7 @@ export class NuevoViajePage {
           });
           alert.present();
 
-          this.RedirectHome();
+          this.RedirectViajesAsignados();
         });
       }).catch(error => {
         loading.dismiss();
@@ -193,7 +193,7 @@ export class NuevoViajePage {
               });
               alert.present();
 
-              this.RedirectHome();
+              this.RedirectViajesAsignados();
             }));
         }
         else {
@@ -203,7 +203,7 @@ export class NuevoViajePage {
             this.EliminaViajeDesasociado(this.viaje, 0);
           }
 
-          this.RedirectHome();
+          this.RedirectViajesAsignados();
         }
       });
     }
@@ -228,7 +228,7 @@ export class NuevoViajePage {
     if (this.networkService.noConnection()) {
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, this.idRechazoSelected, this.idEstatusActualizar, Device.uuid).then(() => {
         loading.dismiss();
-        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, this.idRechazoSelected, idViaje, '', '').then(response => {
+        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, this.idRechazoSelected, idViaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: this.subTitulo,
             buttons: ['OK']
@@ -252,7 +252,7 @@ export class NuevoViajePage {
               });
               alert.present();
 
-              this.RedirectHome();
+              this.RedirectViajesAsignados();
             }));
         }
         else {
@@ -261,7 +261,7 @@ export class NuevoViajePage {
           if (data.pResponseCode == -8) {
             this.EliminaViajeDesasociado(idViaje, 0);
           }
-          this.RedirectHome();
+          this.RedirectViajesAsignados();
         }
 
       });
@@ -337,6 +337,9 @@ export class NuevoViajePage {
       nombre: this.nombre,
       eco: this.economico
     });
+  }
+  RedirectViajesAsignados() {
+    this.navCtrl.setRoot(ViajeAsignadoPage);
   }
 
 }
