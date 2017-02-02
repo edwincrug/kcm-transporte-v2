@@ -175,7 +175,7 @@ export class ViajeAceptadoPage {
 
     alert.addInput({
       type: 'radio',
-      label: 'Siniestro Unidad',
+      label: 'Siniestro unidad',
       value: '10',
       checked: false
     });

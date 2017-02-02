@@ -83,13 +83,13 @@ export class ViajeTerminadoPage {
     let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
     let coordenadas = this.lat + ',' + this.lng;
 
-    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
+    if (this.lat == null || this.lng == null) { coordenadas = 'Sin cobertura'; }
 
     if (this.networkService.noConnection()) {
       this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 7, Device.uuid, coordenadas, fechaEnviada, this.odometro, this.remolque).then(() => {
         this.dataServices.actualizaViajeLocal(7, 0, this.viaje, this.odometro, this.remolque).then(response => {
           let alert = this.alertCtrl.create({
-            subTitle: 'Viaje Terminado',
+            subTitle: 'Viaje terminado',
             buttons: ['OK']
           });
           alert.present();
@@ -109,7 +109,7 @@ export class ViajeTerminadoPage {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.eliminaViajeLocal(this.viaje).then(response => {
               let alert = this.alertCtrl.create({
-                subTitle: 'Viaje Terminado',
+                subTitle: 'Viaje terminado',
                 buttons: ['OK']
               });
               alert.present();
@@ -156,7 +156,7 @@ export class ViajeTerminadoPage {
       this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '').then(() => {
         this.dataServices.actualizaViajeLocal(9, 0, this.viaje, '', '').then(response => {
           let alert = this.alertCtrl.create({
-            subTitle: 'Maniobra Aceptada',
+            subTitle: 'Maniobra aceptada',
             buttons: ['OK']
           });
           alert.present();
@@ -175,7 +175,7 @@ export class ViajeTerminadoPage {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.actualizaViajeLocal(9, 0, this.viaje, this.odometro, this.remolque).then(response => {
               let alert = this.alertCtrl.create({
-                subTitle: 'Maniobra Aceptada',
+                subTitle: 'Maniobra aceptada',
                 buttons: ['OK']
               });
               alert.present();

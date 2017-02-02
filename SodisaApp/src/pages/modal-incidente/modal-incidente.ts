@@ -99,7 +99,7 @@ export class ModalIncidentePage {
         loading.dismiss();
         if (data.pResponseCode == 1) {
           let alert = this.alertCtrl.create({
-            subTitle: 'Incidente Registrado',
+            subTitle: 'Incidente registrado',
             buttons: ['OK']
           });
           alert.present();
@@ -167,7 +167,7 @@ export class ModalIncidentePage {
       this.descripcionIncidente = 'Intento de robo';
     }
     else if (idIncidente == 5) {
-      this.descripcionIncidente = 'Siniestro Unidad';
+      this.descripcionIncidente = 'Siniestro unidad';
     }
     else if (idIncidente == 6) {
       this.descripcionIncidente = 'Otro';

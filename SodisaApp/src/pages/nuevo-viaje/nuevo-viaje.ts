@@ -96,7 +96,7 @@ export class NuevoViajePage {
 
   MuestraMotivos(idViaje, idOrigen, idConcentrado, idTipoViaje) {
     let alert = this.alertCtrl.create();
-    alert.setTitle('Motivos de Rechazo');
+    alert.setTitle('Motivos de rechazo');
 
     alert.addInput({
       type: 'radio',
@@ -114,7 +114,7 @@ export class NuevoViajePage {
 
     alert.addInput({
       type: 'radio',
-      label: 'Negativa del Operador',
+      label: 'Negativa del operador',
       value: '3',
       checked: false
     });
@@ -210,11 +210,11 @@ export class NuevoViajePage {
 
   RechazaViaje(idViaje, idOrigen, idConcentrado, idTipoViaje) {
     if (idTipoViaje == 1) {
-      this.subTitulo = 'Viaje Rechazado';
+      this.subTitulo = 'Viaje rechazado';
       this.idEstatusActualizar = 4;
     }
     else {
-      this.subTitulo = 'Maniobra Rechazada';
+      this.subTitulo = 'Maniobra rechazada';
       this.idEstatusActualizar = 10;
     }
 
@@ -284,7 +284,7 @@ export class NuevoViajePage {
       .then(() => {
 
         this.dataServices.eliminaViajeLocal(idViaje).then(() => {
-          // alert('Eliminado Local');
+          // alert('Eliminado local');
         });
 
         this.dataServices.eliminaViajeSync(idViajeSync).then(() => {

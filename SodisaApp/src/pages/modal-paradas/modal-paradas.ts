@@ -93,7 +93,7 @@ export class ModalParadasPage {
     let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
     let coordenadas = this.lat + ',' + this.lng;
 
-    if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
+    if (this.lat == null || this.lng == null) { coordenadas = 'Sin cobertura'; }
 
     let loading = this.loadingCtrl.create({
       content: 'Espere por favor'
@@ -105,7 +105,7 @@ export class ModalParadasPage {
         loading.dismiss();
         if (data.pResponseCode == 1) {
           let alert = this.alertCtrl.create({
-            subTitle: 'Parada Permitida Registrada',
+            subTitle: 'Parada permitida registrada',
             buttons: ['OK']
           });
           alert.present();
