@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, LoadingController, ToastController } from 'ionic-angular';
-import { Device } from 'ionic-native';
+import { Device, Network } from 'ionic-native';
 
 import { HomePage } from '../home/home';
 import { LoginPage } from '../login/login';
@@ -94,9 +94,11 @@ export class ViajeAsignadoPage {
     let loading = this.loadingCtrl.create({
       content: 'Espere por favor ...'
     });
+    loading.present();
 
     if (this.networkService.noConnection()) {
-      loading.present();
+      loading.dismiss();
+      
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, this.imei).then(() => {
         loading.dismiss();
         this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, 0, idViaje, 0, noRemolque).then(response => {
@@ -109,11 +111,11 @@ export class ViajeAsignadoPage {
           this.ObtieneViajeManiobraInternos();
         });
       }).catch(error => {
+        alert('Error al registrar en bd');
         loading.dismiss();
       });
     }
     else {
-      // this.sodisaService.aceptaRechazaViaje(idOrigen, idConcentrado, 'C55163', 0, 3, 'aa1add0d87db4099').subscribe(data => {
       this.sodisaService.aceptaRechazaViaje(idOrigen, idConcentrado, this.username, 0, this.idEstatusActualizar, this.imei).subscribe(data => {
         loading.dismiss();
         if (data.pResponseCode == 1) {
