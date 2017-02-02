@@ -768,6 +768,7 @@ export class HomePage {
       idConcentrado: viaje.idConcentrado
     });
   }
+  
   RedireccionaEvidencias(viaje) {
     console.log('entre');
     this.navCtrl.setRoot(EvidenciaPage, {
@@ -776,7 +777,8 @@ export class HomePage {
       concentrado: viaje.idConcentrado,
       usuario: this.username,
       eco: this.noTracto,
-      nombre: this.nombre
+      nombre: this.nombre,
+      idViaje: viaje.idViaje
     });
   }
 }
