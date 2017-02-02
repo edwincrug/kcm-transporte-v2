@@ -776,7 +776,8 @@ export class HomePage {
                     concentrado: viaje.idConcentrado,
                     usuario: this.username,
                     eco: this.noTracto,
-                    nombre: this.nombre
+                    nombre: this.nombre,
+                    idViaje: viaje.idViaje
                   });
   }
 }
