@@ -339,7 +339,11 @@ export class NuevoViajePage {
     });
   }
   RedirectViajesAsignados() {
-    this.navCtrl.setRoot(ViajeAsignadoPage);
+    this.navCtrl.setRoot(ViajeAsignadoPage, {
+      usuario: this.username,
+      nombre: this.nombre,
+      eco: this.economico
+    });
   }
 
 }
