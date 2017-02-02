@@ -37,6 +37,7 @@ export class HomePage {
   lat: any;
   lng: any;
   idIncidenteSelected;
+  pintaMapa: number;
 
 
   constructor(public navCtrl: NavController, private platform: Platform, public params: NavParams,
@@ -738,21 +739,29 @@ export class HomePage {
   }
 
   loadMap() {
-    Geolocation.getCurrentPosition().then((position) => {
-      this.map =
-        {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          zoom: 15
-        };
-    }).catch((error) => {
-      this.map =
-        {
-          lat: 19.438029,
-          lng: -99.2118746,
-          zoom: 15
-        };
-    });
+    if (this.networkService.noConnection()) {
+      this.pintaMapa = 0;
+    }
+    else {
+      this.pintaMapa = 1;
+
+      Geolocation.getCurrentPosition().then((position) => {
+        this.map =
+          {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            zoom: 15
+          };
+      }).catch((error) => {
+        this.map =
+          {
+            lat: 19.438029,
+            lng: -99.2118746,
+            zoom: 15
+          };
+      });
+    }
+
   }
 
   RedireccionaViajeTerminado(viaje) {
@@ -768,7 +777,7 @@ export class HomePage {
       idConcentrado: viaje.idConcentrado
     });
   }
-  
+
   RedireccionaEvidencias(viaje) {
     console.log('entre');
     this.navCtrl.setRoot(EvidenciaPage, {

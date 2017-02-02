@@ -257,7 +257,7 @@ export class ViajeAsignadoPage {
     if (this.networkService.noConnection()) {
       this.dataServices.insertaAceptaRechazaViajeSync(idViaje, idOrigen, idConcentrado, this.username, this.idRechazoSelected, this.idEstatusActualizar, Device.uuid).then(() => {
         loading.dismiss();
-        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, this.idRechazoSelected, idViaje, '', '').then(response => {
+        this.dataServices.actualizaViajeLocal(this.idEstatusActualizar, this.idRechazoSelected, idViaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: this.subTitulo,
             buttons: ['OK']

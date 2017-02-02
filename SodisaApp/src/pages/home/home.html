@@ -43,7 +43,7 @@
             <!--<p>Remolque: {{viaje.economico}}</p>
             <p>IdMovimiento: {{viaje.idMovimiento}}</p>-->
         </ion-item>
-        <sebm-google-map *ngIf="viaje.idEstatus == 2 || viaje.idEstatus == 3 || viaje.idEstatus == 5" id="map" [latitude]="map.lat"
+        <sebm-google-map *ngIf="pintaMapa == 1 && (viaje.idEstatus == 2 || viaje.idEstatus == 3 || viaje.idEstatus == 5)" id="map" [latitude]="map.lat"
             [longitude]="map.lng" [zoom]="map.zoom">
             <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
                 <sebm-google-map-info-window>
