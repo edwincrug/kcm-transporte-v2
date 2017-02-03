@@ -673,7 +673,8 @@ export class HomePage {
                     concentrado: idConcentrado,
                     usuario: this.username,
                     eco: this.noTracto,
-                    nombre: this.nombre
+                    nombre: this.nombre,
+                    idViaje: idViaje
                   });
                 }
               }
@@ -708,7 +709,8 @@ export class HomePage {
               usuario: this.username,
               tipoEntrega: 2,
               eco: this.noTracto,
-              nombre: this.nombre
+              nombre: this.nombre,
+              idViaje: idViaje
             });
           }
         },
