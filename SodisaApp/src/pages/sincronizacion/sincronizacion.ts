@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
 import { HomePage } from '../home/home';
+import { LocalDataProvider } from '../../providers/local-data-provider';
 
 /*
   Generated class for the Sincronizacion page.
@@ -17,8 +18,10 @@ export class SincronizacionPage {
   username: any;
   nombre: string;
   economico: any;
+  listaViajesPorSincronizar: any[] = [];
+  listaIncidentesPorSincronizar = [];
 
-  constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController, public dataServices: LocalDataProvider) {
     this.username = params.get('usuario');
     this.nombre = params.get('nombre');
     this.economico = params.get('eco');
@@ -26,7 +29,9 @@ export class SincronizacionPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SincronizacionPage');
+    console.log('ionViewDidLoad SincronizacionPage'); 
+       this.ObtieneViajesPorSincronizar();
+       this.ObtieneIncidentesPorSincronizar();
   }
 
   redirectHome() {
@@ -44,5 +49,33 @@ export class SincronizacionPage {
     });
 
     loading.present();
+  }
+  /*-------------------------------------------------------------------------------------*/
+  /*--Obtengo los procesos guardados de manera local mientras el celular no tiene datos--*/
+  ObtieneViajesPorSincronizar() {
+    this.dataServices.openDatabase()
+      .then(() => this.dataServices.viajesPorSincronizar().then(response => {
+        if (response.length > 0) {
+          this.listaViajesPorSincronizar = response;
+          console.log(this.listaViajesPorSincronizar);
+        }
+        else {
+          this.listaViajesPorSincronizar = [];
+        }
+      }));
+  }
+  /*---------------------------------------------------------------------------------------*/
+  /*--Obtengo las evidencias guardadas de manera local mientras el celular no tiene datos--*/
+  ObtieneIncidentesPorSincronizar() {
+    this.dataServices.openDatabase()
+      .then(() => this.dataServices.paradasIncidentesPorSincronizar().then(response => {
+        if (response.length > 0) {
+          this.listaIncidentesPorSincronizar = response;
+          console.log(this.listaIncidentesPorSincronizar);
+        }
+        else {
+          this.listaIncidentesPorSincronizar = [];
+        }
+      }));
   }
 }
