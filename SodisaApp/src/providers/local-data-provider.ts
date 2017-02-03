@@ -330,7 +330,7 @@ export class LocalDataProvider {
   }
 
   paradasIncidentesPorSincronizar() {
-    let paradaIncidenteSyncQuery = "SELECT * FROM ParadaIncidenteSync";
+    let paradaIncidenteSyncQuery = "SELECT (CASE idTipoEvento WHEN 1 THEN 'Parada' WHEN 2 THEN 'Incidente' ELSE 'Tipo de evento sin declarar' END) AS tipoEvidencia, '' AS mensajeEvidencia, * FROM ParadaIncidenteSync";
     return this.db.executeSql(paradaIncidenteSyncQuery, []).then(response => {
       let hayViajes = [];
       for (let index = 0; index < response.rows.length; index++) {
