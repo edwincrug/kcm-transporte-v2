@@ -57,7 +57,8 @@ export class DocumentacionPage {
       tipoEntrega: this.idTipoEntrega,
       eco: this.noTracto,
       lstFacturas: this.listaFacturas,
-      nombre: this.nombre
+      nombre: this.nombre,
+      idViaje: this.idViaje
     });
   }
 

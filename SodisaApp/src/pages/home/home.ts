@@ -791,4 +791,16 @@ export class HomePage {
       idViaje: viaje.idViaje
     });
   }
+
+  RedireccionaDocumentos(viaje) {
+    this.navCtrl.setRoot(DocumentacionPage, {
+      idViaje: viaje.idViaje,
+      origen: viaje.idOrigen,
+      concentrado: viaje.idConcentrado,
+      usuario: this.username,
+      eco: this.noTracto,
+      nombre: this.nombre
+    });
+  }
+
 }

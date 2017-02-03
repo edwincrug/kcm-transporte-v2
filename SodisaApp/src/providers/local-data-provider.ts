@@ -42,6 +42,11 @@ export class LocalDataProvider {
     return this.db.executeSql(sql, []);
   }
 
+  createTableViajeDetalleSync() {
+    let sql = 'CREATE TABLE IF NOT EXISTS ViajeDetalleSync(idViajeDetalleSync INTEGER PRIMARY KEY AUTOINCREMENT, idViaje INTEGER, idOperador TEXT, idDispositivo TEXT, idLocalidad INTEGER, cliente TEXT, idConcentrado TEXT, clienteAnterior TEXT, consignatario INTEGER, idDocumento TEXT, idEstatus INTEGER, evidencia TEXT, fecha TEXT, coordenadas TEXT); ';
+    return this.db.executeSql(sql, []);
+  }
+
   createTableParadaIncidenteSync() {
     let sql = 'CREATE TABLE IF NOT EXISTS ParadaIncidenteSync(idParadaIncidenteSync INTEGER PRIMARY KEY AUTOINCREMENT, idOperador TEXT, idLocalidad INTEGER, idConcentrado TEXT, idTipoEvento INTEGER, idEvento INTEGER, evidencia TEXT, observacion TEXT, geolocalizacion TEXT, fecha TEXT, idDispositivo TEXT); ';
     return this.db.executeSql(sql, []);
@@ -343,6 +348,19 @@ export class LocalDataProvider {
   eliminaParadaIncidenteSync(idParadaIncidenteSync) {
     let sql = "DELETE FROM ParadaIncidenteSync WHERE idParadaIncidenteSync = ?";
     return this.db.executeSql(sql, [idParadaIncidenteSync]);
+  } //idViaje INTEGER, idOperador TEXT, idDispositivo TEXT, idLocalidad INTEGER, cliente TEXT, idConcentrado TEXT, clienteAnterior TEXT, consignatario INTEGER, idDocumento TEXT, idEstatus INTEGER, evidencia TEXT, fecha TEXT, coordenadas TEXT
+
+  insertaViajeDetalleSync(idViaje, idOperador, idDispositivo, idLocalidad, cliente, idConcentrado, clienteAnterior, consignatario, idDocumento, idEstatus, evidencia, fecha, coordenadas) {
+    let viajeQuery = "INSERT INTO ViajeDetalleSync (idViaje, idOperador, idDispositivo, idLocalidad, cliente, idConcentrado, clienteAnterior, consignatario, idDocumento, idEstatus, evidencia, fecha, coordenadas) VALUES (" +
+      idViaje + ", '" +
+      idOperador + "',"
+
+      cliente + "', " +
+      consignatario + ", '" +
+      idDocumento + "', " +
+      idEstatus + "); ";
+
+    return this.db.executeSql(viajeQuery, []);
   }
 
 }
