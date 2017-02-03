@@ -89,6 +89,27 @@ export class MyApp {
               }
 
             });
+          })
+          .then(() => {
+            dbService.paradasIncidentesPorSincronizar().then(result => {
+
+              for (let x = 0; x < result.length; x++) {
+
+                wsSodisa.RegistraParadaIncidente(result[x].idOperador, result[x].idLocalidad, result[x].idConcentrado, result[x].idTipoEvento, result[x].idEvento, result[x].evidencia, result[x].observacion, result[x].geolocalizacion, result[x].fecha, result[x].idDispositivo).subscribe(data => {
+                  if (data.pResponseCode == 1) {
+                    dbService.eliminaParadaIncidenteSync(result[x].idParadaIncidenteSync).then(() => {
+                      //Elimina parada/incidente local
+                    }).catch(() => {
+                      // alert('Local no eliminado');
+                    });
+                  }
+                }, (err) => {
+                  alert('Error al sincronizar parada/incidente');
+                });
+
+              }
+
+            });
           });
 
       }, false);

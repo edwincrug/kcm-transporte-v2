@@ -154,7 +154,7 @@ export class ViajeTerminadoPage {
 
     if (this.networkService.noConnection()) {
       this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '').then(() => {
-        this.dataServices.actualizaViajeLocal(9, 0, this.viaje, '', '').then(response => {
+        this.dataServices.actualizaViajeLocal(9, 0, this.viaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Maniobra aceptada',
             buttons: ['OK']

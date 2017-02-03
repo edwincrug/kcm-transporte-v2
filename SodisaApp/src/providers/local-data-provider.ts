@@ -328,4 +328,20 @@ export class LocalDataProvider {
     return this.db.executeSql(viajeQuery, []);
   }
 
+  paradasIncidentesPorSincronizar() {
+    let paradaIncidenteSyncQuery = "SELECT * FROM ParadaIncidenteSync";
+    return this.db.executeSql(paradaIncidenteSyncQuery, []).then(response => {
+      let hayViajes = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        hayViajes.push(response.rows.item(index));
+      }
+      return Promise.resolve(hayViajes);
+    });
+  }
+
+  eliminaParadaIncidenteSync(idParadaIncidenteSync) {
+    let sql = "DELETE FROM ParadaIncidenteSync WHERE idParadaIncidenteSync = ?";
+    return this.db.executeSql(sql, [idParadaIncidenteSync]);
+  }
+
 }
