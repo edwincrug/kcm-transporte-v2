@@ -68,24 +68,28 @@ export class LoginPage {
 
         }
         else {
-
-          this.sodisaService.viajesAsignados(this.username, Device.uuid).subscribe(data => {
+          this.sodisaService.login(this.username, this.password, this.imei).subscribe(data => {
             loading.dismiss();
-            this.listaViajesAsignados = data.pListaViajeMovil;
-            if (data.pResponseCode == 1) {
-              if (data.pListaViajeMovil.length > 0) {
-                this.dataServices.openDatabase()
-                  .then(() => this.dataServices.insertaViajesAsignados(data.pListaViajeMovil).then(result => {
-
-                  }));
-              }
-            }
-            else {
-              if (data.pResponseCode == -5) {
-                this.navCtrl.push(LoginPage);
-              }
-            }
+            this.credenciales = data;
+            this.interpretaRespuesta(this.credenciales);
           });
+          // this.sodisaService.viajesAsignados(this.username, Device.uuid).subscribe(data => {
+          //   loading.dismiss();
+          //   this.listaViajesAsignados = data.pListaViajeMovil;
+          //   if (data.pResponseCode == 1) {
+          //     if (data.pListaViajeMovil.length > 0) {
+          //       this.dataServices.openDatabase()
+          //         .then(() => this.dataServices.insertaViajesAsignados(data.pListaViajeMovil).then(result => {
+
+          //         }));
+          //     }
+          //   }
+          //   else {
+          //     if (data.pResponseCode == -5) {
+          //       this.navCtrl.push(LoginPage);
+          //     }
+          //   }
+          // });
 
           let presentacion = this.loadingCtrl.create({
             content: '¡Bienvenido..' + respuesta.nombreCompleto + ' !',

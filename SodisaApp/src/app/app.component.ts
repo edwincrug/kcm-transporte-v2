@@ -47,7 +47,7 @@ export class MyApp {
               if (result.length > 0) {
                 for (let x = 0; x < result.length; x++) {
 
-                  if (result[x].idEstatus == 3 || result[x].idEstatus == 4) {
+                  if (result[x].idEstatus == 3 || result[x].idEstatus == 4 || result[x].idEstatus == 9 || result[x].idEstatus == 10) {
                     wsSodisa.aceptaRechazaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, result[x].idMotivoRechazo, result[x].idEstatus, result[x].idDispositivo).subscribe(resp => {
                       if (resp.pResponseCode == 1) {
                         // alert('Server actualizado');
@@ -66,8 +66,8 @@ export class MyApp {
                       }
                     });
                   }
-                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6) {
-                    wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, '', '', null).subscribe(resp => {
+                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13) {
+                    wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, null).subscribe(resp => {
                       if (resp.pResponseCode == 1) {
                         // alert('Server actualizado');
                         dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {

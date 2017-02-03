@@ -5,6 +5,8 @@ import { Camera, Device, Geolocation } from 'ionic-native';
 import { LoginPage } from '../login/login';
 
 import { WebApiProvider } from '../../providers/web-api-provider';
+import { LocalDataProvider } from '../../providers/local-data-provider';
+import { NetworkProvider } from '../../providers/network-provider';
 
 /*
   Generated class for the ModalIncidente page.
@@ -32,7 +34,7 @@ export class ModalIncidentePage {
 
   constructor(public navCtrl: NavController, public params: NavParams, public viewCtrl: ViewController,
     public sodisaService: WebApiProvider, public toastCtrl: ToastController, public alertCtrl: AlertController,
-    public loadingCtrl: LoadingController) {
+    public loadingCtrl: LoadingController, public networkService: NetworkProvider, public dataServices: LocalDataProvider) {
 
     this.idViaje = params.get('viaje');
     this.idOrigen = params.get('origen');
@@ -95,9 +97,10 @@ export class ModalIncidentePage {
     loading.present();
 
     if (this.imagenSend != null) {
-      this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 2, this.idIncidente, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
-        loading.dismiss();
-        if (data.pResponseCode == 1) {
+      if (this.networkService.noConnection()) {
+        this.dataServices.insertaParadaIncidenteSync(this.userName, this.idOrigen, this.idConcentrado, 2, this.idIncidente, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).then(() => {
+          loading.dismiss();
+
           let alert = this.alertCtrl.create({
             subTitle: 'Incidente registrado',
             buttons: ['OK']
@@ -105,17 +108,44 @@ export class ModalIncidentePage {
           alert.present();
 
           this.dismiss();
-        }
-        else {
-          this.interpretaRespuesta(data);
-        }
 
-      }, (err) => {
-        alert('Hubo error en cámara');
-        loading.dismiss();
-        this.dismiss();
+        }).catch(error => {
+          loading.dismiss();
+          alert('Error al guardar la evidencia local: ' + error);
+        });
+      }
+      else {
+        this.sodisaService.RegistraParadaIncidente(this.userName, this.idOrigen, this.idConcentrado, 2, this.idIncidente, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).subscribe(data => {
+          loading.dismiss();
+          if (data.pResponseCode == 1) {
+            let alert = this.alertCtrl.create({
+              subTitle: 'Incidente registrado',
+              buttons: ['OK']
+            });
+            alert.present();
+
+            this.dismiss();
+          }
+          else {
+            this.interpretaRespuesta(data);
+          }
+
+        }, (err) => {
+          alert('Hubo error en cámara');
+          loading.dismiss();
+          this.dismiss();
+        });
+      }
+
+    }
+    else {
+      loading.dismiss();
+
+      let alert = this.alertCtrl.create({
+        subTitle: 'Por favor capture una evidencia',
+        buttons: ['OK']
       });
-
+      alert.present();
     }
   }
 
