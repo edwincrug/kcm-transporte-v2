@@ -235,7 +235,7 @@ export class NuevoViajePage {
           });
           alert.present();
 
-          this.ObtieneViajeManiobraInternos();
+          this.RedirectViajesAsignados();
         });
       });
     }
