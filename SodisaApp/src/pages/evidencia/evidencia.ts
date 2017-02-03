@@ -95,157 +95,29 @@ export class EvidenciaPage {
 
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
-    let loading = this.loadingCtrl.create({
-      content: 'Espere por favor ...'
-    });
+    if (this.imagenSend != null) {
+      if (this.idTipoEntrega == 1) {
+        this.entregaTotal(fechaEnviada, coordenadas);
 
-    loading.present();
-
-    if (this.idTipoEntrega == 1) {
-      this.idDocumento = 0;
-      this.idEstatus = 14
-
-      if (this.networkService.noConnection()) {
-        this.dataServices.insertaAceptaRechazaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid).then(() => {
-          loading.dismiss();
-          this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
-            let alert = this.alertCtrl.create({
-              subTitle: 'Trabajo terminado',
-              buttons: ['OK']
-            });
-            alert.present();
-
-            this.redirectHome();
-          });
-        }).catch(error => {
-          loading.dismiss();
-        });
       }
       else {
+        this.idEstatus = 15;
 
-        if (this.imagenSend != null) {
-          this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
-            loading.dismiss();
-            if (data.pResponseCode == 1) {
-              let alert = this.alertCtrl.create({
-                subTitle: 'Trabajo terminado',
-                buttons: ['OK']
-              });
-              alert.present();
-
-              this.redirectHome();
-            }
-            else {
-              this.interpretaRespuesta(data);
-            }
-
-          }, (err) => {
-            alert('Hubo error en cámara');
-          });
-
+        if (this.listaFacturas != null) {
+          this.entregaDocumentos(this.listaFacturas, fechaEnviada, coordenadas);
         }
         else {
-          loading.dismiss();
-          let alert = this.alertCtrl.create({
-            subTitle: 'Debe capturar una evidencia',
-            buttons: ['OK']
-          });
-          alert.present();
+          this.entregaTotal(fechaEnviada, coordenadas);
         }
-
       }
-
     }
     else {
-      this.idEstatus = 15;
-
-      if (this.listaFacturas != null) {
-        for (let x = 0; x < this.listaFacturas.length; x++) {
-
-          if (this.listaFacturas[x].idEstatus == true) {
-            this.estatusDoc = 14;
-          }
-          else {
-            this.estatusDoc = 15;
-          }
-
-          let detalleDocumento = {
-            pIdOperadorVc: this.userName,
-            pIdDispositvoVc: Device.uuid,
-            pIdLocalidadIn: this.idOrigen,
-            pIdDestinoIn: this.listaFacturas[x].cliente,
-            pIdConcentradoVc: this.idConcentrado,
-            pIdClienteAnteriorIn: this.listaFacturas[x].cliente,
-            pIdConsignatarioIn: this.listaFacturas[x].consignatario,
-            pIdDocumentoVc: this.listaFacturas[x].noFactura,
-            pIdEstatusViajeIn: this.estatusDoc,
-            pEvidenciaFotograficaVc: ' ',
-            pFechaEventoDt: fechaEnviada,
-            pGeoLocalizacionEventoVc: coordenadas
-          }
-
-          this.lstDocumento.push(detalleDocumento);
-        }
-
-        if (this.imagenSend != null) {
-          this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
-            loading.dismiss();
-            if (data.pResponseCode == 1) {
-              let alert = this.alertCtrl.create({
-                subTitle: 'Trabajo terminado',
-                buttons: ['OK']
-              });
-              alert.present();
-
-              this.redirectHome();
-            }
-            else {
-              this.interpretaRespuesta(data);
-            }
-          }, (err) => {
-            alert('Error webapi: ' + err);
-          });
-        }
-        else {
-          loading.dismiss();
-          let alert = this.alertCtrl.create({
-            subTitle: 'Debe capturar una evidencia',
-            buttons: ['OK']
-          });
-          alert.present();
-        }
-      }
-      else {
-        if (this.imagenSend != null) {
-          this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, 0, 14, Device.uuid, fechaEnviada, coordenadas, 0, 0, this.imagenSend).subscribe(data => {
-            loading.dismiss();
-            if (data.pResponseCode == 1) {
-              let alert = this.alertCtrl.create({
-                subTitle: 'Trabajo terminado',
-                buttons: ['OK']
-              });
-              alert.present();
-
-              this.redirectHome();
-            }
-            else {
-              this.interpretaRespuesta(data);
-            }
-          }, (err) => {
-            alert('Error webapi: ' + err);
-          });
-        }
-        else {
-          let alert = this.alertCtrl.create({
-            subTitle: 'Debe capturar una evidencia',
-            buttons: ['OK']
-          });
-          alert.present();
-        }
-      }
-
+      let alert = this.alertCtrl.create({
+        subTitle: 'Debe capturar una evidencia',
+        buttons: ['OK']
+      });
+      alert.present();
     }
-
 
   }
 
@@ -281,6 +153,139 @@ export class EvidenciaPage {
     if (codigoRespuesta.pResponseCode == -5) {
       this.navCtrl.setRoot(LoginPage);
     }
+  }
+
+  entregaDocumentos(listaFacturas, fechaEnviada, coordenadas) {
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor'
+    });
+
+    loading.present();
+
+    for (let x = 0; x < listaFacturas.length; x++) {
+
+      if (listaFacturas[x].idEstatus == true) {
+        this.estatusDoc = 14;
+      }
+      else {
+        this.estatusDoc = 15;
+      }
+
+      let detalleDocumento = {
+        pIdOperadorVc: this.userName,
+        pIdDispositvoVc: Device.uuid,
+        pIdLocalidadIn: this.idOrigen,
+        pIdDestinoIn: listaFacturas[x].cliente,
+        pIdConcentradoVc: this.idConcentrado,
+        pIdClienteAnteriorIn: listaFacturas[x].cliente,
+        pIdConsignatarioIn: listaFacturas[x].consignatario,
+        pIdDocumentoVc: listaFacturas[x].noFactura,
+        pIdEstatusViajeIn: this.estatusDoc,
+        pEvidenciaFotograficaVc: ' ',
+        pFechaEventoDt: fechaEnviada,
+        pGeoLocalizacionEventoVc: coordenadas
+      }
+
+      this.lstDocumento.push(detalleDocumento);
+    }
+
+    if (this.networkService.noConnection()) {
+      this.dataServices.insertaAceptaRechazaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid).then(() => {
+        loading.dismiss();
+        this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
+          let alert = this.alertCtrl.create({
+            subTitle: 'Viaje terminado',
+            buttons: ['OK']
+          });
+          alert.present();
+
+          this.redirectHome();
+        });
+      }).catch(error => {
+        loading.dismiss();
+      });
+    }
+    else {
+      this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+        loading.dismiss();
+        if (data.pResponseCode == 1) {
+          this.dataServices.openDatabase()
+            .then(() => this.dataServices.eliminaViajeLocal(this.idViaje).then(response => {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Viaje terminado',
+                buttons: ['OK']
+              });
+              alert.present();
+
+              this.redirectHome();
+
+            }));
+        }
+        else {
+          this.interpretaRespuesta(data);
+        }
+      }, (err) => {
+        alert('Error webapi: ' + err);
+      });
+
+    }
+
+  }
+
+  entregaTotal(fechaEnviada, coordenadas) {
+    this.idDocumento = 0;
+    this.idEstatus = 14
+
+    let loading = this.loadingCtrl.create({
+      content: 'Espere por favor'
+    });
+
+    loading.present();
+
+    if (this.networkService.noConnection()) {
+      this.dataServices.insertaAceptaRechazaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid).then(() => {
+        loading.dismiss();
+        this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
+          let alert = this.alertCtrl.create({
+            subTitle: 'Trabajo terminado',
+            buttons: ['OK']
+          });
+          alert.present();
+
+          this.redirectHome();
+        });
+      }).catch(error => {
+        loading.dismiss();
+      });
+    }
+    else {
+      this.sodisaService.actualizaViaje(this.idOrigen, this.idConcentrado, this.userName, this.idDocumento, this.idEstatus, Device.uuid, fechaEnviada, coordenadas, 0, '', this.imagenSend).subscribe(data => {
+        loading.dismiss();
+        if (data.pResponseCode == 1) {
+          this.dataServices.openDatabase()
+            .then(() => this.dataServices.eliminaViajeLocal(this.idViaje).then(response => {
+              let alert = this.alertCtrl.create({
+                subTitle: 'Viaje terminado',
+                buttons: ['OK']
+              });
+              alert.present();
+
+              this.redirectHome();
+
+            }));
+
+        }
+        else {
+          this.interpretaRespuesta(data);
+        }
+
+      }, (err) => {
+        alert('Hubo error en cámara');
+      });
+
+    }
+
+
   }
 
 }
