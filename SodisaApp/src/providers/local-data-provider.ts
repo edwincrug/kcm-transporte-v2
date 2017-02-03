@@ -17,7 +17,7 @@ export class LocalDataProvider {
 
   openDatabase() {
     return this.db.openDatabase({
-      name: 'sodisa.db',
+      name: 'sodisaV2.db',
       location: 'default' // the location field is required      
     });
   }
@@ -38,7 +38,7 @@ export class LocalDataProvider {
   }
 
   createTableViajeSync() {
-    let sql = 'CREATE TABLE IF NOT EXISTS ViajeSync(idViajeSync INTEGER PRIMARY KEY AUTOINCREMENT, idViaje INTEGER, idOrigen INTEGER, idConcentrado TEXT, idOperador TEXT,  idMotivoRechazo INTEGER,  odometro INTEGER, idEstatus INTEGER, idDispositivo TEXT, geolocalizacion TEXT, idDocumento TEXT, fecha TEXT, remolque TEXT); ';
+    let sql = 'CREATE TABLE IF NOT EXISTS ViajeSync(idViajeSync INTEGER PRIMARY KEY AUTOINCREMENT, idViaje INTEGER, idOrigen INTEGER, idConcentrado TEXT, idOperador TEXT,  idMotivoRechazo INTEGER,  odometro INTEGER, idEstatus INTEGER, idDispositivo TEXT, geolocalizacion TEXT, idDocumento TEXT, fecha TEXT, remolque TEXT, evidencia TEXT); ';
     return this.db.executeSql(sql, []);
   }
 
@@ -236,8 +236,8 @@ export class LocalDataProvider {
     return this.db.executeSql(viajeQuery, []);
   }
 
-  insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, coordenadas, fecha, km, noRemolque) {
-    let viajeQuery = "INSERT INTO ViajeSync (idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, geolocalizacion, fecha, odometro, remolque) VALUES (" +
+  insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, coordenadas, fecha, km, noRemolque, evidencia) {
+    let viajeQuery = "INSERT INTO ViajeSync (idViaje, idOrigen, idConcentrado, idOperador, idMotivoRechazo, idEstatus, idDispositivo, geolocalizacion, fecha, odometro, remolque, evidencia) VALUES (" +
       idViaje + ", " +
       idOrigen + ", '" +
       idConcentrado + "', '" +
@@ -248,7 +248,8 @@ export class LocalDataProvider {
       coordenadas + "', '" +
       fecha + "', " +
       km + ", '" +
-      noRemolque + "'); ";
+      noRemolque + "', '" +
+      evidencia + "'); ";
 
     return this.db.executeSql(viajeQuery, []);
   }

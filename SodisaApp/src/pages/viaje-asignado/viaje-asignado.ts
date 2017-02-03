@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, LoadingController, ToastController } from 'ionic-angular';
-import { Device, Network } from 'ionic-native';
+import { Device } from 'ionic-native';
 
 import { HomePage } from '../home/home';
 import { LoginPage } from '../login/login';

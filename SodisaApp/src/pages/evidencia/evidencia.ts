@@ -242,8 +242,8 @@ export class EvidenciaPage {
 
     loading.present();
 
-    if (this.networkService.noConnection()) {
-      this.dataServices.insertaAceptaRechazaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid).then(() => {
+    if (this.networkService.noConnection()) {  //this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid
+      this.dataServices.insertaIniciaTerminaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid, coordenadas, fechaEnviada, 0, '', this.imagenSend).then(() => {
         loading.dismiss();
         this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({

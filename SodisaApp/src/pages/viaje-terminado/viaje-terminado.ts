@@ -86,7 +86,7 @@ export class ViajeTerminadoPage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin cobertura'; }
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 7, Device.uuid, coordenadas, fechaEnviada, this.odometro, this.remolque).then(() => {
+      this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 7, Device.uuid, coordenadas, fechaEnviada, this.odometro, this.remolque, '').then(() => {
         this.dataServices.actualizaViajeLocal(7, 0, this.viaje, this.odometro, this.remolque).then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Viaje terminado',
@@ -153,7 +153,7 @@ export class ViajeTerminadoPage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '').then(() => {
+      this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '', '').then(() => {
         this.dataServices.actualizaViajeLocal(9, 0, this.viaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Maniobra aceptada',

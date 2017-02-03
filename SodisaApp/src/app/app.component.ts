@@ -66,8 +66,8 @@ export class MyApp {
                       }
                     });
                   }
-                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13) {
-                    wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, null).subscribe(resp => {
+                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14) {
+                    wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, result[x].evidencia).subscribe(resp => {
                       if (resp.pResponseCode == 1) {
                         // alert('Server actualizado');
                         dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
