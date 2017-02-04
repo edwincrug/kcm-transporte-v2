@@ -23,6 +23,7 @@ export class SincronizacionPage {
   listaViajesPorSincronizar: any[] = [];
   listaIncidentesPorSincronizar = [];
   imagen: any[] = [];
+  ultimaFecha: string;
 
   constructor(public navCtrl: NavController, public params: NavParams, private loadingCtrl: LoadingController, public dataServices: LocalDataProvider, public sodisaService: WebApiProvider) {
     this.username = params.get('usuario');
@@ -33,6 +34,7 @@ export class SincronizacionPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SincronizacionPage');
+    this.ObtieneUltimoSincronizar();
     this.ObtieneViajesPorSincronizar();
     this.ObtieneIncidentesPorSincronizar();
   }
@@ -54,6 +56,9 @@ export class SincronizacionPage {
     loading.present();
     /*-------------------------------------------------------------------------------------*/
     /*--Sincronizo--*/
+    let fecha = new Date();
+    let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
+    console.log(fechaEnviada);
     this.dataServices.openDatabase()
       .then(() => {
         this.dataServices.viajesPorSincronizar().then(result => {
@@ -75,6 +80,12 @@ export class SincronizacionPage {
                     }).catch(() => {
                       // alert('Local no eliminado');
                     });
+                    this.dataServices.insertaUltimaActualizacion(fechaEnviada).then(() => {
+                      // loading.dismiss();
+
+                    }).catch(error => {
+                      // loading.dismiss();
+                    });
                   }
                   else {
 
@@ -93,6 +104,12 @@ export class SincronizacionPage {
                       }
                     }).catch(() => {
                       // alert('Local no eliminado');
+                    });
+                    this.dataServices.insertaUltimaActualizacion(fechaEnviada).then(() => {
+                      // loading.dismiss();
+
+                    }).catch(error => {
+                      // loading.dismiss();
                     });
                   }
                   else {
@@ -205,6 +222,29 @@ export class SincronizacionPage {
         else {
           this.listaIncidentesPorSincronizar = [];
         }
+      }));
+  }
+  /*-------------------------------------------------------------------------------------*/
+  /*--Obtengo la ultima sicronización--*/
+  ObtieneUltimoSincronizar() {
+    console.log('Si entre en la Sincronizacion')
+    this.dataServices.openDatabase()
+      .then(() => this.dataServices.getUltimaActualizacion().then(response => {
+        console.log(response, 'La respuesta de el QUERY');
+        if (response != undefined) {
+          if (response.length > 0) {
+            this.ultimaFecha = response[0];
+            console.log(this.ultimaFecha, 'Soy la fecha');
+          }
+          else {
+            this.ultimaFecha = "Sin fecha";
+            console.log(this.ultimaFecha, 'Soy la fecha');
+          }
+        } else {
+          this.ultimaFecha = "Sin fecha";
+          console.log(this.ultimaFecha, 'Soy la fecha');
+        }
+
       }));
   }
 }
