@@ -353,7 +353,7 @@ export class LocalDataProvider {
   eliminaParadaIncidenteSync(idParadaIncidenteSync) {
     let sql = "DELETE FROM ParadaIncidenteSync WHERE idParadaIncidenteSync = ?";
     return this.db.executeSql(sql, [idParadaIncidenteSync]);
-  } 
+  }
 
   insertaViajeDetalleSync(idViaje, idOperador, idDispositivo, idLocalidad, cliente, idConcentrado, clienteAnterior, consignatario, idDocumento, idEstatus, evidencia, fecha, coordenadas) {
     let viajeQuery = "INSERT INTO ViajeDetalleSync (idViaje, idOperador, idDispositivo, idLocalidad, cliente, idConcentrado, clienteAnterior, consignatario, idDocumento, idEstatus, evidencia, fecha, coordenadas) VALUES (" +
@@ -386,9 +386,31 @@ export class LocalDataProvider {
       });
   }
 
-   insertaUltimaActualizacion(fecha) {
+  insertaUltimaActualizacion(fecha) {
     let viajeQuery = "INSERT INTO UltimaActualizacion (fecha) VALUES ('" + fecha + "'); ";
     return this.db.executeSql(viajeQuery, []);
+  }
+
+  getViajeDetalleSync(idViaje) {
+    let sql = 'SELECT * FROM ViajeDetalleSync WHERE ViajeDetalleSync.idViaje = ?';
+    return this.db.executeSql(sql, [idViaje])
+      .then(response => {
+        let hayViajes = [];
+        for (let index = 0; index < response.rows.length; index++) {
+          hayViajes.push(response.rows.item(index));
+        }
+        return Promise.resolve(hayViajes);
+      });
+  }
+
+  eliminaTablaViajeDetalleSync() {
+    let sql = "DELETE FROM ViajeDetalleSync ";
+    return this.db.executeSql(sql, []);
+  }
+
+  eliminaViajeDetalleSync(idViajeDetalleSync) {
+    let sql = "DELETE FROM ViajeDetalleSync WHERE idViajeDetalleSync = ?";
+    return this.db.executeSql(sql, [idViajeDetalleSync]);
   }
 
 }

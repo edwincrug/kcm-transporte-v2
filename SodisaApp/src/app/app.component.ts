@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar, Splashscreen, Device } from 'ionic-native';
 import { Http } from '@angular/http';
 
 import { LoginPage } from '../pages/login/login';
@@ -18,6 +18,11 @@ export class MyApp {
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
     public http: Http) {
 
+    this.initializeApp();
+
+  }
+
+  initializeApp() {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -30,8 +35,8 @@ export class MyApp {
         .then(() => this.dataServices.createTableViajeDetalle())
         .then(() => this.dataServices.createTableViajeSync())
         .then(() => this.dataServices.createTableParadaIncidenteSync())
-        .then(()=> this.dataServices.createTableViajeDetalleSync())
-        .then(()=> this.dataServices.createTableUltimaActualizacion())
+        .then(() => this.dataServices.createTableViajeDetalleSync())
+        .then(() => this.dataServices.createTableUltimaActualizacion())
         .then(() => {
           this.rootPage = LoginPage;
         });
@@ -68,7 +73,35 @@ export class MyApp {
                       }
                     });
                   }
-                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14) {
+                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14 || result[x].idEstatus == 15) {
+                    if (result[x].idEstatus == 15) {
+
+
+                      wsSodisa.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+
+                        if (data.pResponseCode == 1) {
+                          this.dataServices.openDatabase()
+                            .then(() => this.dataServices.eliminaViajeLocal(this.idViaje).then(response => {
+                              let alert = this.alertCtrl.create({
+                                subTitle: 'Viaje terminado',
+                                buttons: ['OK']
+                              });
+                              alert.present();
+
+                              this.redirectHome();
+
+                            }));
+                        }
+                        else {
+                          this.interpretaRespuesta(data);
+                        }
+                      }, (err) => {
+                        alert('Error webapi: ' + err);
+                      });
+
+                    }
+
+
                     wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, result[x].evidencia).subscribe(resp => {
                       if (resp.pResponseCode == 1) {
                         // alert('Server actualizado');
@@ -117,7 +150,6 @@ export class MyApp {
       }, false);
 
     });
-
   }
 
 }

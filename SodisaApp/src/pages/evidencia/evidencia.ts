@@ -190,8 +190,15 @@ export class EvidenciaPage {
     }
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaAceptaRechazaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid).then(() => {
+      this.dataServices.insertaIniciaTerminaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid, coordenadas, fechaEnviada, 0, '', this.imagenSend).then(() => {
         loading.dismiss();
+
+        for (let x = 0; x < this.lstDocumento.length; x++) {
+          this.dataServices.insertaViajeDetalleSync(this.idViaje, this.userName, Device.uuid, this.idOrigen, listaFacturas[x].cliente, this.idConcentrado, listaFacturas[x].cliente, listaFacturas[x].consignatario, listaFacturas[x].noFactura, this.estatusDoc, '', fechaEnviada, coordenadas).then(() => {
+            //inserta cada factura
+          });
+        }
+
         this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
           let alert = this.alertCtrl.create({
             subTitle: 'Viaje terminado',
@@ -204,6 +211,7 @@ export class EvidenciaPage {
       }).catch(error => {
         loading.dismiss();
       });
+      
     }
     else {
       this.sodisaService.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
