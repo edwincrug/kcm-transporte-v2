@@ -14,6 +14,7 @@ import { LocalDataProvider } from '../providers/local-data-provider';
 })
 export class MyApp {
   rootPage: any = LoginPage;
+  lstDocumento = [];
 
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
     public http: Http) {
@@ -76,27 +77,48 @@ export class MyApp {
                   else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14 || result[x].idEstatus == 15) {
                     if (result[x].idEstatus == 15) {
 
+                      dbService.getViajeDetalleSync(result[x].idViaje).then(res => {
+                        if (res.length > 0) {
+                          for (let j = 0; j < res.length; j++) {
+                            let detalleDocumento = {
+                              pIdOperadorVc: this.userName,
+                              pIdDispositvoVc: Device.uuid,
+                              pIdLocalidadIn: this.idOrigen,
+                              pIdDestinoIn: res[x].cliente,
+                              pIdConcentradoVc: this.idConcentrado,
+                              pIdClienteAnteriorIn: res[j].cliente,
+                              pIdConsignatarioIn: res[j].consignatario,
+                              pIdDocumentoVc: res[j].noFactura,
+                              pIdEstatusViajeIn: this.estatusDoc,
+                              pEvidenciaFotograficaVc: ' ',
+                              pFechaEventoDt: '',
+                              pGeoLocalizacionEventoVc: ''
+                            }
 
-                      wsSodisa.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+                            this.lstDocumento.push(detalleDocumento);
+                          }
 
-                        if (data.pResponseCode == 1) {
-                          this.dataServices.openDatabase()
-                            .then(() => this.dataServices.eliminaViajeLocal(this.idViaje).then(response => {
-                              let alert = this.alertCtrl.create({
-                                subTitle: 'Viaje terminado',
-                                buttons: ['OK']
-                              });
-                              alert.present();
+                          wsSodisa.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+                            if (data.pResponseCode == 1) {
+                              this.dataServices.openDatabase()
+                                .then(() => this.dataServices.eliminaViajeLocal(this.idViaje).then(response => {
+                                  let alert = this.alertCtrl.create({
+                                    subTitle: 'Viaje terminado',
+                                    buttons: ['OK']
+                                  });
+                                  alert.present();
 
-                              this.redirectHome();
+                                  this.redirectHome();
 
-                            }));
+                                }));
+                            }
+                            else {
+                              this.interpretaRespuesta(data);
+                            }
+                          }, (err) => {
+                            alert('Error webapi: ' + err);
+                          });
                         }
-                        else {
-                          this.interpretaRespuesta(data);
-                        }
-                      }, (err) => {
-                        alert('Error webapi: ' + err);
                       });
 
                     }
