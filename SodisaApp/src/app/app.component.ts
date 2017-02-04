@@ -31,6 +31,7 @@ export class MyApp {
         .then(() => this.dataServices.createTableViajeSync())
         .then(() => this.dataServices.createTableParadaIncidenteSync())
         .then(()=> this.dataServices.createTableViajeDetalleSync())
+        .then(()=> this.dataServices.createTableUltimaActualizacion())
         .then(() => {
           this.rootPage = LoginPage;
         });

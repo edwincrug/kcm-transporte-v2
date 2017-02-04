@@ -52,6 +52,11 @@ export class LocalDataProvider {
     return this.db.executeSql(sql, []);
   }
 
+  createTableUltimaActualizacion() {
+    let sql = 'CREATE TABLE IF NOT EXISTS UltimaActualizacion(idUltimaActualizacion INTEGER PRIMARY KEY AUTOINCREMENT, fecha TEXT); ';
+    return this.db.executeSql(sql, []);
+  }
+
   getAll() {
     let sql = 'SELECT * FROM Usuario';
     return this.db.executeSql(sql, [])
@@ -348,18 +353,41 @@ export class LocalDataProvider {
   eliminaParadaIncidenteSync(idParadaIncidenteSync) {
     let sql = "DELETE FROM ParadaIncidenteSync WHERE idParadaIncidenteSync = ?";
     return this.db.executeSql(sql, [idParadaIncidenteSync]);
-  } //idViaje INTEGER, idOperador TEXT, idDispositivo TEXT, idLocalidad INTEGER, cliente TEXT, idConcentrado TEXT, clienteAnterior TEXT, consignatario INTEGER, idDocumento TEXT, idEstatus INTEGER, evidencia TEXT, fecha TEXT, coordenadas TEXT
+  } 
 
   insertaViajeDetalleSync(idViaje, idOperador, idDispositivo, idLocalidad, cliente, idConcentrado, clienteAnterior, consignatario, idDocumento, idEstatus, evidencia, fecha, coordenadas) {
     let viajeQuery = "INSERT INTO ViajeDetalleSync (idViaje, idOperador, idDispositivo, idLocalidad, cliente, idConcentrado, clienteAnterior, consignatario, idDocumento, idEstatus, evidencia, fecha, coordenadas) VALUES (" +
       idViaje + ", '" +
-      idOperador + "',"
-
-      cliente + "', " +
+      idOperador + "', '" +
+      idDispositivo + "', " +
+      idLocalidad + ", '" +
+      cliente + "', '" +
+      idConcentrado + "', '" +
+      clienteAnterior + "', " +
       consignatario + ", '" +
       idDocumento + "', " +
-      idEstatus + "); ";
+      idEstatus + ", '" +
+      evidencia + "', '" +
+      fecha + "', '" +
+      coordenadas + "'); ";
 
+    return this.db.executeSql(viajeQuery, []);
+  }
+
+  getUltimaActualizacion() {
+    let sql = 'SELECT * FROM UltimaActualizacion ORDER BY idUltimaActualizacion DESC';
+    return this.db.executeSql(sql, [])
+      .then(response => {
+        if (response.rows.length > 0) {
+          return Promise.resolve(response.rows.item(0));
+        }
+      }).catch(error => {
+        return Promise.resolve('ERROR');
+      });
+  }
+
+   insertaUltimaActualizacion(fecha) {
+    let viajeQuery = "INSERT INTO UltimaActualizacion (fecha) VALUES ('" + fecha + "'); ";
     return this.db.executeSql(viajeQuery, []);
   }
 
