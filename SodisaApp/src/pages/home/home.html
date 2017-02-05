@@ -119,7 +119,7 @@
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Terminar
             </button>            
-            <button *ngIf="viaje.idEstatus == 13 && viaje.tipoViaje == 1" ion-button icon-left round item-right size (click)="RedireccionaEvidencias(viaje)"
+            <button *ngIf="viaje.idEstatus == 13 && (viaje.tipoViaje == 1 || viaje.tipoViaje == 3 || viaje.tipoViaje == 4 || viaje.tipoViaje == 5)" ion-button icon-left round item-right size (click)="RedireccionaEvidencias(viaje)"
                 color="light">
                 <ion-icon name="checkmark-circle"></ion-icon>
                 Evidencia

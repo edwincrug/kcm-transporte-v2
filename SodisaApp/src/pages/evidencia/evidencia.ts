@@ -195,7 +195,7 @@ export class EvidenciaPage {
 
         for (let x = 0; x < this.lstDocumento.length; x++) {
           this.dataServices.insertaViajeDetalleSync(this.idViaje, this.userName, Device.uuid, this.idOrigen, listaFacturas[x].cliente, this.idConcentrado, listaFacturas[x].cliente, listaFacturas[x].consignatario, listaFacturas[x].noFactura, this.estatusDoc, '', fechaEnviada, coordenadas).then(() => {
-            //inserta cada factura
+            //alert('Registra Detalle Factura');
           });
         }
 

@@ -14,7 +14,7 @@ import { LocalDataProvider } from '../providers/local-data-provider';
 })
 export class MyApp {
   rootPage: any = LoginPage;
-  lstDocumento = [];
+  
 
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
     public http: Http) {
@@ -43,6 +43,7 @@ export class MyApp {
         });
 
       let wsSodisa = new WebApiProvider(this.http);
+      let lstDocumento = [];
       document.addEventListener("online", function () {
         //alert('Entra a la base');
         let dbService = new LocalDataProvider();
@@ -81,66 +82,63 @@ export class MyApp {
                         if (res.length > 0) {
                           for (let j = 0; j < res.length; j++) {
                             let detalleDocumento = {
-                              pIdOperadorVc: this.userName,
-                              pIdDispositvoVc: Device.uuid,
-                              pIdLocalidadIn: this.idOrigen,
-                              pIdDestinoIn: res[x].cliente,
-                              pIdConcentradoVc: this.idConcentrado,
-                              pIdClienteAnteriorIn: res[j].cliente,
+                              pIdOperadorVc: res[j].idOperador,
+                              pIdDispositvoVc: res[j].idDispositivo,
+                              pIdLocalidadIn: res[j].idLocalidad,
+                              pIdDestinoIn: res[j].cliente,
+                              pIdConcentradoVc: res[j].idConcentrado,
+                              pIdClienteAnteriorIn: res[j].clienteAnterior,
                               pIdConsignatarioIn: res[j].consignatario,
-                              pIdDocumentoVc: res[j].noFactura,
-                              pIdEstatusViajeIn: this.estatusDoc,
-                              pEvidenciaFotograficaVc: ' ',
-                              pFechaEventoDt: '',
-                              pGeoLocalizacionEventoVc: ''
+                              pIdDocumentoVc: res[j].idDocumento,
+                              pIdEstatusViajeIn: res[j].idEstatus,
+                              pEvidenciaFotograficaVc: res[j].evidencia,
+                              pFechaEventoDt: res[j].fecha,
+                              pGeoLocalizacionEventoVc: res[j].coordenadas
                             }
 
-                            this.lstDocumento.push(detalleDocumento);
+                            lstDocumento.push(detalleDocumento);
                           }
 
-                          wsSodisa.actualizaViajeEntrega(this.userName, Device.uuid, this.lstDocumento, this.imagenSend).subscribe(data => {
+                          wsSodisa.actualizaViajeEntrega(result[x].idOperador, result[x].idDispositivo, lstDocumento, result[x].evidencia).subscribe(data => {
                             if (data.pResponseCode == 1) {
-                              this.dataServices.openDatabase()
-                                .then(() => this.dataServices.eliminaViajeLocal(this.idViaje).then(response => {
-                                  let alert = this.alertCtrl.create({
-                                    subTitle: 'Viaje terminado',
-                                    buttons: ['OK']
-                                  });
-                                  alert.present();
+                              dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
+                                dbService.eliminaViajeLocal(result[x].idViaje).then(() => {
+                                  dbService.eliminaViajeDetalleSync(result[x].idViaje).then(() => {
 
-                                  this.redirectHome();
-
-                                }));
+                                  })
+                                });
+                              }).catch(() => {
+                                // alert('Local no eliminado');
+                              });
                             }
                             else {
-                              this.interpretaRespuesta(data);
+
                             }
                           }, (err) => {
-                            alert('Error webapi: ' + err);
+                            // alert('Error webapi: ' + err);
                           });
                         }
                       });
 
                     }
-
-
-                    wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, result[x].evidencia).subscribe(resp => {
-                      if (resp.pResponseCode == 1) {
-                        // alert('Server actualizado');
-                        dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
-                          if (result[x].idEstatus == 6) {
+                    else {
+                      wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, result[x].evidencia).subscribe(resp => {
+                        if (resp.pResponseCode == 1) {
+                          // alert('Server actualizado');
+                          dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
                             dbService.eliminaViajeLocal(result[x].idViaje).then(() => {
                               // alert('Eliminado Local');
                             });
-                          }
-                        }).catch(() => {
-                          // alert('Local no eliminado');
-                        });
-                      }
-                      else {
-                        // alert('No lo afecto pero hay comunicactión');
-                      }
-                    });
+                          }).catch(() => {
+                            // alert('Local no eliminado');
+                          });
+                        }
+                        else {
+                          // alert('No lo afecto pero hay comunicactión');
+                        }
+                      });
+                    }
+
                   }
                 }
               }
