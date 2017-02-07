@@ -99,15 +99,22 @@ export class ModalIncidentePage {
     if (this.imagenSend != null) {
       if (this.networkService.noConnection()) {
         this.dataServices.insertaParadaIncidenteSync(this.userName, this.idOrigen, this.idConcentrado, 2, this.idIncidente, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).then(() => {
-          loading.dismiss();
+          setTimeout(() => {
+            loading.dismiss();
 
-          let alert = this.alertCtrl.create({
-            subTitle: 'Incidente registrado',
-            buttons: ['OK']
-          });
-          alert.present();
-
-          this.dismiss();
+            let alert = this.alertCtrl.create({
+              subTitle: 'Incidente registrado',
+              buttons: [
+                {
+                  text: 'OK',
+                  handler: () => {
+                    this.dismiss();
+                  }
+                }
+              ]
+            });
+            alert.present();
+          }, 5000);
 
         }).catch(error => {
           loading.dismiss();

@@ -105,15 +105,22 @@ export class ModalParadasPage {
     if (this.imagenSend != null) {
       if (this.networkService.noConnection()) {
         this.dataServices.insertaParadaIncidenteSync(this.userName, this.idOrigen, this.idConcentrado, 1, this.idParada, this.imagenSend, this.observaciones, coordenadas, fechaEnviada, Device.uuid).then(() => {
-          loading.dismiss();
+          setTimeout(() => {
+            loading.dismiss();
 
-          let alert = this.alertCtrl.create({
-            subTitle: 'Parada permitida registrada',
-            buttons: ['OK']
-          });
-          alert.present();
-
-          this.RedirectHome();
+            let alert = this.alertCtrl.create({
+              subTitle: 'Parada permitida registrada',
+              buttons: [
+                {
+                  text: 'OK',
+                  handler: () => {
+                    this.dismiss();
+                  }
+                }
+              ]
+            });
+            alert.present();
+          }, 5000);
 
         }).catch(error => {
           loading.dismiss();
