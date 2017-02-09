@@ -99,6 +99,7 @@ export class SincronizacionPage {
                   }
                 });
               }
+              else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 7 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14 || result[x].idEstatus == 15) {
                 if (result[x].idEstatus == 15) {
 
                   this.dataServices.getViajeDetalleSync(result[x].idViaje).then(res => {
