@@ -42,6 +42,7 @@ export class NuevoViajePage {
   lat: any;
   lng: any;
   idTipoViaje: any;
+  pintaMapa: number;
 
   constructor(public navCtrl: NavController, public params: NavParams, public modalCtrl: ModalController,
     public alertCtrl: AlertController, public loadingCtrl: LoadingController, public dataServices: LocalDataProvider,
@@ -78,7 +79,29 @@ export class NuevoViajePage {
   }
 
   loadMap() {
-    Geolocation.getCurrentPosition().then((position) => {
+    if (this.networkService.noConnection()) {
+      this.pintaMapa = 0;
+    }
+    else {
+      this.pintaMapa = 1;
+
+      Geolocation.getCurrentPosition().then((position) => {
+        this.map =
+          {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            zoom: 15
+          };
+      }).catch((error) => {
+        this.map =
+          {
+            lat: 19.438029,
+            lng: -99.2118746,
+            zoom: 15
+          };
+      });
+    }
+    /*Geolocation.getCurrentPosition().then((position) => {
       this.map =
         {
           lat: position.coords.latitude,
@@ -92,7 +115,7 @@ export class NuevoViajePage {
           lng: -99.2118746,
           zoom: 15
         };
-    });
+    });*/
   }
 
   MuestraMotivos(idViaje, idOrigen, idConcentrado, idTipoViaje) {

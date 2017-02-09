@@ -643,7 +643,25 @@ export class HomePage {
           });
           alert.present();
 
-          this.obtieneViajesInternos();
+          if (idEstatus == 13) {
+            if (idTipoViaje == 2) {
+              this.ManejoMercancia(idViaje, idOrigen, idConcentrado);
+            }
+            else {
+              this.navCtrl.setRoot(EvidenciaPage, {
+                tipoEntrega: 1,
+                origen: idOrigen,
+                concentrado: idConcentrado,
+                usuario: this.username,
+                eco: this.noTracto,
+                nombre: this.nombre,
+                idViaje: idViaje
+              });
+            }
+          }
+          else {
+            this.obtieneViajesInternos();
+          }
         });
       }).catch(error => {
         loading.dismiss();

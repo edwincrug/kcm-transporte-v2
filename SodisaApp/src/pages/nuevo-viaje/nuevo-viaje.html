@@ -24,7 +24,7 @@
       <h2>Concentrado #{{concentrado}}</h2>
       <!--<p>Aceptado 11/01/17 11:34</p>-->
     </ion-item>
-    <sebm-google-map id="map" [latitude]="map.lat"
+    <sebm-google-map *ngIf="pintaMapa == 1" id="map" [latitude]="map.lat"
       [longitude]="map.lng" [zoom]="map.zoom">
       <sebm-google-map-marker [latitude]="map.lat" [longitude]="map.lng">
         <sebm-google-map-info-window>
