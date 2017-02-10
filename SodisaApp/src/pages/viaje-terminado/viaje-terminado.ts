@@ -167,7 +167,7 @@ export class ViajeTerminadoPage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
-      alert('Acepta Maniobra: ' + this.viaje);
+      //alert('Acepta Maniobra: ' + this.viaje);
       this.dataServices.openDatabase()
         .then(() => {
           this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '', '').then(resp => {            

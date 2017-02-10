@@ -222,7 +222,7 @@ export class LocalDataProvider {
     return this.db.executeSql(sql, [idViajeSync]);
   }
 
-  viajesPorSincronizar() { //INNER JOIN Viaje ON ViajeSync.idViaje = Viaje.idViaje ORDER BY ViajeSync.idViaje, ViajeSync.idEstatus ASC
+  viajesPorSincronizar() { 
     let viajeSyncQuery = "SELECT (CASE ViajeSync.idEstatus WHEN 1 THEN 'Pendiente de Asignar' WHEN 2 THEN 'Asignado' WHEN 3 THEN 'Aceptado' WHEN 4 THEN 'Rechazado' WHEN 5 THEN 'Salida' WHEN 6 THEN 'Llegada' WHEN 7 THEN 'Pendiente de asignar maniobra' WHEN 8 THEN 'Maniobra asignada' WHEN 9 THEN 'Maniobra aceptada' WHEN 10 THEN 'Maniobra rechazada' WHEN 11 THEN 'Inicia maniobra' WHEN 12 THEN 'Carga-Descarga' WHEN 13 THEN 'Fin maniobra' WHEN 14 THEN 'Entrega total' WHEN 15 THEN 'Entrega parcial' WHEN 16 THEN 'Cancelado' WHEN 17 THEN 'Terminado' ELSE 'ESTATUS NO ASIGNADO LOCALMENTE' END) AS estatus, * FROM ViajeSync ORDER BY ViajeSync.idViaje, ViajeSync.idEstatus ASC ";
     return this.db.executeSql(viajeSyncQuery, []).then(response => {
       let hayViajes = [];
@@ -411,6 +411,17 @@ export class LocalDataProvider {
   eliminaViajeDetalleSync(idViajeDetalleSync) {
     let sql = "DELETE FROM ViajeDetalleSync WHERE idViajeDetalleSync = ?";
     return this.db.executeSql(sql, [idViajeDetalleSync]);
+  }
+
+  viajesPorSincronizarJoin() {
+    let viajeSyncQuery = "SELECT (CASE ViajeSync.idEstatus WHEN 1 THEN 'Pendiente de Asignar' WHEN 2 THEN 'Asignado' WHEN 3 THEN 'Aceptado' WHEN 4 THEN 'Rechazado' WHEN 5 THEN 'Salida' WHEN 6 THEN 'Llegada' WHEN 7 THEN 'Pendiente de asignar maniobra' WHEN 8 THEN 'Maniobra asignada' WHEN 9 THEN 'Maniobra aceptada' WHEN 10 THEN 'Maniobra rechazada' WHEN 11 THEN 'Inicia maniobra' WHEN 12 THEN 'Carga-Descarga' WHEN 13 THEN 'Fin maniobra' WHEN 14 THEN 'Entrega' WHEN 15 THEN 'Entrega' WHEN 16 THEN 'Cancelado' WHEN 17 THEN 'Terminado' ELSE 'ESTATUS NO ASIGNADO LOCALMENTE' END) AS estatus, * FROM ViajeSync INNER JOIN Viaje ON ViajeSync.idViaje = Viaje.idViaje ORDER BY ViajeSync.idViaje, ViajeSync.idEstatus ASC ";
+    return this.db.executeSql(viajeSyncQuery, []).then(response => {
+      let hayViajes = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        hayViajes.push(response.rows.item(index));
+      }
+      return Promise.resolve(hayViajes);
+    });
   }
 
 }

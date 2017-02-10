@@ -190,7 +190,7 @@ export class EvidenciaPage {
     }
 
     if (this.networkService.noConnection()) {
-      alert('Entrega documentos, viaje: ' + this.idViaje + ',  estatus: ' + this.idEstatus);
+      // alert('Entrega documentos, viaje: ' + this.idViaje + ',  estatus: ' + this.idEstatus);
       this.dataServices.insertaIniciaTerminaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid, coordenadas, fechaEnviada, 0, '', this.imagenSend).then(() => {
         loading.dismiss();
 
@@ -252,7 +252,7 @@ export class EvidenciaPage {
     loading.present();
 
     if (this.networkService.noConnection()) {  //this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid
-      alert('Entrega total, viaje: ' + this.idViaje + ',  estatus: ' + this.idEstatus);
+      //alert('Entrega total, viaje: ' + this.idViaje + ',  estatus: ' + this.idEstatus);
       this.dataServices.insertaIniciaTerminaViajeSync(this.idViaje, this.idOrigen, this.idConcentrado, this.userName, 0, this.idEstatus, Device.uuid, coordenadas, fechaEnviada, 0, '', this.imagenSend).then(() => {
         loading.dismiss();
         this.dataServices.actualizaViajeLocal(this.idEstatus, 0, this.idViaje, 0, '').then(response => {
