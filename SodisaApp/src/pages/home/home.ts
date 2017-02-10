@@ -299,6 +299,7 @@ export class HomePage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
+      alert('Inserta viaje: ' + idViaje);
       this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 5, Device.uuid, coordenadas, fechaEnviada, km, noRemolque, '').then(() => {
         this.dataServices.actualizaViajeLocal(5, 0, idViaje, km, noRemolque).then(response => {
           let alert = this.alertCtrl.create({
@@ -354,6 +355,7 @@ export class HomePage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
+      alert('Termina Viaje: ' + idViaje);
       this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, 6, Device.uuid, coordenadas, fechaEnviada, km, noRemolque, '').then(() => {
         this.dataServices.actualizaViajeLocal(6, 0, idViaje, km, noRemolque).then(response => {
           let alert = this.alertCtrl.create({
@@ -634,6 +636,7 @@ export class HomePage {
     loading.present();
 
     if (this.networkService.noConnection()) {
+      alert('Maniobra: ' + subTitulo + ' ' + 'Viaje: ' + idViaje);
       this.dataServices.insertaIniciaTerminaViajeSync(idViaje, idOrigen, idConcentrado, this.username, 0, idEstatus, Device.uuid, coordenadas, fechaEnviada, 0, '', '').then(() => {
         loading.dismiss();
         this.dataServices.actualizaViajeLocal(idEstatus, 0, idViaje, 0, '').then(response => {

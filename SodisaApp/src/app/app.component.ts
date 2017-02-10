@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen, Device } from 'ionic-native';
+import { StatusBar, Splashscreen } from 'ionic-native';
 import { Http } from '@angular/http';
 
 import { LoginPage } from '../pages/login/login';
@@ -14,7 +14,7 @@ import { LocalDataProvider } from '../providers/local-data-provider';
 })
 export class MyApp {
   rootPage: any = LoginPage;
-  
+
 
   constructor(public platform: Platform, public sodisaService: WebApiProvider, public dataServices: LocalDataProvider,
     public http: Http) {
@@ -54,18 +54,33 @@ export class MyApp {
               // alert('Viajes por sincronizar: ' + result.length);
 
               if (result.length > 0) {
+
+                let fecha = new Date();
+                let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
+
                 for (let x = 0; x < result.length; x++) {
 
                   if (result[x].idEstatus == 3 || result[x].idEstatus == 4 || result[x].idEstatus == 9 || result[x].idEstatus == 10) {
                     wsSodisa.aceptaRechazaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, result[x].idMotivoRechazo, result[x].idEstatus, result[x].idDispositivo).subscribe(resp => {
                       if (resp.pResponseCode == 1) {
-                        // alert('Server actualizado');
+                        // alert('Origen: ' + result[x].idOrigen);
+                        // alert('Concentrado: ' + result[x].idConcentrado);
+                        // alert('Operador: ' + result[x].idOperador);
+                        // alert('Motivo: ' + result[x].idMotivoRechazo);
+                        // alert('Estatus: ' + result[x].idEstatus);
+                        // alert('Dispositivo: ' + result[x].idDispositivo); 
+
                         dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
                           if (result[x].idEstatus == 4) {
                             dbService.eliminaViajeLocal(result[x].idViaje).then(() => {
                               // alert('Eliminado Local');
                             });
                           }
+
+                          dbService.insertaUltimaActualizacion(fechaEnviada).then(() => {
+                            console.log('Inserto la fecha ');
+                          });
+
                         }).catch(() => {
                           // alert('Local no eliminado');
                         });
@@ -75,7 +90,7 @@ export class MyApp {
                       }
                     });
                   }
-                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14 || result[x].idEstatus == 15) {
+                  else if (result[x].idEstatus == 5 || result[x].idEstatus == 6 || result[x].idEstatus == 7 || result[x].idEstatus == 11 || result[x].idEstatus == 12 || result[x].idEstatus == 13 || result[x].idEstatus == 14 || result[x].idEstatus == 15) {
                     if (result[x].idEstatus == 15) {
 
                       dbService.getViajeDetalleSync(result[x].idViaje).then(res => {
@@ -101,10 +116,17 @@ export class MyApp {
 
                           wsSodisa.actualizaViajeEntrega(result[x].idOperador, result[x].idDispositivo, lstDocumento, result[x].evidencia).subscribe(data => {
                             if (data.pResponseCode == 1) {
+                              // alert('Operador: ' + result[x].idOperador);
+                              // alert('Dispositivo: ' + result[x].idDispositivo);
+                              // alert('Estatus: ' + result[x].idEstatus);
+
                               dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
                                 dbService.eliminaViajeLocal(result[x].idViaje).then(() => {
                                   dbService.eliminaViajeDetalleSync(result[x].idViaje).then(() => {
+                                    dbService.insertaUltimaActualizacion(fechaEnviada).then(() => {
+                                      console.log('Inserto la fecha ')
 
+                                    });
                                   })
                                 });
                               }).catch(() => {
@@ -124,10 +146,24 @@ export class MyApp {
                     else {
                       wsSodisa.actualizaViaje(result[x].idOrigen, result[x].idConcentrado, result[x].idOperador, 0, result[x].idEstatus, result[x].idDispositivo, result[x].fecha, result[x].geolocalizacion, result[x].odometro, result[x].remolque, result[x].evidencia).subscribe(resp => {
                         if (resp.pResponseCode == 1) {
-                          // alert('Server actualizado');
+                          // alert('Origen: ' + result[x].idOrigen);
+                          // alert('Concentrado: ' + result[x].idConcentrado);
+                          // alert('Operador: ' + result[x].idOperador);
+                          // alert('Documento: ' + 0);
+                          // alert('Estatus: ' + result[x].idEstatus);
+                          // alert('Dispositivo: ' + result[x].idDispositivo);
+                          // alert('Fecha: ' + result[x].fecha);
+                          // alert('Coordenadas: ' + result[x].geolocalizacion);
+                          // alert('Kilometraje' + result[x].odometro);
+                          // alert('Remolque: ' + result[x].remolque);
+
                           dbService.eliminaViajeSync(result[x].idViajeSync).then(() => {
                             dbService.eliminaViajeLocal(result[x].idViaje).then(() => {
                               // alert('Eliminado Local');
+                              dbService.insertaUltimaActualizacion(fechaEnviada).then(() => {
+                                console.log('Inserto la fecha ')
+
+                              });
                             });
                           }).catch(() => {
                             // alert('Local no eliminado');
@@ -149,11 +185,17 @@ export class MyApp {
             dbService.paradasIncidentesPorSincronizar().then(result => {
 
               for (let x = 0; x < result.length; x++) {
+                let fecha = new Date();
+                let fechaEnviada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate() + ' ' + fecha.getHours() + ':' + fecha.getMinutes();
 
                 wsSodisa.RegistraParadaIncidente(result[x].idOperador, result[x].idLocalidad, result[x].idConcentrado, result[x].idTipoEvento, result[x].idEvento, result[x].evidencia, result[x].observacion, result[x].geolocalizacion, result[x].fecha, result[x].idDispositivo).subscribe(data => {
                   if (data.pResponseCode == 1) {
                     dbService.eliminaParadaIncidenteSync(result[x].idParadaIncidenteSync).then(() => {
                       //Elimina parada/incidente local
+                      dbService.insertaUltimaActualizacion(fechaEnviada).then(() => {
+                        console.log('Inserto la fecha ')
+
+                      });
                     }).catch(() => {
                       // alert('Local no eliminado');
                     });

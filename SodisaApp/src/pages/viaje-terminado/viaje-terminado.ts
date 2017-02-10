@@ -32,6 +32,7 @@ export class ViajeTerminadoPage {
   viaje: any;
   origen: any;
   concentrado: any;
+  pintaMapa: number;
 
   constructor(public navCtrl: NavController, public params: NavParams, public alertCtrl: AlertController,
     private loadingCtrl: LoadingController, public networkService: NetworkProvider, public dataServices: LocalDataProvider,
@@ -46,6 +47,12 @@ export class ViajeTerminadoPage {
     this.origen = params.get('idOrigen');
     this.concentrado = params.get('idConcentrado');
 
+    Geolocation.getCurrentPosition()
+      .then(position => {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+      });
+
     this.loadMap();
     this.map = { lat: 0, lng: 0, zoom: 15 };
   }
@@ -55,21 +62,28 @@ export class ViajeTerminadoPage {
   }
 
   loadMap() {
-    Geolocation.getCurrentPosition().then((position) => {
-      this.map =
-        {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          zoom: 15
-        };
-    }).catch((error) => {
-      this.map =
-        {
-          lat: 19.438029,
-          lng: -99.2118746,
-          zoom: 15
-        };
-    });
+    if (this.networkService.noConnection()) {
+      this.pintaMapa = 0;
+    }
+    else {
+      this.pintaMapa = 1;
+
+      Geolocation.getCurrentPosition().then((position) => {
+        this.map =
+          {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            zoom: 15
+          };
+      }).catch((error) => {
+        this.map =
+          {
+            lat: 19.438029,
+            lng: -99.2118746,
+            zoom: 15
+          };
+      });
+    }
   }
 
   TerminarViaje() {
@@ -153,27 +167,39 @@ export class ViajeTerminadoPage {
     if (this.lat == null || this.lng == null) { coordenadas = 'Sin Cobertura'; }
 
     if (this.networkService.noConnection()) {
-      this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '', '').then(() => {
-        this.dataServices.actualizaViajeLocal(9, 0, this.viaje, 0, '').then(response => {
-          let alert = this.alertCtrl.create({
-            subTitle: 'Maniobra aceptada',
-            buttons: ['OK']
-          });
-          alert.present();
+      alert('Acepta Maniobra: ' + this.viaje);
+      this.dataServices.openDatabase()
+        .then(() => {
+          this.dataServices.insertaIniciaTerminaViajeSync(this.viaje, this.origen, this.concentrado, this.username, 0, 9, Device.uuid, coordenadas, fechaEnviada, 0, '', '').then(resp => {            
+            console.log('Inserta Maniobra Aceptada: ' + resp);
+            this.dataServices.actualizaViajeLocal(9, 0, this.viaje, 0, '').then(response => {
+              console.log('Update Correcto: ' + response);
+              let alert = this.alertCtrl.create({
+                subTitle: 'Maniobra aceptada',
+                buttons: ['OK']
+              });
+              alert.present();
 
-          this.navCtrl.setRoot(HomePage, {
-            usuario: this.username,
-            nombre: this.nombre,
-            eco: this.noTracto
+              this.navCtrl.setRoot(HomePage, {
+                usuario: this.username,
+                nombre: this.nombre,
+                eco: this.noTracto
+              });
+            }).catch(error => {
+              console.log('No actualiza Maniobra Aceptada: ' + error);
+            });
+          }).catch(error => {
+            console.log('Maniobra Aceptada Sync Error: ' + error);
           });
         });
-      });
+
     }
     else {
       this.sodisaService.actualizaViaje(this.origen, this.concentrado, this.username, 0, 9, Device.uuid, fechaEnviada, coordenadas, 0, '', null).subscribe(data => {
         if (data.pResponseCode == 1) {
           this.dataServices.openDatabase()
             .then(() => this.dataServices.actualizaViajeLocal(9, 0, this.viaje, this.odometro, this.remolque).then(response => {
+              console.log('Actualiza estatus 9: ' + response);
               let alert = this.alertCtrl.create({
                 subTitle: 'Maniobra aceptada',
                 buttons: ['OK']
@@ -186,6 +212,8 @@ export class ViajeTerminadoPage {
                 eco: this.noTracto
               });
 
+            }).catch(error => {
+              console.log('Error al actualizar estatus 9: ' + error);
             }));
         }
         else {
